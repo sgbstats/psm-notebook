@@ -1,0 +1,4 @@
+- source: project
+  netlify:
+    - id: 5989be11-c318-40b2-9f24-f6e902191e13
+      url: 'https://teal-hamster-f36a60.netlify.app'

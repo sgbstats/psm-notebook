@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "PSM Notebook",
+    "section": "",
+    "text": "This is my notebook for all things pattern submodels.\nPSM is an under developed method of creating an ensemble of models, one for each of the missing data patterns1."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "index.html#background",
+    "href": "index.html#background",
+    "title": "PSM Notebook",
+    "section": "Background",
+    "text": "Background\nIn most clinical prediction models, missing data is either ignored or mean imputed2 @tsvetanova_missing_2021\n\nReferences\n\n\n1. Fletcher Mercaldo S, Blume JD. Missing data and prediction: The pattern submodel. Biostatistics. 2020;21(2):236-252. doi:10.1093/biostatistics/kxy040\n\n\n2. Nijman S, Leeuwenberg A, Beekers I, et al. Missing data is poorly handled and reported in prediction model studies using machine learning: A literature review. Journal of Clinical Epidemiology. 2022;142:218-229. doi:10.1016/j.jclinepi.2021.11.023"
+  }
+]

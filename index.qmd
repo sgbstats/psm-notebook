@@ -1,0 +1,20 @@
+---
+title: "PSM Notebook"
+format: html
+author: "Seb Bate"
+bibliography: PSM.bib
+csl: csl/jama.csl
+---
+
+This is my notebook for all things pattern submodels.
+
+PSM is an under developed method of creating an ensemble of models, one for each of the missing data patterns @fletcher_mercaldo_missing_2020.
+
+## Background
+
+In most clinical prediction models, missing data is either ignored or mean imputed @nijman_missing_2022 @tsvetanova_missing_2021
+
+### References
+
+::: {#refs}
+:::

@@ -1,0 +1,80 @@
+
+@article{fletcher_mercaldo_missing_2020,
+	title = {Missing data and prediction: the pattern submodel},
+	volume = {21},
+	copyright = {http://creativecommons.org/licenses/by/4.0/},
+	issn = {1465-4644, 1468-4357},
+	shorttitle = {Missing data and prediction},
+	url = {https://academic.oup.com/biostatistics/article/21/2/236/5092384},
+	doi = {10.1093/biostatistics/kxy040},
+	abstract = {Missing data are a common problem for both the construction and implementation of a prediction algorithm. Pattern submodels (PS)—a set of submodels for every missing data pattern that are ﬁt using only data from that pattern—are a computationally efﬁcient remedy for handling missing data at both stages. Here, we show that PS (i) retain their predictive accuracy even when the missing data mechanism is not missing at random (MAR) and (ii) yield an algorithm that is the most predictive among all standard missing data strategies. Speciﬁcally, we show that the expected loss of a forecasting algorithm is minimized when each pattern-speciﬁc loss is minimized. Simulations and a re-analysis of the SUPPORT study conﬁrms that PS generally outperforms zero-imputation, mean-imputation, complete-case analysis, complete-case submodels, and even multiple imputation (MI). The degree of improvement is highly dependent on the missingness mechanism and the effect size of missing predictors. When the data are MAR, MI can yield comparable forecasting performance but generally requires a larger computational cost. We also show that predictions from the PS approach are equivalent to the limiting predictions for a MI procedure that is dependent on missingness indicators (the MIMI model). The focus of this article is on out-of-sample prediction; implications for model inference are only brieﬂy explored.},
+	language = {en},
+	number = {2},
+	urldate = {2025-01-28},
+	journal = {Biostatistics},
+	author = {Fletcher Mercaldo, Sarah and Blume, Jeffrey D},
+	month = apr,
+	year = {2020},
+	pages = {236--252},
+	file = {Fletcher Mercaldo and Blume - 2020 - Missing data and prediction the pattern submodel.pdf:C\:\\Users\\mbbx4sb5\\Zotero\\storage\\MK6XVMLF\\Fletcher Mercaldo and Blume - 2020 - Missing data and prediction the pattern submodel.pdf:application/pdf},
+}
+
+@article{nijman_missing_2022,
+	title = {Missing data is poorly handled and reported in prediction model studies using machine learning: a literature review},
+	volume = {142},
+	issn = {0895-4356},
+	shorttitle = {Missing data is poorly handled and reported in prediction model studies using machine learning},
+	url = {https://www.sciencedirect.com/science/article/pii/S0895435621003759},
+	doi = {10.1016/j.jclinepi.2021.11.023},
+	abstract = {Objectives
+Missing data is a common problem during the development, evaluation, and implementation of prediction models. Although machine learning (ML) methods are often said to be capable of circumventing missing data, it is unclear how these methods are used in medical research. We aim to find out if and how well prediction model studies using machine learning report on their handling of missing data.
+Study design and setting
+We systematically searched the literature on published papers between 2018 and 2019 about primary studies developing and/or validating clinical prediction models using any supervised ML methodology across medical fields. From the retrieved studies information about the amount and nature (e.g. missing completely at random, potential reasons for missingness) of missing data and the way they were handled were extracted.
+Results
+We identified 152 machine learning-based clinical prediction model studies. A substantial amount of these 152 papers did not report anything on missing data (n = 56/152). A majority (n = 96/152) reported details on the handling of missing data (e.g., methods used), though many of these (n = 46/96) did not report the amount of the missingness in the data. In these 96 papers the authors only sometimes reported possible reasons for missingness (n = 7/96) and information about missing data mechanisms (n = 8/96). The most common approach for handling missing data was deletion (n = 65/96), mostly via complete-case analysis (CCA) (n = 43/96). Very few studies used multiple imputation (n = 8/96) or built-in mechanisms such as surrogate splits (n = 7/96) that directly address missing data during the development, validation, or implementation of the prediction model.
+Conclusion
+Though missing values are highly common in any type of medical research and certainly in the research based on routine healthcare data, a majority of the prediction model studies using machine learning does not report sufficient information on the presence and handling of missing data. Strategies in which patient data are simply omitted are unfortunately the most often used methods, even though it is generally advised against and well known that it likely causes bias and loss of analytical power in prediction model development and in the predictive accuracy estimates. Prediction model researchers should be much more aware of alternative methodologies to address missing data.},
+	urldate = {2025-01-28},
+	journal = {Journal of Clinical Epidemiology},
+	author = {Nijman, SWJ and Leeuwenberg, AM and Beekers, I and Verkouter, I and Jacobs, JJL and Bots, ML and Asselbergs, FW and Moons, KGM and Debray, TPA},
+	month = feb,
+	year = {2022},
+	keywords = {literature review, Machine learning, Missing data, prediction, reporting},
+	pages = {218--229},
+	file = {Full Text:C\:\\Users\\mbbx4sb5\\Zotero\\storage\\MZIQVTTG\\Nijman et al. - 2022 - Missing data is poorly handled and reported in pre.pdf:application/pdf;ScienceDirect Snapshot:C\:\\Users\\mbbx4sb5\\Zotero\\storage\\UH4IHT2T\\S0895435621003759.html:text/html},
+}
+
+@article{tsvetanova_missing_2021,
+	title = {Missing data was handled inconsistently in {UK} prediction models: a review of method used},
+	volume = {140},
+	issn = {0895-4356},
+	shorttitle = {Missing data was handled inconsistently in {UK} prediction models},
+	url = {https://www.sciencedirect.com/science/article/pii/S0895435621002882},
+	doi = {10.1016/j.jclinepi.2021.09.008},
+	abstract = {Objectives
+No clear guidance exists on handling missing data at each stage of developing, validating and implementing a clinical prediction model (CPM). We aimed to review the approaches to handling missing data that underly the CPMs currently recommended for use in UK healthcare.
+Study Design and Setting
+A descriptive cross-sectional meta-epidemiological study aiming to identify CPMs recommended by the National Institute for Health and Care Excellence (NICE), which summarized how missing data is handled across their pipelines.
+Results
+A total of 23 CPMs were included through “sampling strategy.” Six missing data strategies were identified: complete case analysis (CCA), multiple imputation, imputation of mean values, k-nearest neighbours imputation, using an additional category for missingness, considering missing values as risk-factor-absent. 52\% of the development articles and 48\% of the validation articles did not report how missing data were handled. CCA was the most common approach used for development (40\%) and validation (44\%). At implementation, 57\% of the CPMs required complete data entry, whilst 43\% allowed missing values. Three CPMs had consistent paths in their pipelines.
+Conclusion
+A broad variety of methods for handling missing data underly the CPMs currently recommended for use in UK healthcare. Missing data handling strategies were generally inconsistent. Better quality assurance of CPMs needs greater clarity and consistency in handling of missing data.},
+	urldate = {2025-01-28},
+	journal = {Journal of Clinical Epidemiology},
+	author = {Tsvetanova, Antonia and Sperrin, Matthew and Peek, Niels and Buchan, Iain and Hyland, Stephanie and Martin, Glen P.},
+	month = dec,
+	year = {2021},
+	keywords = {Imputation, Missing data, Missing data handling approaches, Predictive medicine, Prognosis, Statistical models},
+	pages = {149--158},
+	file = {ScienceDirect Snapshot:C\:\\Users\\mbbx4sb5\\Zotero\\storage\\YBURDVRN\\S0895435621002882.html:text/html},
+}
+
+@article{agency1998,
+	title = {ICH E9 statistical principles for clinical trials - Scientific guideline. Available from:},
+	author = {Agency, European Medicines},
+	year = {1998},
+	date = {1998},
+	url = {https://www.ema.europa.eu/en/ich-e9-statistical-principles-clinical-trials-scientific-guideline#current-version-section},
+	note = {Type: Legal Rule or Regulation
+Volume: CPMP/ICH/363/96}
+}

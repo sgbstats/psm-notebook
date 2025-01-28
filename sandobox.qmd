@@ -1,0 +1,19 @@
+---
+title: "sandbox"
+---
+
+```{r, message=F, echo=F}
+library(tidyverse)
+x="a" 
+y= c("b", "c")
+
+x %in% y
+
+!x %in% y
+
+z =data.frame("u"=c("a", "b"), "w"= c("b", "c"))
+
+z %>% filter(u %in% x)
+
+z %>% filter(!u %in% x)
+```

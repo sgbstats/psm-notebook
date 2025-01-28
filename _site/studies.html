@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>About – Seb’s Notebook</title>
+<title>Studies – Seb’s Notebook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,41 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
 }
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
 }
-</style>
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -114,9 +99,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
-      Seb's Notebook
-      </li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./studies.html">Studies</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -149,7 +132,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./studies.html" class="sidebar-item-text sidebar-link">
+  <a href="./studies.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Studies</span></a>
   </div>
 </li>
@@ -181,15 +164,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#references" id="toc-references" class="nav-link active" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">About</h1>
+<h1 class="title">Studies</h1>
 </div>
 
 
@@ -206,15 +195,227 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>About this site</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td>Short Name</td>
+<td>NCT number</td>
+<td>Relevant Size</td>
+</tr>
+<tr class="even">
+<td>Anzueto<span class="citation" data-cites="anzueto2009"><sup><a href="#ref-anzueto2009" role="doc-biblioref">1</a></sup></span></td>
+<td>NCT00115492</td>
+<td>797</td>
+</tr>
+<tr class="odd">
+<td>Calverley<span class="citation" data-cites="calverley2010"><sup><a href="#ref-calverley2010" role="doc-biblioref">2</a></sup></span></td>
+<td>NCT00476099</td>
+<td>1465</td>
+</tr>
+<tr class="even">
+<td>Dransfield 1<span class="citation" data-cites="dransfield2013"><sup><a href="#ref-dransfield2013" role="doc-biblioref">3</a></sup></span></td>
+<td>NCT01009463</td>
+<td>1622</td>
+</tr>
+<tr class="odd">
+<td>Dransfield 2<span class="citation" data-cites="dransfield2013"><sup><a href="#ref-dransfield2013" role="doc-biblioref">3</a></sup></span></td>
+<td>NCT01017952</td>
+<td>1633</td>
+</tr>
+<tr class="even">
+<td>EFFECT<span class="citation" data-cites="papi2017"><sup><a href="#ref-papi2017" role="doc-biblioref">4</a></sup></span></td>
+<td>EudraCT 2012–004162–17</td>
+<td>1765</td>
+</tr>
+<tr class="odd">
+<td>Ferguson<span class="citation" data-cites="ferguson2008"><sup><a href="#ref-ferguson2008" role="doc-biblioref">5</a></sup></span></td>
+<td>NCT00144911</td>
+<td>782</td>
+</tr>
+<tr class="even">
+<td>FLTA3025<span class="citation" data-cites="gsk-a"><sup><a href="#ref-gsk-a" role="doc-biblioref">6</a></sup></span></td>
+<td>&nbsp;</td>
+<td>640</td>
+</tr>
+<tr class="odd">
+<td>FORWARD<span class="citation" data-cites="wedzicha2014"><sup><a href="#ref-wedzicha2014" role="doc-biblioref">7</a></sup></span></td>
+<td>NCT00929851</td>
+<td>1186</td>
+</tr>
+<tr class="even">
+<td>Hanania<span class="citation" data-cites="hanania2003"><sup><a href="#ref-hanania2003" role="doc-biblioref">8</a></sup></span></td>
+<td>&nbsp;</td>
+<td>723</td>
+</tr>
+<tr class="odd">
+<td>IMPACT<span class="citation" data-cites="lipson2018"><sup><a href="#ref-lipson2018" role="doc-biblioref">9</a></sup></span></td>
+<td>NCT02164513</td>
+<td>6221</td>
+</tr>
+<tr class="even">
+<td>INSTEAD<span class="citation" data-cites="rossi2014"><sup><a href="#ref-rossi2014" role="doc-biblioref">10</a></sup></span></td>
+<td>NCT01555138</td>
+<td>581</td>
+</tr>
+<tr class="odd">
+<td>Kardos<span class="citation" data-cites="kardos2007"><sup><a href="#ref-kardos2007" role="doc-biblioref">11</a></sup></span></td>
+<td>&nbsp;</td>
+<td>994</td>
+</tr>
+<tr class="even">
+<td>Kerwin<span class="citation" data-cites="kerwin2013"><sup><a href="#ref-kerwin2013" role="doc-biblioref">12</a></sup></span></td>
+<td>NCT01053988</td>
+<td>1030</td>
+</tr>
+<tr class="odd">
+<td>Mahler<span class="citation" data-cites="mahler2002"><sup><a href="#ref-mahler2002" role="doc-biblioref">13</a></sup></span></td>
+<td><a href="https://clinicaltrials.gov/ct2/show/?term=NCT00356642&amp;rank=1">NCT00356642</a></td>
+<td>691</td>
+</tr>
+<tr class="even">
+<td>Martinez<span class="citation" data-cites="martinez2013"><sup><a href="#ref-martinez2013" role="doc-biblioref">14</a></sup></span></td>
+<td>NCT01054885</td>
+<td>1224</td>
+</tr>
+<tr class="odd">
+<td>Ohar<span class="citation" data-cites="ohar2014"><sup><a href="#ref-ohar2014" role="doc-biblioref">15</a></sup></span></td>
+<td>NCT01110200</td>
+<td>639</td>
+</tr>
+<tr class="even">
+<td>RISE<span class="citation" data-cites="ferguson2017"><sup><a href="#ref-ferguson2017" role="doc-biblioref">16</a></sup></span></td>
+<td>NCT02157935</td>
+<td>1219</td>
+</tr>
+<tr class="odd">
+<td>Sharafkhaneh<span class="citation" data-cites="sharafkhaneh2012"><sup><a href="#ref-sharafkhaneh2012" role="doc-biblioref">17</a></sup></span></td>
+<td>NCT00419744</td>
+<td>1219</td>
+</tr>
+<tr class="even">
+<td>Siler<span class="citation" data-cites="siler2017"><sup><a href="#ref-siler2017" role="doc-biblioref">18</a></sup></span></td>
+<td>NCT02105974</td>
+<td>1622</td>
+</tr>
+<tr class="odd">
+<td>SUMIRE<span class="citation" data-cites="fukuchi2013"><sup><a href="#ref-fukuchi2013" role="doc-biblioref">19</a></sup></span></td>
+<td>NCT01069289</td>
+<td>1293</td>
+</tr>
+<tr class="even">
+<td>SUMMIT<span class="citation" data-cites="vestbo2022"><sup><a href="#ref-vestbo2022" role="doc-biblioref">20</a></sup></span></td>
+<td>NCT01313676</td>
+<td>16590</td>
+</tr>
+<tr class="odd">
+<td>SUNSET<span class="citation" data-cites="chapman2018"><sup><a href="#ref-chapman2018" role="doc-biblioref">21</a></sup></span></td>
+<td>NCT02603393</td>
+<td>1053</td>
+</tr>
+<tr class="even">
+<td>TORCH<span class="citation" data-cites="calverley2007"><sup><a href="#ref-calverley2007" role="doc-biblioref">22</a></sup></span></td>
+<td>NCT00268216</td>
+<td>6112</td>
+</tr>
+<tr class="odd">
+<td>TRIBUTE<span class="citation" data-cites="papi2018"><sup><a href="#ref-papi2018" role="doc-biblioref">23</a></sup></span></td>
+<td>NCT02579850</td>
+<td>1532</td>
+</tr>
+<tr class="even">
+<td>TRISTAN<span class="citation" data-cites="calverley2003"><sup><a href="#ref-calverley2003" role="doc-biblioref">24</a></sup></span></td>
+<td>&nbsp;</td>
+<td>1465</td>
+</tr>
+<tr class="odd">
+<td>WISDOM<span class="citation" data-cites="magnussen2014"><sup><a href="#ref-magnussen2014" role="doc-biblioref">25</a></sup></span></td>
+<td>NCT00975195</td>
+<td>2488</td>
+</tr>
+</tbody>
+</table>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+<div id="refs" class="references csl-bib-body" role="list">
+<div id="ref-anzueto2009" class="csl-entry" role="listitem">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Anzueto A, Ferguson GT, Feldman G, et al. Effect of fluticasone propionate/salmeterol (250/50) on COPD exacerbations and impact on patient outcomes. <em>COPD: Journal of Chronic Obstructive Pulmonary Disease</em>. 2009;6(5):320-329. doi:<a href="https://doi.org/10.1080/15412550903140881">10.1080/15412550903140881</a></div>
+</div>
+<div id="ref-calverley2010" class="csl-entry" role="listitem">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Calverley PMA, Kuna P, Monsó E, et al. Beclomethasone/formoterol in the management of COPD: A randomised controlled trial. <em>Respiratory Medicine</em>. 2010;104(12):1858-1868. doi:<a href="https://doi.org/10.1016/j.rmed.2010.09.008">10.1016/j.rmed.2010.09.008</a></div>
+</div>
+<div id="ref-dransfield2013" class="csl-entry" role="listitem">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Dransfield MT, Bourbeau J, Jones PW, et al. Once-daily inhaled fluticasone furoate and vilanterol versus vilanterol only for prevention of exacerbations of COPD: Two replicate double-blind, parallel-group, randomised controlled trials. <em>The Lancet Respiratory Medicine</em>. 2013;1(3):210-223. doi:<a href="https://doi.org/10.1016/S2213-2600(13)70040-7">10.1016/S2213-2600(13)70040-7</a></div>
+</div>
+<div id="ref-papi2017" class="csl-entry" role="listitem">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Papi A, Dokic D, Tzimas W, et al. Fluticasone propionate/formoterol for COPD management: A randomized controlled trial. <em>International Journal of Chronic Obstructive Pulmonary Disease</em>. 2017;12:1961-1971. doi:<a href="https://doi.org/10.2147/COPD.S136527">10.2147/COPD.S136527</a></div>
+</div>
+<div id="ref-ferguson2008" class="csl-entry" role="listitem">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">Ferguson GT, Anzueto A, Fei R, Emmett A, Knobil K, Kalberg C. Effect of fluticasone propionate/salmeterol (250/50 μg) or salmeterol (50 μg) on COPD exacerbations. <em>Respiratory Medicine</em>. 2008;102(8):1099-1108. doi:<a href="https://doi.org/10.1016/j.rmed.2008.04.019">10.1016/j.rmed.2008.04.019</a></div>
+</div>
+<div id="ref-gsk-a" class="csl-entry" role="listitem">
+<div class="csl-left-margin">6. </div><div class="csl-right-inline">GSK - a randomized, double-blind, parallel-group, comparative trial of inhaled fluticasone propionate 250mcg twice daily, 500mcg twice daily, and placebo twice daily via the DISKUS® inhaler in subjects with chronic obstructive pulmonary disease (COPD). <a href="https://www.gsk-studyregister.com/en/trial-details/?id=FLTA3025">https://www.gsk-studyregister.com/en/trial-details/?id=FLTA3025</a></div>
+</div>
+<div id="ref-wedzicha2014" class="csl-entry" role="listitem">
+<div class="csl-left-margin">7. </div><div class="csl-right-inline">Wedzicha JA, Singh D, Vestbo J, et al. Extrafine beclomethasone/formoterol in severe COPD patients with history of exacerbations. <em>Respiratory Medicine</em>. 2014;108(8):1153-1162. doi:<a href="https://doi.org/10.1016/j.rmed.2014.05.013">10.1016/j.rmed.2014.05.013</a></div>
+</div>
+<div id="ref-hanania2003" class="csl-entry" role="listitem">
+<div class="csl-left-margin">8. </div><div class="csl-right-inline">Hanania NA, Darken P, Horstman D, et al. The efficacy and safety of fluticasone propionate (250 μg)/salmeterol (50 μg) combined in the diskus inhaler for the treatment of COPD. <em>CHEST</em>. 2003;124(3):834-843. doi:<a href="https://doi.org/10.1378/chest.124.3.834">10.1378/chest.124.3.834</a></div>
+</div>
+<div id="ref-lipson2018" class="csl-entry" role="listitem">
+<div class="csl-left-margin">9. </div><div class="csl-right-inline">Lipson DA, Barnhart F, Brealey N, et al. Once-daily single-inhaler triple versus dual therapy in patients with COPD. <em>New England Journal of Medicine</em>. 2018;378(18):1671-1680. doi:<a href="https://doi.org/10.1056/NEJMoa1713901">10.1056/NEJMoa1713901</a></div>
+</div>
+<div id="ref-rossi2014" class="csl-entry" role="listitem">
+<div class="csl-left-margin">10. </div><div class="csl-right-inline">Rossi A, Molen T van der, Olmo R del, et al. INSTEAD: a randomised switch trial of indacaterol versus salmeterol/fluticasone in moderate COPD. <em>European Respiratory Journal</em>. 2014;44(6):1548-1556. doi:<a href="https://doi.org/10.1183/09031936.00126814">10.1183/09031936.00126814</a></div>
+</div>
+<div id="ref-kardos2007" class="csl-entry" role="listitem">
+<div class="csl-left-margin">11. </div><div class="csl-right-inline">Kardos P, Wencker M, Glaab T, Vogelmeier C. Impact of salmeterol/fluticasone propionate versus salmeterol on exacerbations in severe chronic obstructive pulmonary disease. <em>American Journal of Respiratory and Critical Care Medicine</em>. 2007;175(2):144-149. doi:<a href="https://doi.org/10.1164/rccm.200602-244OC">10.1164/rccm.200602-244OC</a></div>
+</div>
+<div id="ref-kerwin2013" class="csl-entry" role="listitem">
+<div class="csl-left-margin">12. </div><div class="csl-right-inline">Kerwin EM, Scott-Wilson C, Sanford L, et al. A randomised trial of fluticasone furoate/vilanterol (50/25 μg; 100/25 μg) on lung function in COPD. <em>Respiratory Medicine</em>. 2013;107(4):560-569. doi:<a href="https://doi.org/10.1016/j.rmed.2012.12.014">10.1016/j.rmed.2012.12.014</a></div>
+</div>
+<div id="ref-mahler2002" class="csl-entry" role="listitem">
+<div class="csl-left-margin">13. </div><div class="csl-right-inline">Mahler DA, Wire P, Horstman D, et al. Effectiveness of fluticasone propionate and salmeterol combination delivered via the diskus device in the treatment of chronic obstructive pulmonary disease. <em>American Journal of Respiratory and Critical Care Medicine</em>. 2002;166(8):1084-1091. doi:<a href="https://doi.org/10.1164/rccm.2112055">10.1164/rccm.2112055</a></div>
+</div>
+<div id="ref-martinez2013" class="csl-entry" role="listitem">
+<div class="csl-left-margin">14. </div><div class="csl-right-inline">Martinez FJ, Boscia J, Feldman G, et al. Fluticasone furoate/vilanterol (100/25; 200/25 μg) improves lung function in COPD: A randomised trial. <em>Respiratory Medicine</em>. 2013;107(4):550-559. doi:<a href="https://doi.org/10.1016/j.rmed.2012.12.016">10.1016/j.rmed.2012.12.016</a></div>
+</div>
+<div id="ref-ohar2014" class="csl-entry" role="listitem">
+<div class="csl-left-margin">15. </div><div class="csl-right-inline">Ohar JA, Crater GD, Emmett A, et al. Fluticasone propionate/salmeterol 250/50 μg versus salmeterol 50 μg after chronic obstructive pulmonary disease exacerbation. <em>Respiratory Research</em>. 2014;15(1):105. doi:<a href="https://doi.org/10.1186/s12931-014-0105-2">10.1186/s12931-014-0105-2</a></div>
+</div>
+<div id="ref-ferguson2017" class="csl-entry" role="listitem">
+<div class="csl-left-margin">16. </div><div class="csl-right-inline">Ferguson GT, Tashkin DP, Skärby T, et al. Effect of budesonide/formoterol pressurized metered-dose inhaler on exacerbations versus formoterol in chronic obstructive pulmonary disease: The 6-month, randomized RISE (revealing the impact of symbicort in reducing exacerbations in COPD) study. <em>Respiratory Medicine</em>. 2017;132:31-41. doi:<a href="https://doi.org/10.1016/j.rmed.2017.09.002">10.1016/j.rmed.2017.09.002</a></div>
+</div>
+<div id="ref-sharafkhaneh2012" class="csl-entry" role="listitem">
+<div class="csl-left-margin">17. </div><div class="csl-right-inline">Sharafkhaneh A, Southard JG, Goldman M, Uryniak T, Martin UJ. Effect of budesonide/formoterol pMDI on COPD exacerbations: A double-blind, randomized study. <em>Respiratory Medicine</em>. 2012;106(2):257-268. doi:<a href="https://doi.org/10.1016/j.rmed.2011.07.020">10.1016/j.rmed.2011.07.020</a></div>
+</div>
+<div id="ref-siler2017" class="csl-entry" role="listitem">
+<div class="csl-left-margin">18. </div><div class="csl-right-inline">Siler TM, Nagai A, Scott-Wilson CA, Midwinter DA, Crim C. A randomised, phase III trial of once-daily fluticasone furoate/vilanterol 100/25 μg versus once-daily vilanterol 25 μg to evaluate the contribution on lung function of fluticasone furoate in the combination in patients with COPD. <em>Respiratory Medicine</em>. 2017;123:8-17. doi:<a href="https://doi.org/10.1016/j.rmed.2016.12.001">10.1016/j.rmed.2016.12.001</a></div>
+</div>
+<div id="ref-fukuchi2013" class="csl-entry" role="listitem">
+<div class="csl-left-margin">19. </div><div class="csl-right-inline">Fukuchi Y, Samoro R, Fassakhov R, et al. Budesonide/formoterol via Turbuhaler® versus formoterol via Turbuhaler® in patients with moderate to severe chronic obstructive pulmonary disease: Phase III multinational study results. <em>Respirology</em>. 2013;18(5):866-873. doi:<a href="https://doi.org/10.1111/resp.12090">10.1111/resp.12090</a></div>
+</div>
+<div id="ref-vestbo2022" class="csl-entry" role="listitem">
+<div class="csl-left-margin">20. </div><div class="csl-right-inline">Vestbo J, Waterer G, Leather D, et al. Mortality after admission with pneumonia is higher than after admission with an exacerbation of COPD. <em>Eur Respir J</em>. Published online 2022. doi:<a href="https://doi.org/10.1183/13993003.02899-2021">10.1183/13993003.02899-2021</a></div>
+</div>
+<div id="ref-chapman2018" class="csl-entry" role="listitem">
+<div class="csl-left-margin">21. </div><div class="csl-right-inline">Chapman KR, Hurst JR, Frent SM, et al. Long-term triple therapy de-escalation to indacaterol/glycopyrronium in patients with chronic obstructive pulmonary disease (SUNSET): A randomized, double-blind, triple-dummy clinical trial. <em>American Journal of Respiratory and Critical Care Medicine</em>. 2018;198(3):329-339. doi:<a href="https://doi.org/10.1164/rccm.201803-0405OC">10.1164/rccm.201803-0405OC</a></div>
+</div>
+<div id="ref-calverley2007" class="csl-entry" role="listitem">
+<div class="csl-left-margin">22. </div><div class="csl-right-inline">Calverley PMA, Anderson JA, Celli B, et al. Salmeterol and fluticasone propionate and survival in chronic obstructive pulmonary disease. <em>New England Journal of Medicine</em>. 2007;356(8):775-789. doi:<a href="https://doi.org/10.1056/NEJMoa063070">10.1056/NEJMoa063070</a></div>
+</div>
+<div id="ref-papi2018" class="csl-entry" role="listitem">
+<div class="csl-left-margin">23. </div><div class="csl-right-inline">Papi A, Vestbo J, Fabbri L, et al. Extrafine inhaled triple therapy versus dual bronchodilator therapy in chronic obstructive pulmonary disease (TRIBUTE): A double-blind, parallel group, randomised controlled trial. <em>The Lancet</em>. 2018;391(10125):1076-1084. doi:<a href="https://doi.org/10.1016/S0140-6736(18)30206-X">10.1016/S0140-6736(18)30206-X</a></div>
+</div>
+<div id="ref-calverley2003" class="csl-entry" role="listitem">
+<div class="csl-left-margin">24. </div><div class="csl-right-inline">Calverley P, Pauwels R, Vestbo J, et al. Combined salmeterol and fluticasone in the treatment of chronic obstructive pulmonary disease: A randomised controlled trial. <em>The Lancet</em>. 2003;361(9356):449-456. doi:<a href="https://doi.org/10.1016/S0140-6736(03)12459-2">10.1016/S0140-6736(03)12459-2</a></div>
+</div>
+<div id="ref-magnussen2014" class="csl-entry" role="listitem">
+<div class="csl-left-margin">25. </div><div class="csl-right-inline">Magnussen H, Disse B, Rodriguez-Roisin R, et al. Withdrawal of inhaled glucocorticoids and exacerbations of COPD. <em>New England Journal of Medicine</em>. 2014;371(14):1285-1294. doi:<a href="https://doi.org/10.1056/NEJMoa1407154">10.1056/NEJMoa1407154</a></div>
 </div>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

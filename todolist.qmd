@@ -1,0 +1,7 @@
+```         
+---
+title: "Random to do list"
+---
+```
+
+-   Remove the `%notin%` from all of my code

@@ -6,6 +6,8 @@ bibliography: PSM.bib
 csl: csl/jama.csl
 ---
 
+# Pattern Submodels
+
 This is my notebook for all things pattern submodels.
 
 PSM is an under developed method of creating an ensemble of models, one for each of the missing data patterns @fletcher_mercaldo_missing_2020.
@@ -13,6 +15,26 @@ PSM is an under developed method of creating an ensemble of models, one for each
 ## Background
 
 In most clinical prediction models, missing data is either ignored or mean imputed @nijman_missing_2022 @tsvetanova_missing_2021
+
+Using complete-case analysis is only valid when the data is MCAR @rubin1976 @little2019. This leads to the problem of trying to create a CPM when the data is most likely MAR.
+
+## Rationale
+
+The aim is for their to be a prediction model that can be used in general practice and not all parameters are available at all times, especially blood tests. In Bate's review @bate2024, it is noted that several covid prediction models use parameters that are not always available and this means that more often than not, the model can't be used (the review that was in the context of ICU and set in a University Hospital).
+
+## Studies
+
+In ICS-Recode, clinical data is taken from across studies, with various degrees of missingness. Given that all of the data that is included in the development data are from clinical trials, there data is on the whole very complete. See [studies list](studies.qmd)
+
+### To do list
+
+-   Document all of the code so far
+
+-   Discuss issues with model selection and shrinkage
+
+### One day
+
+-   I will make this into a proper R package
 
 ### References
 

@@ -1,0 +1,40 @@
+---
+title: "Studies"
+bibliography: PSM.bib
+csl: csl/jama.csl
+---
+
+|  |  |  |
+|----|----|----|
+| Short Name | NCT number | Relevant Size |
+| Anzueto @anzueto2009 | NCT00115492 | 797 |
+| Calverley @calverley2010 | NCT00476099 | 1465 |
+| Dransfield 1 @dransfield2013 | NCT01009463 | 1622 |
+| Dransfield 2 @dransfield2013 | NCT01017952 | 1633 |
+| EFFECT @papi2017 | EudraCT 2012–004162–17 | 1765 |
+| Ferguson @ferguson2008 | NCT00144911 | 782 |
+| FLTA3025 @gsk-a |   | 640 |
+| FORWARD @wedzicha2014 | NCT00929851 | 1186 |
+| Hanania @hanania2003 |   | 723 |
+| IMPACT @lipson2018 | NCT02164513 | 6221 |
+| INSTEAD @rossi2014 | NCT01555138 | 581 |
+| Kardos @kardos2007 |   | 994 |
+| Kerwin @kerwin2013 | NCT01053988 | 1030 |
+| Mahler @mahler2002 | [NCT00356642](https://clinicaltrials.gov/ct2/show/?term=NCT00356642&rank=1) | 691 |
+| Martinez @martinez2013 | NCT01054885 | 1224 |
+| Ohar @ohar2014 | NCT01110200 | 639 |
+| RISE @ferguson2017 | NCT02157935 | 1219 |
+| Sharafkhaneh @sharafkhaneh2012 | NCT00419744 | 1219 |
+| Siler @siler2017 | NCT02105974 | 1622 |
+| SUMIRE @fukuchi2013 | NCT01069289 | 1293 |
+| SUMMIT @vestbo2022 | NCT01313676 | 16590 |
+| SUNSET @chapman2018 | NCT02603393 | 1053 |
+| TORCH @calverley2007 | NCT00268216 | 6112 |
+| TRIBUTE @papi2018 | NCT02579850 | 1532 |
+| TRISTAN @calverley2003 |   | 1465 |
+| WISDOM @magnussen2014 | NCT00975195 | 2488 |
+
+### References
+
+::: {#refs}
+:::

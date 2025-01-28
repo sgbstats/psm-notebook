@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>About – Seb’s Notebook</title>
+<title>Submodels – Seb’s Notebook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -114,9 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
-      Seb's Notebook
-      </li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./rcode.html">R Code</a></li><li class="breadcrumb-item"><a href="./submodels.html">Submodels</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -164,7 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./submodels.html" class="sidebar-item-text sidebar-link">
+  <a href="./submodels.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Submodels</span></a>
   </div>
 </li>
@@ -181,15 +179,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#submodels-function" id="toc-submodels-function" class="nav-link active" data-scroll-target="#submodels-function"><em>Submodels function</em></a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./rcode.html">R Code</a></li><li class="breadcrumb-item"><a href="./submodels.html">Submodels</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">About</h1>
+<h1 class="title">Submodels</h1>
 </div>
 
 
@@ -206,15 +210,123 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>About this site</p>
+<section id="submodels-function" class="level1">
+<h1><em>Submodels function</em></h1>
+<p><em>This is the main function in the submodels family.</em></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Hmisc)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mi)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doSNOW)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pROC)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">%notin%</span><span class="st">`</span><span class="ot">=</span><span class="fu">Negate</span>(<span class="st">`</span><span class="at">%in%</span><span class="st">`</span>) <span class="co">#I think that you can do !x %in% y and one day I will start doing that</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<ul>
+<li><em>To do: work out what libraries can be deleted</em></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>submodels<span class="ot">&lt;-</span> <span class="cf">function</span>(DATA, model, model_fn,<span class="at">submodel_type=</span><span class="fu">c</span>(<span class="st">"pmks"</span>, <span class="st">"ccsm"</span>), <span class="at">force_variables=</span><span class="fu">c</span>(),<span class="at">remove_model_data=</span><span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"y"</span>, <span class="st">"fitted"</span>), ...){</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#DATA=the training data</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#model = the model as a string</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#model_fn= the function for the model being used</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#force_varaibles = Any variables that you want to force into the model</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove_subject_data is to remve the ipd from the model</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  submodel_type<span class="ot">=</span><span class="fu">match.arg</span>(submodel_type)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  mod.DATA<span class="ot">&lt;-</span> <span class="fu">get_all_vars</span>(<span class="fu">as.formula</span>(model), <span class="at">data=</span>DATA) <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>(,<span class="dv">1</span>) <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>(<span class="fu">all_of</span>(force_variables))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  SDATA<span class="ot">&lt;-</span> mod.DATA[,<span class="sc">-</span><span class="dv">1</span>] <span class="co">#remove the outcome </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  var_names<span class="ot">=</span><span class="fu">names</span>(SDATA)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unpack</span>(<span class="fu">missingness_pattern</span>(SDATA))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># tmp.dat      &lt;- as.data.frame(is.na(SDATA)*1)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># tmp.pattern  &lt;- factor(apply(tmp.dat,1,function(z) paste(z,collapse="")))</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># tmp.info     &lt;- split(seq(nrow(SDATA)), tmp.pattern)</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mp.levels    &lt;- levels(tmp.pattern)</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mp.pattern   &lt;- do.call(rbind, lapply(as.list(mp.levels),function(ZZ) strsplit(ZZ,'')[[1]]))        </span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mp.info     &lt;- data.frame(cbind(names(tmp.info), unlist(lapply(tmp.info, length))),</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                           stringsAsFactors= FALSE)</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># rownames(mp.info) &lt;- seq(nrow(mp.info))</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># colnames(mp.info) &lt;- c('mp','n')</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  all.patterns0<span class="ot">=</span><span class="fu">expand.grid</span>(<span class="fu">rep</span>(<span class="fu">list</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>),<span class="fu">ncol</span>(SDATA)))</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(all.patterns0)<span class="ot">=</span>var_names</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="co">#stops the computing of models that would have dropped the force variables.</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  remove<span class="ot">=</span><span class="fu">intersect</span>(var_names, force_variables)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  all.patterns1<span class="ot">=</span>all.patterns0[<span class="fu">rowSums</span>(<span class="fu">as.matrix</span>(all.patterns0[,remove]<span class="sc">==</span><span class="dv">1</span>))<span class="sc">==</span><span class="dv">0</span>,]</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  all.patterns <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">apply</span>(all.patterns1,<span class="dv">1</span>,<span class="cf">function</span>(z) <span class="fu">paste</span>(z,<span class="at">collapse=</span><span class="st">""</span>)))</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  obs.patterns <span class="ot">&lt;-</span> <span class="fu">unique</span>(tmp.pattern)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(<span class="fu">setdiff</span>(all.patterns,obs.patterns)) <span class="sc">==</span> <span class="dv">0</span>){</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    empty.patterns <span class="ot">=</span> <span class="cn">NULL</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    empty.patterns <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mp =</span> <span class="fu">factor</span>(<span class="fu">setdiff</span>(all.patterns,obs.patterns)), <span class="at">n=</span><span class="dv">0</span>)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  } </span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  mp.info <span class="ot">&lt;-</span> <span class="fu">rbind</span>(mp.info,empty.patterns)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unpack</span>(<span class="fu">model_breakdown</span>(model))</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  cc <span class="ot">&lt;-</span> <span class="fu">ncol</span>(<span class="fu">model.matrix</span>(<span class="fu">as.formula</span>(model),mod.DATA))</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  threshold <span class="ot">&lt;-</span> cc<span class="sc">*</span><span class="dv">2</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>  mp.info<span class="sc">$</span>use.ptmx <span class="ot">&lt;-</span> (<span class="fu">as.numeric</span>(mp.info<span class="sc">$</span>n)<span class="sc">&gt;=</span>threshold)<span class="sc">*</span><span class="dv">1</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>  reg.out <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">'list'</span>, <span class="fu">length</span>(all.patterns))</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(reg.out) <span class="ot">&lt;-</span> mp.info<span class="sc">$</span>mp.info</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(ixx <span class="cf">in</span> <span class="fu">seq</span>(<span class="fu">nrow</span>(mp.info))) {</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    col.keep  <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">strsplit</span>(mp.info<span class="sc">$</span>mp[ixx],<span class="st">''</span>)[[<span class="dv">1</span>]]<span class="sc">==</span><span class="st">'0'</span>)</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">length</span>(col.keep)<span class="sc">==</span><span class="dv">0</span>){</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>      new.mod <span class="ot">&lt;-</span> <span class="fu">paste</span>(mod.lhs,<span class="dv">1</span>,<span class="at">sep=</span><span class="st">'~'</span>)</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>      new.mod   <span class="ot">&lt;-</span> <span class="fu">paste</span>(mod.lhs,<span class="fu">paste</span>(mod.rhs[col.keep],<span class="at">collapse=</span><span class="st">'+'</span>),</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sep=</span><span class="st">'~'</span>)</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>    <span class="co">#adding in the interaction term</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">length</span>(mod.rhs.interaction<span class="sc">&gt;</span><span class="dv">0</span>)){</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(mod.rhs.interaction))</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>        new.mod<span class="ot">=</span><span class="fu">gsub</span>(<span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">*"</span>,<span class="st">"</span><span class="sc">\\\\</span><span class="st">+"</span>,mod.rhs.interaction[i]), mod.rhs.interaction[i], new.mod)</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    new.mod<span class="ot">=</span><span class="fu">as.formula</span>(new.mod)</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(class(DATA$eos_bl))</span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(mp.info<span class="sc">$</span>use.ptmx[ixx]<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>submodel_type<span class="sc">==</span><span class="st">"pkms"</span>){</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>      reg.out[[ixx]] <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">pattern =</span> mod.rhs[col.keep],</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>                             <span class="at">mod =</span> <span class="fu">model_fn</span>(<span class="at">formula=</span>new.mod,<span class="at">data=</span>mod.DATA[tmp.info[[ixx]],]))</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>      reg.out[[ixx]] <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">pattern =</span> mod.rhs[col.keep],</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>                             <span class="at">mod     =</span> <span class="fu">model_fn</span>(<span class="at">formula=</span>new.mod,<span class="at">data=</span>mod.DATA))</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> remove_model_data){</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>      reg.out[[ixx]][[<span class="st">"mod"</span>]][[i]]<span class="ot">=</span><span class="cn">NULL</span></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"model"</span>]]<span class="ot">=</span>model</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"vars"</span>]]<span class="ot">=</span>var_names</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"force_variables"</span>]]<span class="ot">=</span>force_variables</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"mp.info"</span>]]<span class="ot">=</span>mp.info</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"all.patterns"</span>]]<span class="ot">=</span>all.patterns</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"submodel_type"</span>]]<span class="ot">=</span>submodel_type</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(reg.out)</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

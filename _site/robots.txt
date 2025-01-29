@@ -1,1 +1,1 @@
-Sitemap: https://sgbstats.github.io/psm-notebook/sitemap.xml
+Sitemap: https://notebook.sebbate.uk/sitemap.xml

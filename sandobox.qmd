@@ -17,3 +17,17 @@ z %>% filter(u %in% x)
 
 z %>% filter(!u %in% x)
 ```
+
+
+```         
+{{< include R/test.R >}}
+```
+
+```{r}
+#| echo: true
+source("R/test.R")
+```
+
+```{r,file = "R/test.R", echo=TRUE}
+
+```

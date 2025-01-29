@@ -6,17 +6,17 @@ title: "Submodels"
 
 *This is the main function in the submodels family.*
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\submodels.R", echo=TRUE, message=FALSE}
+```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\submodels.R", echo=TRUE, message=FALSE, warning=FALSE}
 ```
 
 # predict.submodels
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\predict_submodels.R", echo=TRUE, message=FALSE}
+```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\predict_submodels.R", echo=TRUE, message=FALSE, warning=FALSE}
 ```
 
 # print.submodels
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\print_submodels.R", echo=TRUE, message=FALSE}
+```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\print_submodels.R", echo=TRUE, message=FALSE, warning=FALSE}
 
 
 ```

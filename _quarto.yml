@@ -14,15 +14,21 @@ website:
       - section: "R Code"
         href: rcode.qmd
         contents: 
-          - submodels.qmd
+          - text: "Submodels"
+            href: submodels.qmd
+          - text: "Helper Functions"
+            href:  helper_functions.qmd
       - text: "To-do list"
         href: todolist.qmd
             
-          
 
+  
 format:
   html:
-    theme: cosmo
+    theme: 
+      dark: darkly
+      light: darkly
+    highlight-style: .theme/custom.theme
     css: styles.css
     toc: true
 

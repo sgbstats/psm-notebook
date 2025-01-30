@@ -1,0 +1,13 @@
+---
+title: "Helper functions"
+---
+
+# print.submodels
+
+```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\print_submodels.R", echo=TRUE, message=FALSE, warning=FALSE}
+
+
+```
+
+```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\auc_boot.R", echo=TRUE, message=FALSE, warning=FALSE}
+```

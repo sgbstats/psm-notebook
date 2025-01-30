@@ -6,17 +6,29 @@ title: "Submodels"
 
 *This is the main function in the submodels family.*
 
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
 ```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\submodels.R", echo=TRUE, message=FALSE, warning=FALSE}
 ```
+
+### Basic premise of the function
+
+1.  Housekeeping and sanitizing inputs
+
+2.  Getting the missingness patterns (see [Helper functions](helper_functions.qmd))
+
+3.  Stops the computing of models that would have dropped the force variables.
+
+4.  Set the threshold (uses the number of variables in the model)
 
 # predict.submodels
 
 ```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\predict_submodels.R", echo=TRUE, message=FALSE, warning=FALSE}
 ```
 
-# print.submodels
+# auc
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\print_submodels.R", echo=TRUE, message=FALSE, warning=FALSE}
-
-
+```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\auc.R", echo=TRUE, message=FALSE, warning=FALSE}
 ```

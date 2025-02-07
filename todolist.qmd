@@ -1,9 +1,10 @@
-```         
 ---
 title: "Random to do list"
 ---
-```
+
 
 -   Remove the `%notin%` from all of my code
--   Check the pneumonia starts within exacs
--   
+
+-   Splines in the models
+
+-   Random forests

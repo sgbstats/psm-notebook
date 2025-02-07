@@ -11,6 +11,8 @@ website:
         href: index.qmd
       - text: "Studies"
         href: studies.qmd
+      - text: "Examples studies"
+        hraf: example_studies.qmd
       - section: "R Code"
         href: rcode.qmd
         contents: 
@@ -18,6 +20,8 @@ website:
             href: submodels.qmd
           - text: "Helper Functions"
             href:  helper_functions.qmd
+      - text: "Randon Forests"
+        href: rf.qmd
       - text: "To-do list"
         href: todolist.qmd
             

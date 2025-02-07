@@ -1,0 +1,19 @@
+---
+title: "Splines"
+bibliography: PSM.bib
+---
+
+-   Splines give the opportunity to model non-linear interactions
+
+-   So far have tested with 2 knots on Impact and Dransfield 2 (biggest studies with eos)
+
+-   used aov with a linear interaction and a spline term to see if there was a benefit to using splines over linear interaction
+
+-   Riley ch7 p191 @riley2021
+
+-   Sugggests using mv meta
+
+### References
+
+::: {#refs}
+:::

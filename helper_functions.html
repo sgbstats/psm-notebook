@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Seb Bate">
 
-<title>PSM Notebook – Seb’s Notebook</title>
+<title>Helper functions – Seb’s Notebook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,26 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
 }
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -102,7 +116,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Home</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./rcode.html">R Code</a></li><li class="breadcrumb-item"><a href="./helper_functions.html">Helper Functions</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -132,7 +146,7 @@ div.csl-indent {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
@@ -162,7 +176,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./helper_functions.html" class="sidebar-item-text sidebar-link">
+  <a href="./helper_functions.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Helper Functions</span></a>
   </div>
 </li>
@@ -190,40 +204,27 @@ div.csl-indent {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#pattern-submodels" id="toc-pattern-submodels" class="nav-link active" data-scroll-target="#pattern-submodels">Pattern Submodels</a>
-  <ul class="collapse">
-  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
-  <li><a href="#rationale" id="toc-rationale" class="nav-link" data-scroll-target="#rationale">Rationale</a></li>
-  <li><a href="#studies" id="toc-studies" class="nav-link" data-scroll-target="#studies">Studies</a></li>
-  <li><a href="#how-do-pattern-submodels-work" id="toc-how-do-pattern-submodels-work" class="nav-link" data-scroll-target="#how-do-pattern-submodels-work">How do pattern submodels work?</a></li>
-  <li><a href="#what-are-the-current-concerns" id="toc-what-are-the-current-concerns" class="nav-link" data-scroll-target="#what-are-the-current-concerns">What are the current concerns?</a>
-  <ul class="collapse">
-  <li><a href="#to-do-list" id="toc-to-do-list" class="nav-link" data-scroll-target="#to-do-list">To do list</a></li>
-  <li><a href="#one-day" id="toc-one-day" class="nav-link" data-scroll-target="#one-day">One day</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
-  </ul></li>
-  </ul></li>
+  <li><a href="#missingness_pattern" id="toc-missingness_pattern" class="nav-link active" data-scroll-target="#missingness_pattern">missingness_pattern</a></li>
+  <li><a href="#remove_missing_vars" id="toc-remove_missing_vars" class="nav-link" data-scroll-target="#remove_missing_vars">remove_missing_vars</a></li>
+  <li><a href="#print.submodels" id="toc-print.submodels" class="nav-link" data-scroll-target="#print.submodels">print.submodels</a></li>
+  <li><a href="#auc_boot" id="toc-auc_boot" class="nav-link" data-scroll-target="#auc_boot">auc_boot</a></li>
+  <li><a href="#model_breakdown" id="toc-model_breakdown" class="nav-link" data-scroll-target="#model_breakdown">model_breakdown</a></li>
+  <li><a href="#unpack" id="toc-unpack" class="nav-link" data-scroll-target="#unpack">unpack</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./rcode.html">R Code</a></li><li class="breadcrumb-item"><a href="./helper_functions.html">Helper Functions</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">PSM Notebook</h1>
+<h1 class="title">Helper functions</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Seb Bate </p>
-          </div>
-  </div>
     
   
     
@@ -234,73 +235,136 @@ div.csl-indent {
 </header>
 
 
-<section id="pattern-submodels" class="level1">
-<h1>Pattern Submodels</h1>
-<p>This is my notebook for all things pattern submodels.</p>
-<p>PSM is an under developed method of creating an ensemble of models, one for each of the missing data patterns<span class="citation" data-cites="fletcher_mercaldo_missing_2020"><sup><a href="#ref-fletcher_mercaldo_missing_2020" role="doc-biblioref">1</a></sup></span>.</p>
-<section id="background" class="level2">
-<h2 class="anchored" data-anchor-id="background">Background</h2>
-<p>In most clinical prediction models, missing data is either ignored or mean imputed<span class="citation" data-cites="nijman_missing_2022"><sup><a href="#ref-nijman_missing_2022" role="doc-biblioref">2</a></sup></span> <span class="citation" data-cites="tsvetanova_missing_2021"><sup><a href="#ref-tsvetanova_missing_2021" role="doc-biblioref">3</a></sup></span></p>
-<p>Using complete-case analysis is only valid when the data is MCAR<span class="citation" data-cites="rubin1976"><sup><a href="#ref-rubin1976" role="doc-biblioref">4</a></sup></span> <span class="citation" data-cites="little2019"><sup><a href="#ref-little2019" role="doc-biblioref">5</a></sup></span>. This leads to the problem of trying to create a CPM when the data is most likely MAR.</p>
-</section>
-<section id="rationale" class="level2">
-<h2 class="anchored" data-anchor-id="rationale">Rationale</h2>
-<p>The aim is for their to be a prediction model that can be used in general practice and not all parameters are available at all times, especially blood tests. In Bate’s review<span class="citation" data-cites="bate2024"><sup><a href="#ref-bate2024" role="doc-biblioref">6</a></sup></span>, it is noted that several covid prediction models use parameters that are not always available and this means that more often than not, the model can’t be used (the review that was in the context of ICU and set in a University Hospital).</p>
-</section>
-<section id="studies" class="level2">
-<h2 class="anchored" data-anchor-id="studies">Studies</h2>
-<p>In ICS-Recode, clinical data is taken from across studies, with various degrees of missingness. Given that all of the data that is included in the development data are from clinical trials, there data is on the whole very complete. See <a href="./studies.html">studies list</a></p>
-</section>
-<section id="how-do-pattern-submodels-work" class="level2">
-<h2 class="anchored" data-anchor-id="how-do-pattern-submodels-work">How do pattern submodels work?</h2>
-<p>Within a models there are 2^p missingness patterns, every combination of missing and not. Obviously not all patterns are present within the data. For each pattern of data, a model is fitted using only the data that has that pattern (apart from when there are insufficient data when a complete case models).</p>
-<p>Currently it is believed that the psm can handle MAR data because the pattern can take in information from the missingness.</p>
-<p>The benefit of these models is that in the wild, there may be reasonable and sensible amounts of missing data and it is useful for the model to be able to handle these users with incomplete data without having to revert to mean/mode imputation.</p>
-</section>
-<section id="what-are-the-current-concerns" class="level2">
-<h2 class="anchored" data-anchor-id="what-are-the-current-concerns">What are the current concerns?</h2>
-<ul>
-<li>Regularisation/shrinkage is a major concern</li>
-</ul>
-<section id="to-do-list" class="level3">
-<h3 class="anchored" data-anchor-id="to-do-list">To do list</h3>
-<ul>
-<li><p>Document all of the code so far</p></li>
-<li><p>Discuss issues with model selection and shrinkage</p></li>
-</ul>
-</section>
-<section id="one-day" class="level3">
-<h3 class="anchored" data-anchor-id="one-day">One day</h3>
-<ul>
-<li>I will make this into a proper R package</li>
-</ul>
-</section>
-<section id="references" class="level3">
-<h3 class="anchored" data-anchor-id="references">References</h3>
-<div id="refs" class="references csl-bib-body" role="list">
-<div id="ref-fletcher_mercaldo_missing_2020" class="csl-entry" role="listitem">
-<div class="csl-left-margin">1. </div><div class="csl-right-inline">Fletcher Mercaldo S, Blume JD. Missing data and prediction: The pattern submodel. <em>Biostatistics</em>. 2020;21(2):236-252. doi:<a href="https://doi.org/10.1093/biostatistics/kxy040">10.1093/biostatistics/kxy040</a></div>
+<section id="missingness_pattern" class="level1">
+<h1>missingness_pattern</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>missingness_pattern<span class="ot">=</span><span class="cf">function</span>(SDATA){</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  tmp.dat      <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">is.na</span>(SDATA)<span class="sc">*</span><span class="dv">1</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  tmp.pattern  <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">apply</span>(tmp.dat,<span class="dv">1</span>,<span class="cf">function</span>(z) <span class="fu">paste</span>(z,<span class="at">collapse=</span><span class="st">""</span>)))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  tmp.info     <span class="ot">&lt;-</span> <span class="fu">split</span>(<span class="fu">seq</span>(<span class="fu">nrow</span>(SDATA)), tmp.pattern)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  mp.levels    <span class="ot">&lt;-</span> <span class="fu">levels</span>(tmp.pattern)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  mp.pattern   <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">as.list</span>(mp.levels),<span class="cf">function</span>(ZZ) <span class="fu">strsplit</span>(ZZ,<span class="st">''</span>)[[<span class="dv">1</span>]]))      </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  mp.info     <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">cbind</span>(<span class="fu">names</span>(tmp.info), <span class="fu">unlist</span>(<span class="fu">lapply</span>(tmp.info, length))),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">stringsAsFactors=</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(mp.info) <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">nrow</span>(mp.info))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(mp.info) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'mp'</span>,<span class="st">'n'</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="st">"tmp.dat"</span><span class="ot">=</span>tmp.dat, <span class="st">"tmp.pattern"</span><span class="ot">=</span>tmp.pattern, <span class="st">"tmp.info"</span><span class="ot">=</span>tmp.info, <span class="st">"mp.levels"</span><span class="ot">=</span>mp.levels, <span class="st">"mp.pattern"</span><span class="ot">=</span>mp.pattern, <span class="st">"mp.info"</span><span class="ot">=</span>mp.info))</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="ref-nijman_missing_2022" class="csl-entry" role="listitem">
-<div class="csl-left-margin">2. </div><div class="csl-right-inline">Nijman S, Leeuwenberg A, Beekers I, et al. Missing data is poorly handled and reported in prediction model studies using machine learning: A literature review. <em>Journal of Clinical Epidemiology</em>. 2022;142:218-229. doi:<a href="https://doi.org/10.1016/j.jclinepi.2021.11.023">10.1016/j.jclinepi.2021.11.023</a></div>
+</section>
+<section id="remove_missing_vars" class="level1">
+<h1>remove_missing_vars</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>remove_missing_vars<span class="ot">=</span><span class="cf">function</span>(model,cols, vars_to_keep){</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  model<span class="ot">=</span><span class="fu">as.formula</span>(model) <span class="co">#coerces the model formula into a formula class object</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unpack</span>(<span class="fu">model_breakdown</span>(model))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  filter_partial_matches<span class="ot">=</span><span class="cf">function</span>(vec1, vec2){</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    vec2[<span class="fu">sapply</span>(vec2, <span class="cf">function</span>(x) <span class="fu">any</span>(<span class="fu">grepl</span>(<span class="fu">paste</span>(vec1, <span class="at">collapse =</span> <span class="st">"|"</span>), x)))]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  new.mod0<span class="ot">=</span><span class="fu">filter_partial_matches</span>(vars_to_keep, mod.rhs)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  new.mod<span class="ot">=</span><span class="fu">paste</span>(mod.lhs,<span class="fu">paste</span>(new.mod0,<span class="at">collapse=</span><span class="st">'+'</span>),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">sep=</span><span class="st">'~'</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(mod.rhs.interaction)<span class="sc">&gt;</span><span class="dv">0</span>){</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(mod.rhs.interaction))</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      new.mod<span class="ot">=</span><span class="fu">gsub</span>(<span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">*"</span>,<span class="st">"</span><span class="sc">\\\\</span><span class="st">+"</span>,mod.rhs.interaction[i]),mod.rhs.interaction[i],  new.mod)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">as.formula</span>(new.mod))</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="ref-tsvetanova_missing_2021" class="csl-entry" role="listitem">
-<div class="csl-left-margin">3. </div><div class="csl-right-inline">Tsvetanova A, Sperrin M, Peek N, Buchan I, Hyland S, Martin GP. Missing data was handled inconsistently in <span>UK</span> prediction models: A review of method used. <em>Journal of Clinical Epidemiology</em>. 2021;140:149-158. doi:<a href="https://doi.org/10.1016/j.jclinepi.2021.09.008">10.1016/j.jclinepi.2021.09.008</a></div>
+</section>
+<section id="print.submodels" class="level1">
+<h1>print.submodels</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>submodel.print<span class="ot">=</span><span class="cf">function</span>(submodels.object, <span class="at">long_wide=</span><span class="fu">c</span>(<span class="st">"long"</span>, <span class="st">"wide"</span>)){</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  out<span class="ot">=</span><span class="fu">list</span>()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  f <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">x =</span><span class="fu">c</span>(<span class="st">"long"</span>, <span class="st">"wide"</span>)) {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">match.arg</span>(x)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(x)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  out[[<span class="st">"meta"</span>]]<span class="ot">=</span>submodels.object[[<span class="st">"meta"</span>]]</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  coefficients<span class="ot">=</span><span class="fu">tribble</span>(<span class="sc">~</span><span class="st">"pattern"</span>,<span class="sc">~</span><span class="st">"formula"</span>,<span class="sc">~</span><span class="st">"var"</span>, <span class="sc">~</span><span class="st">"coef"</span> )</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(<span class="fu">length</span>(submodels.object)<span class="sc">-</span><span class="dv">1</span>)){</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># cat(paste(i, "\n"))</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    coefficients1<span class="ot">=</span><span class="fu">data.frame</span>(<span class="st">"pattern"</span><span class="ot">=</span>submodels.object[[<span class="st">"meta"</span>]][[<span class="st">"all.patterns"</span>]][i],</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"formula"</span><span class="ot">=</span>(submodels.object[[i]][[<span class="st">"mod"</span>]][[<span class="st">"terms"</span>]] <span class="sc">%&gt;%</span> <span class="fu">as.character</span>())[<span class="dv">3</span>],</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"var"</span><span class="ot">=</span><span class="fu">names</span>(submodels.object[[i]][[<span class="st">"mod"</span>]][[<span class="st">"coefficients"</span>]]),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"coef"</span><span class="ot">=</span>submodels.object[[i]][[<span class="st">"mod"</span>]][[<span class="st">"coefficients"</span>]])</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">row.names</span>(coefficients1)<span class="ot">=</span><span class="cn">NULL</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    coefficients<span class="ot">=</span><span class="fu">rbind</span>(coefficients, coefficients1)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  long_wide<span class="ot">=</span><span class="fu">f</span>(long_wide)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(long_wide<span class="sc">==</span><span class="st">"long"</span>){</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    out[[<span class="st">"coefficients"</span>]]<span class="ot">=</span>coefficients</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(long_wide<span class="sc">==</span><span class="st">"wide"</span>){</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    out[[<span class="st">"coefficients"</span>]]<span class="ot">=</span>coefficients <span class="sc">%&gt;%</span> <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"var"</span>, <span class="at">values_from=</span><span class="st">"coef"</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="ref-rubin1976" class="csl-entry" role="listitem">
-<div class="csl-left-margin">4. </div><div class="csl-right-inline">Rubin DB. Inference and missing data. <em>Biometrika</em>. 1976;63(3):581-592. doi:<a href="https://doi.org/10.1093/biomet/63.3.581">10.1093/biomet/63.3.581</a></div>
+</section>
+<section id="auc_boot" class="level1">
+<h1>auc_boot</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>auc_boot<span class="ot">=</span><span class="cf">function</span>(data, indices, actual, predicted)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  d<span class="ot">=</span>data[indices,]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">auc</span>(d, actual,predicted, <span class="at">boot=</span>F))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="ref-little2019" class="csl-entry" role="listitem">
-<div class="csl-left-margin">5. </div><div class="csl-right-inline">Little RJA, Rubin DB. <em>Statistical Analysis with Missing Data</em>. John Wiley &amp; Sons; 2019.</div>
+</section>
+<section id="model_breakdown" class="level1">
+<h1>model_breakdown</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model_breakdown<span class="ot">=</span><span class="cf">function</span>(model){</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  model<span class="ot">=</span><span class="fu">as.character</span>(model)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  mod.lhs <span class="ot">&lt;-</span> model[<span class="dv">2</span>]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  mod.rhs0 <span class="ot">&lt;-</span> model[<span class="dv">3</span>]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  mod.rhs.interaction0 <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(mod.rhs0,<span class="st">'</span><span class="sc">\\</span><span class="st">+'</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  mod.rhs <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(mod.rhs0,<span class="st">'</span><span class="sc">\\</span><span class="st">+|</span><span class="sc">\\</span><span class="st">*|</span><span class="sc">\\</span><span class="st">:'</span>)[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> <span class="fu">str_squish</span>()</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  mod.rhs <span class="ot">&lt;-</span> <span class="fu">str_squish</span>(mod.rhs[<span class="sc">!</span>(mod.rhs<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">''</span>,<span class="st">'+'</span>,<span class="st">'~'</span>))])</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#getting the interaction terms</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  mod.rhs.interaction0<span class="ot">=</span>mod.rhs.interaction0[<span class="fu">which</span>(<span class="fu">grepl</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">*|</span><span class="sc">\\</span><span class="st">:"</span>, mod.rhs.interaction0))]<span class="sc">%&gt;%</span> <span class="fu">str_squish</span>()</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  mod.rhs.interaction2<span class="ot">=</span><span class="fu">str_split</span>(mod.rhs.interaction0, <span class="st">"</span><span class="sc">\\</span><span class="st">*|</span><span class="sc">\\</span><span class="st">:"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  mod.rhs.interaction<span class="ot">=</span><span class="fu">c</span>()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(mod.rhs.interaction2)<span class="sc">&gt;</span><span class="dv">0</span>){</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(mod.rhs.interaction2)){</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">length</span>(mod.rhs.interaction2[[j]])<span class="sc">:</span><span class="dv">2</span>){</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        mod.rhs.interaction3<span class="ot">=</span><span class="fu">t</span>(<span class="fu">combn</span>(mod.rhs.interaction2[[j]],i)) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        mod.rhs.interaction4 <span class="ot">&lt;-</span> <span class="fu">apply</span>( mod.rhs.interaction3 , <span class="dv">1</span> , paste , <span class="at">collapse =</span> <span class="st">"*"</span> )</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        mod.rhs.interaction<span class="ot">=</span><span class="fu">c</span>(mod.rhs.interaction, mod.rhs.interaction4)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="st">"mod.rhs"</span><span class="ot">=</span>mod.rhs,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>              <span class="st">"mod.lhs"</span><span class="ot">=</span>mod.lhs,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>              <span class="st">"mod.rhs.interaction"</span><span class="ot">=</span><span class="fu">str_replace_all</span>(mod.rhs.interaction, <span class="at">pattern =</span> <span class="st">" "</span>, <span class="at">repl=</span><span class="st">""</span>),</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>              <span class="st">"mod.rhs.raw"</span><span class="ot">=</span>mod.rhs0))</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="ref-bate2024" class="csl-entry" role="listitem">
-<div class="csl-left-margin">6. </div><div class="csl-right-inline">Bate S, Stokes V, Greenlee H, et al. External validation of prognostic models in critical care: A cautionary tale from COVID-19 pneumonitis. <em>Critical Care Explorations</em>. 2024;6(4):e1067. doi:<a href="https://doi.org/10.1097/CCE.0000000000001067">10.1097/CCE.0000000000001067</a></div>
-</div>
+</section>
+<section id="unpack" class="level1">
+<h1>unpack</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>unpack<span class="ot">=</span><span class="cf">function</span>(list, <span class="at">envir=</span> <span class="fu">parent.frame</span>())</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">names</span>(list))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">assign</span>(i, list[[i]], <span class="at">envir =</span>envir)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
-</section>
-</section>
 </section>
 
 </main> <!-- /main -->

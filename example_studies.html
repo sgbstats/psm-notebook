@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Seb Bate">
 
-<title>PSM Notebook – Seb’s Notebook</title>
+<title>Example studies – Seb’s Notebook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,26 +20,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -102,7 +82,9 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Home</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
+      Seb's Notebook
+      </li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -132,7 +114,7 @@ div.csl-indent {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
@@ -185,45 +167,21 @@ div.csl-indent {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#pattern-submodels" id="toc-pattern-submodels" class="nav-link active" data-scroll-target="#pattern-submodels">Pattern Submodels</a>
-  <ul class="collapse">
-  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
-  <li><a href="#rationale" id="toc-rationale" class="nav-link" data-scroll-target="#rationale">Rationale</a></li>
-  <li><a href="#studies" id="toc-studies" class="nav-link" data-scroll-target="#studies">Studies</a></li>
-  <li><a href="#how-do-pattern-submodels-work" id="toc-how-do-pattern-submodels-work" class="nav-link" data-scroll-target="#how-do-pattern-submodels-work">How do pattern submodels work?</a></li>
-  <li><a href="#what-are-the-current-concerns" id="toc-what-are-the-current-concerns" class="nav-link" data-scroll-target="#what-are-the-current-concerns">What are the current concerns?</a>
-  <ul class="collapse">
-  <li><a href="#to-do-list" id="toc-to-do-list" class="nav-link" data-scroll-target="#to-do-list">To do list</a></li>
-  <li><a href="#one-day" id="toc-one-day" class="nav-link" data-scroll-target="#one-day">One day</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
-  </ul></li>
-  </ul></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">PSM Notebook</h1>
+<h1 class="title">Example studies</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Seb Bate </p>
-          </div>
-  </div>
     
   
     
@@ -234,74 +192,10 @@ div.csl-indent {
 </header>
 
 
-<section id="pattern-submodels" class="level1">
-<h1>Pattern Submodels</h1>
-<p>This is my notebook for all things pattern submodels.</p>
-<p>PSM is an under developed method of creating an ensemble of models, one for each of the missing data patterns<span class="citation" data-cites="fletcher_mercaldo_missing_2020"><sup><a href="#ref-fletcher_mercaldo_missing_2020" role="doc-biblioref">1</a></sup></span>.</p>
-<section id="background" class="level2">
-<h2 class="anchored" data-anchor-id="background">Background</h2>
-<p>In most clinical prediction models, missing data is either ignored or mean imputed<span class="citation" data-cites="nijman_missing_2022"><sup><a href="#ref-nijman_missing_2022" role="doc-biblioref">2</a></sup></span> <span class="citation" data-cites="tsvetanova_missing_2021"><sup><a href="#ref-tsvetanova_missing_2021" role="doc-biblioref">3</a></sup></span></p>
-<p>Using complete-case analysis is only valid when the data is MCAR<span class="citation" data-cites="rubin1976"><sup><a href="#ref-rubin1976" role="doc-biblioref">4</a></sup></span> <span class="citation" data-cites="little2019"><sup><a href="#ref-little2019" role="doc-biblioref">5</a></sup></span>. This leads to the problem of trying to create a CPM when the data is most likely MAR.</p>
-</section>
-<section id="rationale" class="level2">
-<h2 class="anchored" data-anchor-id="rationale">Rationale</h2>
-<p>The aim is for their to be a prediction model that can be used in general practice and not all parameters are available at all times, especially blood tests. In Bate’s review<span class="citation" data-cites="bate2024"><sup><a href="#ref-bate2024" role="doc-biblioref">6</a></sup></span>, it is noted that several covid prediction models use parameters that are not always available and this means that more often than not, the model can’t be used (the review that was in the context of ICU and set in a University Hospital).</p>
-</section>
-<section id="studies" class="level2">
-<h2 class="anchored" data-anchor-id="studies">Studies</h2>
-<p>In ICS-Recode, clinical data is taken from across studies, with various degrees of missingness. Given that all of the data that is included in the development data are from clinical trials, there data is on the whole very complete. See <a href="./studies.html">studies list</a></p>
-</section>
-<section id="how-do-pattern-submodels-work" class="level2">
-<h2 class="anchored" data-anchor-id="how-do-pattern-submodels-work">How do pattern submodels work?</h2>
-<p>Within a models there are 2^p missingness patterns, every combination of missing and not. Obviously not all patterns are present within the data. For each pattern of data, a model is fitted using only the data that has that pattern (apart from when there are insufficient data when a complete case models).</p>
-<p>Currently it is believed that the psm can handle MAR data because the pattern can take in information from the missingness.</p>
-<p>The benefit of these models is that in the wild, there may be reasonable and sensible amounts of missing data and it is useful for the model to be able to handle these users with incomplete data without having to revert to mean/mode imputation.</p>
-</section>
-<section id="what-are-the-current-concerns" class="level2">
-<h2 class="anchored" data-anchor-id="what-are-the-current-concerns">What are the current concerns?</h2>
-<ul>
-<li>Regularisation/shrinkage is a major concern</li>
-</ul>
-<section id="to-do-list" class="level3">
-<h3 class="anchored" data-anchor-id="to-do-list">To do list</h3>
-<ul>
-<li><p>Document all of the code so far</p></li>
-<li><p>Discuss issues with model selection and shrinkage</p></li>
-</ul>
-</section>
-<section id="one-day" class="level3">
-<h3 class="anchored" data-anchor-id="one-day">One day</h3>
-<ul>
-<li>I will make this into a proper R package</li>
-</ul>
-</section>
-<section id="references" class="level3">
-<h3 class="anchored" data-anchor-id="references">References</h3>
-<div id="refs" class="references csl-bib-body" role="list">
-<div id="ref-fletcher_mercaldo_missing_2020" class="csl-entry" role="listitem">
-<div class="csl-left-margin">1. </div><div class="csl-right-inline">Fletcher Mercaldo S, Blume JD. Missing data and prediction: The pattern submodel. <em>Biostatistics</em>. 2020;21(2):236-252. doi:<a href="https://doi.org/10.1093/biostatistics/kxy040">10.1093/biostatistics/kxy040</a></div>
-</div>
-<div id="ref-nijman_missing_2022" class="csl-entry" role="listitem">
-<div class="csl-left-margin">2. </div><div class="csl-right-inline">Nijman S, Leeuwenberg A, Beekers I, et al. Missing data is poorly handled and reported in prediction model studies using machine learning: A literature review. <em>Journal of Clinical Epidemiology</em>. 2022;142:218-229. doi:<a href="https://doi.org/10.1016/j.jclinepi.2021.11.023">10.1016/j.jclinepi.2021.11.023</a></div>
-</div>
-<div id="ref-tsvetanova_missing_2021" class="csl-entry" role="listitem">
-<div class="csl-left-margin">3. </div><div class="csl-right-inline">Tsvetanova A, Sperrin M, Peek N, Buchan I, Hyland S, Martin GP. Missing data was handled inconsistently in <span>UK</span> prediction models: A review of method used. <em>Journal of Clinical Epidemiology</em>. 2021;140:149-158. doi:<a href="https://doi.org/10.1016/j.jclinepi.2021.09.008">10.1016/j.jclinepi.2021.09.008</a></div>
-</div>
-<div id="ref-rubin1976" class="csl-entry" role="listitem">
-<div class="csl-left-margin">4. </div><div class="csl-right-inline">Rubin DB. Inference and missing data. <em>Biometrika</em>. 1976;63(3):581-592. doi:<a href="https://doi.org/10.1093/biomet/63.3.581">10.1093/biomet/63.3.581</a></div>
-</div>
-<div id="ref-little2019" class="csl-entry" role="listitem">
-<div class="csl-left-margin">5. </div><div class="csl-right-inline">Little RJA, Rubin DB. <em>Statistical Analysis with Missing Data</em>. John Wiley &amp; Sons; 2019.</div>
-</div>
-<div id="ref-bate2024" class="csl-entry" role="listitem">
-<div class="csl-left-margin">6. </div><div class="csl-right-inline">Bate S, Stokes V, Greenlee H, et al. External validation of prognostic models in critical care: A cautionary tale from COVID-19 pneumonitis. <em>Critical Care Explorations</em>. 2024;6(4):e1067. doi:<a href="https://doi.org/10.1097/CCE.0000000000001067">10.1097/CCE.0000000000001067</a></div>
-</div>
-</div>
+<p>EFFECT (data not available)</p>
+<p>Mercaldo and Blume data —</p>
 
 
-</section>
-</section>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

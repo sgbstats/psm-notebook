@@ -2,34 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://sgbstats.github.io/psm-notebook/todolist.html</loc>
-    <lastmod>2025-01-28T17:20:31.840Z</lastmod>
+    <lastmod>2025-02-07T13:33:22.336Z</lastmod>
   </url>
   <url>
     <loc>https://sgbstats.github.io/psm-notebook/studies.html</loc>
     <lastmod>2025-01-28T17:20:31.839Z</lastmod>
   </url>
   <url>
+    <loc>https://sgbstats.github.io/psm-notebook/sandobox.html</loc>
+    <lastmod>2025-01-29T13:26:24.737Z</lastmod>
+  </url>
+  <url>
     <loc>https://sgbstats.github.io/psm-notebook/rcode.html</loc>
-    <lastmod>2025-01-28T17:20:31.838Z</lastmod>
+    <lastmod>2025-01-29T13:26:11.490Z</lastmod>
   </url>
   <url>
     <loc>https://sgbstats.github.io/psm-notebook/index.html</loc>
-    <lastmod>2025-01-28T17:20:31.837Z</lastmod>
+    <lastmod>2025-02-07T10:42:43.124Z</lastmod>
+  </url>
+  <url>
+    <loc>https://sgbstats.github.io/psm-notebook/example_studies.html</loc>
+    <lastmod>2025-02-04T13:08:15.313Z</lastmod>
   </url>
   <url>
     <loc>https://sgbstats.github.io/psm-notebook/about.html</loc>
     <lastmod>2025-01-28T17:20:31.834Z</lastmod>
   </url>
   <url>
+    <loc>https://sgbstats.github.io/psm-notebook/helper_functions.html</loc>
+    <lastmod>2025-02-07T13:35:55.754Z</lastmod>
+  </url>
+  <url>
     <loc>https://sgbstats.github.io/psm-notebook/LICENSE.html</loc>
     <lastmod>2025-01-28T17:20:31.804Z</lastmod>
   </url>
   <url>
-    <loc>https://sgbstats.github.io/psm-notebook/sandobox.html</loc>
-    <lastmod>2025-01-28T17:20:31.838Z</lastmod>
+    <loc>https://sgbstats.github.io/psm-notebook/rf.html</loc>
+    <lastmod>2025-02-04T12:47:30.202Z</lastmod>
+  </url>
+  <url>
+    <loc>https://sgbstats.github.io/psm-notebook/splines.html</loc>
+    <lastmod>2025-02-06T16:55:38.926Z</lastmod>
   </url>
   <url>
     <loc>https://sgbstats.github.io/psm-notebook/submodels.html</loc>
-    <lastmod>2025-01-28T17:20:31.840Z</lastmod>
+    <lastmod>2025-02-07T13:35:58.245Z</lastmod>
   </url>
 </urlset>

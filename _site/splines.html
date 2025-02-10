@@ -191,7 +191,10 @@ div.csl-indent {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#references" id="toc-references" class="nav-link active" data-scroll-target="#references">References</a></li>
+  <li><a href="#questions-to-ask" id="toc-questions-to-ask" class="nav-link active" data-scroll-target="#questions-to-ask">Questions to ask</a>
+  <ul class="collapse">
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -222,7 +225,14 @@ div.csl-indent {
 <li><p>So far have tested with 2 knots on Impact and Dransfield 2 (biggest studies with eos)</p></li>
 <li><p>used aov with a linear interaction and a spline term to see if there was a benefit to using splines over linear interaction</p></li>
 <li><p>Riley ch7 p191<span class="citation" data-cites="riley2021"><sup><a href="#ref-riley2021" role="doc-biblioref">1</a></sup></span></p></li>
-<li><p>Sugggests using mv meta</p></li>
+<li><p>Suggests using mv meta</p></li>
+</ul>
+<section id="questions-to-ask" class="level2">
+<h2 class="anchored" data-anchor-id="questions-to-ask">Questions to ask</h2>
+<ul>
+<li><p>how many knots?</p></li>
+<li><p>potential issues with stability, especially for low event rates (e.g., pneumonia)</p></li>
+<li><p>interpretation of interaction coefs</p></li>
 </ul>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
@@ -233,6 +243,7 @@ div.csl-indent {
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -472,7 +483,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/notebook\.sebbate\.uk");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

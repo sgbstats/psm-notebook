@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Random Forests – Seb’s Notebook</title>
+<title>Abstract – Seb’s Notebook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,47 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -90,7 +70,7 @@ div.csl-indent {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked">
@@ -102,7 +82,9 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./rf.html">Randon Forests</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
+      Seb's Notebook
+      </li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -117,7 +99,7 @@ div.csl-indent {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Seb’s Notebook</a> 
+      <a href="../">Seb’s Notebook</a> 
         <div class="sidebar-tools-main">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -132,13 +114,13 @@ div.csl-indent {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./studies.html" class="sidebar-item-text sidebar-link">
+  <a href="../studies.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Studies</span></a>
   </div>
 </li>
@@ -147,7 +129,7 @@ div.csl-indent {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./rcode.html" class="sidebar-item-text sidebar-link">
+            <a href="../rcode.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">R Code</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -156,13 +138,13 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./submodels.html" class="sidebar-item-text sidebar-link">
+  <a href="../submodels.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Submodels</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./helper_functions.html" class="sidebar-item-text sidebar-link">
+  <a href="../helper_functions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Helper Functions</span></a>
   </div>
 </li>
@@ -170,13 +152,13 @@ div.csl-indent {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./rf.html" class="sidebar-item-text sidebar-link active">
+  <a href="../rf.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Randon Forests</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./todolist.html" class="sidebar-item-text sidebar-link">
+  <a href="../todolist.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">To-do list</span></a>
   </div>
 </li>
@@ -185,15 +167,24 @@ div.csl-indent {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#pattern-submodels-why-you-could-use-them-and-what-we-dont-know-yet" id="toc-pattern-submodels-why-you-could-use-them-and-what-we-dont-know-yet" class="nav-link active" data-scroll-target="#pattern-submodels-why-you-could-use-them-and-what-we-dont-know-yet">Pattern Submodels: why you could use them and what we don’t know yet?</a>
+  <ul class="collapse">
+  <li><a href="#nihr-stats-conference" id="toc-nihr-stats-conference" class="nav-link" data-scroll-target="#nihr-stats-conference">NIHR Stats conference</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Random Forests</h1>
+<h1 class="title">Abstract</h1>
 </div>
 
 
@@ -210,16 +201,18 @@ div.csl-indent {
 </header>
 
 
-<p>Currently it looks like the random forest needs to have complete data and ones where there it is missing it seems to want to impute with mean impution.</p>
-<p>I really don’t like this approach.</p>
-<p><span class="citation" data-cites="tang2017">Tang and Ishwaran (<a href="#ref-tang2017" role="doc-biblioref">2017</a>)</span></p>
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-tang2017" class="csl-entry" role="listitem">
-Tang, Fei, and Hemant Ishwaran. 2017. <span>“Random Forest Missing Data Algorithms.”</span> <em>Statistical Analysis and Data Mining</em> 10 (6): 363–77. <a href="https://doi.org/10.1002/sam.11348">https://doi.org/10.1002/sam.11348</a>.
-</div>
-</div>
+<section id="pattern-submodels-why-you-could-use-them-and-what-we-dont-know-yet" class="level1">
+<h1>Pattern Submodels: why you could use them and what we don’t know yet?</h1>
+<section id="nihr-stats-conference" class="level2">
+<h2 class="anchored" data-anchor-id="nihr-stats-conference">NIHR Stats conference</h2>
+<p>Missing data is the scourge of prediction models and mishandling of incomplete entries can lead to biased and/or unusable models.</p>
+<p>Pattern submodels (PSM) are a method proposed by Fletcher Mercaldo and Blume (2020) which allows a predictive model to be built with datasets with substantial missing data with various missingness mechanisms and without imputation. For each ‘pattern’ of missing data (e.g., FEV1 is missing but all other predictors are present), a model is fitted but only with the data that has this missingness pattern (subject to some other constraints). This leads to 2^p models being fitted (where p is the number of predictors being used). Furthermore, it is easy to make the models interpretable and transportable rather than the ‘blackbox’ of some machine learning techniques.</p>
+<p>Currently, there has been very little work since that has developed PSMs While C statistics and calibration curves can be defined for these models, other methods, such as regularisation and shrinkage to avoid overftting have yet to be defined and so far have caused major questions for these ensemble models. There continues to be questions about how generalisable the models would be if the reasons for missing data are not the same between development and in-the-wild testing.</p>
+<p>As part of ICS-RECODE, we are using PSMs as a potential approach to handle data missingness within our study datasets. Maybe you could try PSMs for your next prediction model?</p>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -12,7 +12,15 @@ csl: csl/jama.csl
 
 -   Riley ch7 p191 @riley2021
 
--   Sugggests using mv meta
+-   Suggests using mv meta
+
+## Questions to ask
+
+- how many knots?
+
+- potential issues with stability, especially for low event rates (e.g., pneumonia)
+
+- interpretation of interaction coefs
 
 ### References
 

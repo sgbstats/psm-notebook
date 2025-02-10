@@ -380,19 +380,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 [[1]]$mod
 
 Call:  model_fn(formula = new.mod, data = mod.data[tmp.info[[i]], ], 
-    init.theta = 1.330504786, link = log)
+    init.theta = 1.219765948, link = log)
 
 Coefficients:
       (Intercept)         arm_ipdICS             eos_bl            age_imp  
-        -0.451227          -0.121818           0.615459          -0.006466  
+         -0.01541           -0.26772            0.25949           -0.01104  
           exac_bl               sexM  smoking_blCurrent            fev1_bl  
-         0.306646          -0.246209          -0.028884          -0.791599  
+          0.26285           -0.03875            0.08094           -0.92044  
 arm_ipdICS:eos_bl  
-         0.086774  
+          0.36547  
 
-Degrees of Freedom: 959 Total (i.e. Null);  951 Residual
-Null Deviance:      943.7 
-Residual Deviance: 869.3    AIC: 2068</code></pre>
+Degrees of Freedom: 894 Total (i.e. Null);  886 Residual
+Null Deviance:      877 
+Residual Deviance: 814.8    AIC: 1975</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>submodels.object<span class="sc">$</span>meta<span class="sc">$</span>vars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -402,10 +402,10 @@ Residual Deviance: 869.3    AIC: 2068</code></pre>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(submodels.object<span class="sc">$</span>meta<span class="sc">$</span>mp.info)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        mp   n use.psm
-1 00000000 960       1
-2 00000010 205       1
-3 00010000 217       1
-4 00010010  68       1
+1 00000000 895       1
+2 00000010 227       1
+3 00010000 246       1
+4 00010010  59       1
 5 10000000   0       0
 6 01000000   0       0</code></pre>
 </div>
@@ -494,20 +494,20 @@ Residual Deviance: 869.3    AIC: 2068</code></pre>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>       <span class="fu">arrange</span>(rn) <span class="sc">%&gt;%</span> </span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>       dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>rn))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  exac_modsev_n arm_ipd eos_bl age_imp exac_bl sex smoking_bl fev1_bl   trt_dur
-1             0     ICS    0.1      55       1   F    Current    0.47 0.0109514
-2             1     ICS    0.3      65       2   M     Former      NA 0.9965777
-3             0     ICS    0.2      55      NA   M     Former    0.73 0.9965777
-4             0 Control    0.1      55      NA   M     Former      NA 0.9938398
-5             0 Control    0.5      65       1   M    Current    1.34 1.0130048
-6             2     ICS    0.3      65       1   F    Current      NA 0.9938398
-        fit     se.fit       mp
-1 0.3899259 0.05715194 00000000
-2 0.7190492 0.13010614 00000010
-3 0.9274759 0.21724563 00010000
-4 0.3795350 0.18363292 00010010
-5 0.5599077 0.10514702 00000000
-6 0.8380206 0.17955053 00000010</code></pre>
+<pre><code>  exac_modsev_n arm_ipd eos_bl age_imp exac_bl sex smoking_bl fev1_bl
+1             1 Control    0.1      75       1   M    Current    0.80
+2             1     ICS    0.4      55       1   M    Current      NA
+3             0 Control    0.5      55      NA   M    Current    1.28
+4             0     ICS    0.4      75      NA   M     Former      NA
+5             3 Control    0.3      65       1   M     Former    0.69
+6             2     ICS    0.1      55       1   F    Current      NA
+     trt_dur       fit     se.fit       mp
+1 0.07118412 0.3081073 0.05069117 00000000
+2 1.01300479 0.6559410 0.12881057 00000010
+3 1.01574264 0.5644376 0.25114923 00010000
+4 1.01026694 0.7070172 0.29623953 00010010
+5 0.99657769 0.9330062 0.12973663 00000000
+6 0.45722108 0.4379208 0.09912528 00000010</code></pre>
 </div>
 </div>
 </section>
@@ -528,29 +528,31 @@ Residual Deviance: 869.3    AIC: 2068</code></pre>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  x<span class="ot">=</span><span class="fu">cbind.data.frame</span>(data[actual], data[predicted])</span>
 <span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(x)<span class="ot">=</span><span class="fu">c</span>(<span class="st">"actual"</span>, <span class="st">"predicted"</span>)</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  y<span class="ot">=</span><span class="fu">cross_join</span>(x,x) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(predicted.x<span class="sc">&lt;</span>predicted.y, actual.x<span class="sc">!=</span>actual.y) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">correct=</span>actual.x<span class="sc">&lt;</span>actual.y)</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(invert<span class="sc">==</span><span class="st">"invert_optional"</span>){</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    auc<span class="ot">=</span><span class="fu">max</span>(<span class="fu">mean</span>(y<span class="sc">$</span>correct),<span class="dv">1</span><span class="sc">-</span><span class="fu">mean</span>(y<span class="sc">$</span>correct))</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(invert<span class="sc">==</span><span class="st">"no_inversion"</span>){</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    auc<span class="ot">=</span><span class="fu">mean</span>(y<span class="sc">$</span>correct)</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(invert<span class="sc">==</span><span class="st">"force_inversion"</span>){</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    auc<span class="ot">=</span><span class="dv">1</span><span class="sc">-</span><span class="fu">mean</span>(y<span class="sc">$</span>correct)</span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  }  </span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(boot)</span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  {</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    b<span class="ot">=</span>boot<span class="sc">::</span><span class="fu">boot</span>(x, <span class="at">statistic=</span>auc_boot, <span class="at">R=</span><span class="dv">1000</span>, <span class="at">actual=</span><span class="st">"actual"</span>, <span class="at">predicted=</span><span class="st">"predicted"</span>, <span class="at">invert=</span>invert)</span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    b1<span class="ot">=</span>boot<span class="sc">::</span><span class="fu">boot.ci</span>(b, <span class="at">type=</span><span class="st">"norm"</span>)</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    b2<span class="ot">=</span>b1<span class="sc">$</span>normal</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">data.frame</span>(<span class="st">"t"</span><span class="ot">=</span>auc,</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"lower"</span><span class="ot">=</span>b2[<span class="dv">2</span>],</span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"upper"</span><span class="ot">=</span>b2[<span class="dv">3</span>]))</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span>boot){</span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(auc)</span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">#cross join on the data to make every combination and then filter so that there is one row for each pair of data points, minus those that equal actual outcomes.</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  y<span class="ot">=</span><span class="fu">cross_join</span>(x,x) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(predicted.x<span class="sc">&lt;</span>predicted.y, actual.x<span class="sc">!=</span>actual.y) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">correct=</span>actual.x<span class="sc">&lt;</span>actual.y)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(invert<span class="sc">==</span><span class="st">"invert_optional"</span>){</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    auc<span class="ot">=</span><span class="fu">max</span>(<span class="fu">mean</span>(y<span class="sc">$</span>correct),<span class="dv">1</span><span class="sc">-</span><span class="fu">mean</span>(y<span class="sc">$</span>correct))</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(invert<span class="sc">==</span><span class="st">"no_inversion"</span>){</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    auc<span class="ot">=</span><span class="fu">mean</span>(y<span class="sc">$</span>correct)</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(invert<span class="sc">==</span><span class="st">"force_inversion"</span>){</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    auc<span class="ot">=</span><span class="dv">1</span><span class="sc">-</span><span class="fu">mean</span>(y<span class="sc">$</span>correct)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  }  </span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(boot)</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    b<span class="ot">=</span>boot<span class="sc">::</span><span class="fu">boot</span>(x, <span class="at">statistic=</span>auc_boot, <span class="at">R=</span><span class="dv">1000</span>, <span class="at">actual=</span><span class="st">"actual"</span>, <span class="at">predicted=</span><span class="st">"predicted"</span>, <span class="at">invert=</span>invert)</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    b1<span class="ot">=</span>boot<span class="sc">::</span><span class="fu">boot.ci</span>(b, <span class="at">type=</span><span class="st">"norm"</span>)</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    b2<span class="ot">=</span>b1<span class="sc">$</span>normal</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">data.frame</span>(<span class="st">"t"</span><span class="ot">=</span>auc,</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"lower"</span><span class="ot">=</span>b2[<span class="dv">2</span>],</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"upper"</span><span class="ot">=</span>b2[<span class="dv">3</span>]))</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span>boot){</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(auc)</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><p>Housekeeping</p></li>
@@ -561,7 +563,7 @@ Residual Deviance: 869.3    AIC: 2068</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auc</span>(test, <span class="st">"exac_modsev_n"</span>, <span class="st">"fit"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.5509884</code></pre>
+<pre><code>[1] 0.5870436</code></pre>
 </div>
 </div>
 

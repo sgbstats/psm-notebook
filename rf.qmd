@@ -1,3 +1,13 @@
 ---
 title: "Random Forests"
+bibliography: references.bib
 ---
+
+Currently it looks like the random forest needs to have complete data and ones where there it is missing it seems to want to impute with mean impution.
+
+I really don't like this approach.
+
+@tang2017
+
+::: {#refs}
+:::

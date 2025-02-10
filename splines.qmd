@@ -1,6 +1,7 @@
 ---
 title: "Splines"
 bibliography: PSM.bib
+csl: csl/jama.csl
 ---
 
 -   Splines give the opportunity to model non-linear interactions

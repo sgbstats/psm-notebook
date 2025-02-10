@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -190,6 +210,14 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>Currently it looks like the random forest needs to have complete data and ones where there it is missing it seems to want to impute with mean impution.</p>
+<p>I really don’t like this approach.</p>
+<p><span class="citation" data-cites="tang2017">Tang and Ishwaran (<a href="#ref-tang2017" role="doc-biblioref">2017</a>)</span></p>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-tang2017" class="csl-entry" role="listitem">
+Tang, Fei, and Hemant Ishwaran. 2017. <span>“Random Forest Missing Data Algorithms.”</span> <em>Statistical Analysis and Data Mining</em> 10 (6): 363–77. <a href="https://doi.org/10.1002/sam.11348">https://doi.org/10.1002/sam.11348</a>.
+</div>
+</div>
 
 
 
@@ -430,7 +458,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/notebook\.sebbate\.uk");
+      var filterRegex = new RegExp('/' + window.location.host + '/');
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

@@ -24,7 +24,6 @@ ul.task-list li input[type="checkbox"] {
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -222,14 +221,14 @@ div.csl-indent {
 <li><p>Splines give the opportunity to model non-linear interactions</p></li>
 <li><p>So far have tested with 2 knots on Impact and Dransfield 2 (biggest studies with eos)</p></li>
 <li><p>used aov with a linear interaction and a spline term to see if there was a benefit to using splines over linear interaction</p></li>
-<li><p>Riley ch7 p191 <span class="citation" data-cites="riley2021">Riley, Tierney, and Stewart (<a href="#ref-riley2021" role="doc-biblioref">2021</a>)</span></p></li>
+<li><p>Riley ch7 p191<span class="citation" data-cites="riley2021"><sup><a href="#ref-riley2021" role="doc-biblioref">1</a></sup></span></p></li>
 <li><p>Sugggests using mv meta</p></li>
 </ul>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body" role="list">
 <div id="ref-riley2021" class="csl-entry" role="listitem">
-Riley, R. D., J. F. Tierney, and L. A. Stewart. 2021. <em>Individual Participant Data Meta-Analysis. A Handbook for Healthcare Research</em>. Wiley.
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Riley RD, Tierney JF, Stewart LA. <em>Individual Participant Data Meta-Analysis. A Handbook for Healthcare Research</em>. Wiley; 2021.</div>
 </div>
 </div>
 
@@ -473,7 +472,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/notebook\.sebbate\.uk");
+      var filterRegex = new RegExp('/' + window.location.host + '/');
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

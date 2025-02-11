@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -102,7 +136,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./rf.html">Randon Forests</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./rf.html">Random Forests</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -143,8 +177,11 @@ div.csl-indent {
   </div>
 </li>
         <li class="sidebar-item">
- <span class="menu-text">Examples studies</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="./example_studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Examples studies</span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./rcode.html" class="sidebar-item-text sidebar-link">
@@ -171,7 +208,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./rf.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Randon Forests</span></a>
+ <span class="menu-text">Random Forests</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -210,9 +247,67 @@ div.csl-indent {
 </header>
 
 
-<p>Currently it looks like the random forest needs to have complete data and ones where there it is missing it seems to want to impute with mean impution.</p>
-<p>I really don’t like this approach.</p>
-<p><span class="citation" data-cites="tang2017">Tang and Ishwaran (<a href="#ref-tang2017" role="doc-biblioref">2017</a>)</span></p>
+<p>Currently it looks like the random forest needs to have complete data and ones where there it is missing it seems to want to impute with mean impution. I really don’t like this approach. <span class="citation" data-cites="tang2017">Tang and Ishwaran (<a href="#ref-tang2017" role="doc-biblioref">2017</a>)</span></p>
+<p>For our big, data driven model. We would end up borrowing across studies, which probably isn’t the end of the world. However, the predict function in the RF package doesn’t like incomplete data.</p>
+<p>Major question about interaction. I think that we would have add an interaction variable into the datasets but then theoretically it should only be in models when both of the arm and eos (eg) were both in the tree.</p>
+<p>Could we maybe build two sets of trees, one for people on ICS and one without?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>data<span class="ot">=</span>study_data<span class="sc">$</span>EFFECT<span class="sc">$</span>ad</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>data<span class="ot">=</span>data <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">mutate_at</span>(<span class="fu">c</span>(<span class="st">"exac_bl"</span>, <span class="st">"fev1_bl"</span>),<span class="sc">~</span><span class="fu">ifelse</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>), <span class="at">size =</span> <span class="fu">length</span>(.), <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.2</span>)),., <span class="cn">NA</span>))<span class="sc">%&gt;%</span> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">interaction=</span>eos_bl<span class="sc">*</span><span class="fu">if_else</span>(arm_ipd<span class="sc">==</span><span class="st">"ICS"</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">rate=</span>exac_modsev_n<span class="sc">/</span>trt_dur) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(rate)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>train<span class="ot">=</span><span class="fu">as.logical</span>(<span class="fu">rbinom</span>(<span class="fu">nrow</span>(data),<span class="dv">1</span>, <span class="fl">0.8</span>))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>model<span class="ot">=</span><span class="st">"rate ~ arm_ipd+eos_bl+age_imp+exac_bl+sex+smoking_bl+fev1_bl+interaction"</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>model<span class="ot">=</span><span class="fu">as.formula</span>(model)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>rf<span class="ot">=</span><span class="fu">randomForest</span>(<span class="at">formula=</span>model, <span class="at">data=</span>data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(train), <span class="at">na.action =</span> na.roughfix)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">varImpPlot</span>(rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="rf_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>newdata<span class="ot">=</span>data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>train)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>z<span class="ot">=</span><span class="fu">predict</span>(rf, newdata)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>pred.out<span class="ot">=</span><span class="fu">data.frame</span>(<span class="at">actual=</span>newdata<span class="sc">$</span>exac_modsev_n<span class="sc">/</span>newdata<span class="sc">$</span>trt_dur,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">pred=</span>z)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred.out, <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     actual      pred
+1  0.000000 0.6255064
+2  0.000000        NA
+3  0.000000        NA
+4  0.000000 0.8585983
+5  8.027473        NA
+6  0.000000 1.7456278
+7  2.111272        NA
+8  0.000000        NA
+9  0.000000        NA
+10 1.000685 3.4357000
+11 0.000000 0.5038430
+12 0.000000 1.3508731
+13 0.000000 0.3520517
+14 2.006868        NA
+15 2.977582 1.4752154
+16 2.006868 1.5210667
+17 3.804688 1.4891789
+18 0.000000 0.3819424
+19 4.712903        NA
+20 4.024793        NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auc</span>(pred.out, <span class="st">"actual"</span>, <span class="st">"pred"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5804464</code></pre>
+</div>
+</div>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-tang2017" class="csl-entry" role="listitem">
 Tang, Fei, and Hemant Ishwaran. 2017. <span>“Random Forest Missing Data Algorithms.”</span> <em>Statistical Analysis and Data Mining</em> 10 (6): 363–77. <a href="https://doi.org/10.1002/sam.11348">https://doi.org/10.1002/sam.11348</a>.

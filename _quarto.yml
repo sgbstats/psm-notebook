@@ -22,6 +22,8 @@ website:
             href:  helper_functions.qmd
       - text: "Random Forests"
         href: rf.qmd
+      - text: "Splines"
+        href: splines.qmd
       - text: "To-do list"
         href: todolist.qmd
             

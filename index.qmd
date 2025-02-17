@@ -37,6 +37,10 @@ The benefit of these models is that in the wild, there may be reasonable and sen
 ## What are the current concerns?
 
 -   Regularisation/shrinkage is a major concern
+-   So I don't think that it will be possible to extend this method to the 'data driven' throw everything at the wall and see what sticks method as the parent PSM (aka the complete model) would need to have enough obs that it could then meanifully contribute to the child sub-models where they have insuficient data. Overall one would need `threshold*predictors` number of fully complete cases. 
+-   My (maybe naive) understanding for LASSO/Ridge/Elastic net is that as N increases the penalisation is lower (all things being equal). For example, a LASSO may even reduce some params to 0 but then those data are not carried through to the child model that carries the equivalent parameter.
+  - LASSO may be workable on complete-case models and any model that has a parameter set to zero gets binned. 
+  - I think all of this would apply to Ridge/EN too as the net may unfairly shrink some of the parameters due to low data. 
 
 ### To do list
 

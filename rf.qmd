@@ -7,7 +7,7 @@ Currently it looks like the random forest needs to have complete data and ones w
 
 For our big, data driven model. We would end up borrowing across studies, which probably isn't the end of the world. However, the predict function in the RF package doesn't like incomplete data.
 
-Major question about interaction. I think that we would have add an interaction variable into the datasets but then theoretically it should only be in models when both of the arm and eos (eg) were both in the tree. 
+Major question about interaction. I think that we would have add an interaction variable into the datasets but then theoretically it should only be in models when both of the arm and eos (eg) were both in the tree.
 
 Could we maybe build two sets of trees, one for people on ICS and one without?
 
@@ -18,34 +18,80 @@ source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECO
 source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/auc_boot.R")
 ```
 
-```{r,message=FALSE, warning=FALSE}
+```{r,message=FALSE, warning=FALSE, eval=F}
 
-library(tidyverse)
-data=study_data$EFFECT$ad
-
-data=data %>% dplyr::mutate_at(c("exac_bl", "fev1_bl"),~ifelse(sample(c(TRUE, FALSE), size = length(.), replace = TRUE, prob = c(0.8, 0.2)),., NA))%>% 
-  mutate(interaction=eos_bl*if_else(arm_ipd=="ICS",1,0),
-         rate=exac_modsev_n/trt_dur) %>% 
-  drop_na(rate)
-data$train=as.logical(rbinom(nrow(data),1, 0.8))
-
-model="rate ~ arm_ipd+eos_bl+age_imp+exac_bl+sex+smoking_bl+fev1_bl+interaction"
-model=as.formula(model)
 
 library(randomForest)
-rf=randomForest(formula=model, data=data %>% filter(train), na.action = na.roughfix)
+library(tidyverse)
+
+load("data/study_data.RDa")
+
+ddm=study_data$EFFECT$ddm %>% 
+  dplyr::select(usubjid, paramcd, aval) %>% 
+  pivot_wider(names_from=paramcd, values_from=aval) %>% 
+  dplyr::select(-BACT)
+
+ad=study_data$EFFECT$ad %>% 
+  dplyr::select(usubjid, arm_ipd, ics_dose, ics_dose_24, trt_dur, age_imp, ics_bl, sex, cat_bl,
+                fev1_bl, fev1percent_bl, fvc_bl, fev1fvc_bl, laba_bl, lama_bl, comorb_tot_bl, eos_bl, 
+                eos_pc_bl, reversibility_bl, smoking_bl, exac_bl, gold_grp, gold_stage, exac_modsev_n)
+model="rate~."
+model=as.formula(model)
+data=merge(ad, ddm, by="usubjid") %>%
+  filter(trt_dur>0.5) %>% 
+  #dplyr::mutate_at(c("exac_bl", "fev1_bl"),~ifelse(sample(c(TRUE, FALSE), size = length(.), replace = TRUE, prob = c(0.8, 0.2)),., NA))%>% 
+  mutate(interaction=eos_bl*if_else(arm_ipd=="ICS",1,0),
+         rate=exac_modsev_n/trt_dur) %>% 
+  drop_na(rate)%>% 
+  dplyr::select(-trt_dur, -exac_modsev_n, -usubjid) %>% 
+  mutate(across(where(is.logical), as.integer))
+
+data2=na.roughfix(data)
+
+
+data$train=as.logical(rbinom(nrow(data),1, 0.8))
+
+rf=randomForest(formula=model, data=data %>% filter(train) %>% dplyr::select(-train), na.action = na.omit)
 varImpPlot(rf)
 
 
-newdata=data %>% filter(!train)
-z=predict(rf, newdata)
-pred.out=data.frame(actual=newdata$exac_modsev_n/newdata$trt_dur,
+newdata=data %>% filter(!train) %>% 
+  dplyr::select(-train)%>%
+  na.roughfix()
+
+z=predict(rf, newdata, se.fit=T)
+
+pred.out=data.frame(actual=newdata$rate,
                     pred=z)
 
-head(pred.out, 20)
 auc(pred.out, "actual", "pred")
 
+
+z1=predict(rf, newdata, predict.all = T)
+
+
+
+pred=z1$individual%>% as.data.frame() %>%  mutate(rn=row_number()) %>% 
+  pivot_longer(cols=-"rn", values_to="pred", names_to = "tree") %>% 
+  summarise(se.fit=sd(pred,na.rm=T), .by="rn") %>% 
+  merge(data.frame(pred=z1$aggregate )%>% mutate(rn=row_number()), by="rn")
+
+
+
+
 ```
+
+## Thoughts about imputing data
+
+-   na.roughfix, isn't a great option but may have some useful properties like actually wanting to reduce variance of predictor as a penalty for having high levels of incompleteness
+
+-   How we would deal with missing data in the test set may be more tricky.
+
+    -   I think we could use MICE to make n=20ish copies of the data to be predicted and then averaged over the prediction. Could be computationally intensive though (as then you be making 10k predictions.
+
+    -   In practice you could end up having to impute on the client-side which may not be possible
+
+    -   Or you use mean/mode imputation for new predictions.
 
 ::: {#refs}
 :::

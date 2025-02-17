@@ -16,11 +16,21 @@ csl: csl/jama.csl
 
 ## Questions to ask
 
-- how many knots?
+-   how many knots?
 
-- potential issues with stability, especially for low event rates (e.g., pneumonia)
+-   potential issues with stability, especially for low event rates (e.g., pneumonia)
 
-- interpretation of interaction coefs
+-   interpretation of interaction coefs
+
+Had a play with the studies that use EOS
+
+![](images/clipboard-442944437.png)
+
+interpretation of mvmeta (set with splines at 0.1, 0.25 and then capped at 0.6).
+
+![](images/clipboard-544715296.png)
+
+It does seem that the spline is associative. I made two models, one with arm\*spline(eos) and the other with arm+spline(eos)+spline(arm\*eos) and got basically the same results.
 
 ### References
 

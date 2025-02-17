@@ -101,9 +101,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
-      Seb's Notebook
-      </li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./splines.html">Splines</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -180,6 +178,12 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./splines.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Splines</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./todolist.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">To-do list</span></a>
   </div>
@@ -237,6 +241,11 @@ div.csl-indent {
 <li><p>potential issues with stability, especially for low event rates (e.g., pneumonia)</p></li>
 <li><p>interpretation of interaction coefs</p></li>
 </ul>
+<p>Had a play with the studies that use EOS</p>
+<p><img src="images/clipboard-442944437.png" class="img-fluid"></p>
+<p>interpretation of mvmeta (set with splines at 0.1, 0.25 and then capped at 0.6).</p>
+<p><img src="images/clipboard-544715296.png" class="img-fluid"></p>
+<p>It does seem that the spline is associative. I made two models, one with arm*spline(eos) and the other with arm+spline(eos)+spline(arm*eos) and got basically the same results.</p>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
 <div id="refs" class="references csl-bib-body" role="list">

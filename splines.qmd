@@ -6,23 +6,122 @@ csl: csl/jama.csl
 
 -   Splines give the opportunity to model non-linear interactions
 
--   So far have tested with 2 knots on Impact and Dransfield 2 (biggest studies with eos)
+-   We know there is a trt-cov interaction between ICS and Eos modeled through 2 stage MA on the interaction term, we wish to explore whether there is a non-linear trend.
 
--   used aov with a linear interaction and a spline term to see if there was a benefit to using splines over linear interaction
+-   I started by testing Impact and Dransfield 2 (biggest studies with eos) with various knots and settled on 2 then worked through all of the other studies with EOS.
+
+    -   As a first test, used aov with a linear interaction and a spline term to see if there was a benefit to using splines over linear interaction
 
 -   Riley ch7 p191 @riley2021
 
 -   Suggests using mv meta
 
-## Questions to ask
+-   From initial prodding, severe exacs and pneumonia have too few events to be stable.
 
--   how many knots?
+## MVMA on spline terms
 
--   potential issues with stability, especially for low event rates (e.g., pneumonia)
+### Code
 
--   interpretation of interaction coefs
+```{r, eval=FALSE}
+library(tidyverse)
+library(crayon)
+library(systemfit)
+library(MASS)
+library(boot)
+library(metafor)
+library(mvmeta)
+library(splines)
 
-Had a play with the studies that use EOS
+load("data/study_data.RDa")
+source("R/functions.R")
+
+# This has all been copied out of vivli using chatgpt to transcribe screengrabs.
+spline_bs = function(data, indices, covar) {
+  #we only use eos<=0.6 (still more than 95% of observations)
+  trial = data[indices,] %>% filter(eos_bl <= 0.6)
+  
+  formula = as.formula(paste0("exac_modsev_n ~ arm_ipd * ns(eos_bl, knots = c(0.1, 0.25)) + ", paste(covar, collapse = "+"),"+ offset(trt_dur)"))
+  #Note arm*spline(eos) gives the same as arm+spline(eos)+spline(arm*eos)
+  
+  reg1 = glm.nb(formula, data = trial)
+  out = c(tail(reg1$coefficients, 3))
+  
+  return(out)
+}
+
+a = Sys.time()
+set.seed(2)
+boot_results = list()
+
+for (i in 1:nrow(study_data$length)) {
+  R = 1000
+  study = study_data$length$study[i]
+  
+  #skip the trials with missing eos
+  if (study_data[[i]][["missing_eos"]]) { 
+    next 
+  }
+  
+  cat(paste0(study, "\n"))
+  
+  #and catch any errors so it doesn't break
+  tryCatch({
+    boot_results[[study]] = boot(
+      data = study_data[[study]][["ad"]],
+      statistic = spline_bs,
+      R = R,
+      covar = study_data[[study]][["covar"]]
+    )
+  },
+  error = function(e) {
+    cat(red("Error \n"))
+  })
+}
+
+b = Sys.time()
+difftime(b, a, units = "mins")
+
+save(boot_results, file = "data/splines/boot.RDa")
+
+
+#Using RR's code from the IPDMA course
+mvmeta = tribble(~"study", ~"spline", ~"yi", ~"v1i", ~"v2i", ~"v3i")
+
+for (i in 1:length(boot_results)) {
+  study = names(boot_results)[i]
+  cat(paste0(study, "\n"))
+  
+  x = data.frame(
+    "study" = rep(study, 3),
+    "outcome" = c("spline1_0_0.1", "spline2_0.1_0.25", "spline3_0.25_0.6"),
+    "yi" = boot_results[[study]][["t0"]]
+  )
+  
+  y = as.data.frame(cov(boot_results[[study]][["t"]])) %>%
+    rename(v1i = V1, v2i = V2, v3i = V3)
+  
+  mvmeta = mvmeta %>%
+    rbind.data.frame(cbind.data.frame(x, y))
+}
+
+mvmeta2_vivli = mvmeta %>% merge(study_data$length, by = "study")
+save(mvmeta2_vivli, file = "results/splines/bootstrap.RDA")
+
+v = bldiag(lapply(split(mvmeta[, c("v1i", "v2i", "v3i")], mvmeta$study), as.matrix))
+
+biv.full.part = rma.mv(
+  yi, V = v, mods = ~ outcome - 1, 
+  random = ~ outcome | study, struct = "UN", 
+  data = mvmeta, method = "REML"
+)
+
+biv.full.part %>% summary()
+
+
+
+```
+
+*Had a play with the studies that use EOS*
 
 ![](images/clipboard-442944437.png)
 
@@ -32,7 +131,23 @@ interpretation of mvmeta (set with splines at 0.1, 0.25 and then capped at 0.6).
 
 It does seem that the spline is associative. I made two models, one with arm\*spline(eos) and the other with arm+spline(eos)+spline(arm\*eos) and got basically the same results.
 
-### References
+## MA on the marginal effects
+
+The next idea was to examine whether there is a benefit to using splines.
+
+-   I took the spline model for each of the studies and boostrapped the treatment efffect at each eos value
+
+-   After doing that I used the BS mean as BS error to aggregate using a bog standard meta-analysis at each value to get the marginal effect over all studies.
+
+-   I then did the same for the linear model
+
+    -   In the main paper I have used a closed solution to get the marginal effect but for consistency here I used a bootstrap.
+
+![](images/clipboard-3587344229.png)
+
+Here is what I get. Different but not loads.
+
+### *References*
 
 ::: {#refs}
 :::

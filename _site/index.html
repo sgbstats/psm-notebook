@@ -173,6 +173,12 @@ div.csl-indent {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./ri.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Imputation</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./rf.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Random Forests</span></a>
   </div>
@@ -181,6 +187,12 @@ div.csl-indent {
   <div class="sidebar-item-container"> 
   <a href="./splines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Splines</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./progress.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Models progress</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -258,13 +270,14 @@ div.csl-indent {
 </section>
 <section id="studies" class="level2">
 <h2 class="anchored" data-anchor-id="studies">Studies</h2>
-<p>In ICS-Recode, clinical data is taken from across studies, with various degrees of missingness. Given that all of the data that is included in the development data are from clinical trials, there data is on the whole very complete. See <a href="./studies.html">studies list</a></p>
+<p>In ICS-Recode<span class="citation" data-cites="bate_predictors_2025"><sup><a href="#ref-bate_predictors_2025" role="doc-biblioref">7</a></sup></span>, clinical data is taken from across studies, with various degrees of missingness. Given that all of the data that is included in the development data are from clinical trials, there data is on the whole very complete. See <a href="./studies.html">studies list</a></p>
 </section>
 <section id="how-do-pattern-submodels-work" class="level2">
 <h2 class="anchored" data-anchor-id="how-do-pattern-submodels-work">How do pattern submodels work?</h2>
-<p>Within a models there are 2^p missingness patterns, every combination of missing and not. Obviously not all patterns are present within the data. For each pattern of data, a model is fitted using only the data that has that pattern (apart from when there are insufficient data when a complete case models).</p>
+<p>Within a models there are 2^p missingness patterns, every combination of missing and not. Obviously not all patterns are present within the data. For each pattern of data, a model is fitted using only the data that has that pattern (apart from when there are insufficient data, when a complete case models).</p>
 <p>Currently it is believed that the psm can handle MAR data because the pattern can take in information from the missingness.</p>
 <p>The benefit of these models is that in the wild, there may be reasonable and sensible amounts of missing data and it is useful for the model to be able to handle these users with incomplete data without having to revert to mean/mode imputation.</p>
+<p>You can add further requirements, like having mandatory variables to reduce the build time.</p>
 </section>
 <section id="what-are-the-current-concerns" class="level2">
 <h2 class="anchored" data-anchor-id="what-are-the-current-concerns">What are the current concerns?</h2>
@@ -308,6 +321,9 @@ div.csl-indent {
 </div>
 <div id="ref-bate2024" class="csl-entry" role="listitem">
 <div class="csl-left-margin">6. </div><div class="csl-right-inline">Bate S, Stokes V, Greenlee H, et al. External validation of prognostic models in critical care: A cautionary tale from COVID-19 pneumonitis. <em>Critical Care Explorations</em>. 2024;6(4):e1067. doi:<a href="https://doi.org/10.1097/CCE.0000000000001067">10.1097/CCE.0000000000001067</a></div>
+</div>
+<div id="ref-bate_predictors_2025" class="csl-entry" role="listitem">
+<div class="csl-left-margin">7. </div><div class="csl-right-inline">Bate S, Fortescue R, Fullwood C, et al. Predictors of treatment <span>REsponse</span> to inhaled corticosteroids (<span>ICS</span>) in <span>Chronic</span> <span>Obstructive</span> pulmonary disease: Randomised controlled trials individual participant <span>Data</span> re-<span>Evaluation</span>–protocol of the <span>ICS</span>-<span>RECODE</span> individual participant data meta-analysis. <em>BMJ Open</em>. 2025;15(3):e095541. doi:<a href="https://doi.org/10.1136/bmjopen-2024-095541">10.1136/bmjopen-2024-095541</a></div>
 </div>
 </div>
 

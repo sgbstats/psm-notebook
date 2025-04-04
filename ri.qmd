@@ -1,0 +1,59 @@
+---
+title: "Regression Imputation"
+bibliography: PSM.bib
+csl: csl/jama.csl
+---
+
+Using Sisk @sisk_imputation_2023 and further advice, regression imputation allows us to build p deterministic models to impute data. It also gives the ability to impute data on the fly.
+
+The basic premise is that you initialise each missing value to the mean (not sure about categorical variables).
+
+You then build a model for each variable in turn and use this model to update the missing values from the first variable and then move on to the next variable and repeat. It then loops through all of the variables until it converges (probably 10 times).
+
+This gives the opportunity to impute on the fly. You can take the models for imputation and impute any new data (using the same ideas of cycling through until convergence).
+
+Currently it is possible to use `MICE` @vanbuuren do do a single imputation
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+load("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\data/study_data.RDa")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/model_breakdown.R")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/unpack.R")
+```
+
+```{r,message=FALSE, warning=FALSE, eval=TRUE}
+model="exac_modsev_n ~ arm_ipd*eos_bl+arm_ipd*age_imp+arm_ipd*exac_bl+arm_ipd*sex+arm_ipd*smoking_bl+arm_ipd*fev1_bl+offset(trt_dur)"
+model=as.formula(model)
+
+
+data=study_data$EFFECT$ad %>% dplyr::mutate_at(c("exac_bl", "fev1_bl"),~ifelse(sample(c(TRUE, FALSE), size = length(.), replace = TRUE, prob = c(0.8, 0.2)),., NA)) 
+data$train=as.logical(rbinom(nrow(data),1, 0.8))
+
+unpack(model_breakdown(model))
+
+data.init=data %>%
+  filter(train) %>% 
+  get_all_vars(model, data=.) %>% 
+  dplyr::select(-all_of(mod.lhs)) %>% 
+  summarise(eos_bl=mean(eos_bl, na.rm=T),
+            arm_ipd="ICS",
+            age_imp=mean(age_imp, na.rm=T),
+            exac_bl=mean(exac_bl, na.rm=T),
+            smoking="Former",
+            fev1_bl=mean(fev1_bl, na.rm=T),
+            trt_dur=mean(trt_dur, na.rm=T),
+            n=n()) %>% 
+  uncount(n)
+
+m1=mice::mice(data %>% filter(train) %>% get_all_vars(model, data=.) %>% dplyr::select(-all_of(mod.lhs)), method="norm.predict",data.init=data.init, m=1, maxit=1)
+
+head(complete(m1))
+```
+
+But my concern here is that I can't work out how to run a data-agnostic on the fly imputation
+
+### References
+
+::: {#refs}
+:::

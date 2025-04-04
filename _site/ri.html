@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>R Code – Seb’s Notebook</title>
+<title>Regression Imputation – Seb’s Notebook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,60 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -82,7 +135,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./rcode.html">R Code</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ri.html">Regression Imputation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -130,7 +183,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./rcode.html" class="sidebar-item-text sidebar-link active">
+            <a href="./rcode.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">R Code</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -153,7 +206,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ri.html" class="sidebar-item-text sidebar-link">
+  <a href="./ri.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Regression Imputation</span></a>
   </div>
 </li>
@@ -186,15 +239,21 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#references" id="toc-references" class="nav-link active" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">R Code</h1>
+<h1 class="title">Regression Imputation</h1>
 </div>
 
 
@@ -211,8 +270,66 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>Using Sisk<span class="citation" data-cites="sisk_imputation_2023"><sup><a href="#ref-sisk_imputation_2023" role="doc-biblioref">1</a></sup></span> and further advice, regression imputation allows us to build p deterministic models to impute data. It also gives the ability to impute data on the fly.</p>
+<p>The basic premise is that you initialise each missing value to the mean (not sure about categorical variables).</p>
+<p>You then build a model for each variable in turn and use this model to update the missing values from the first variable and then move on to the next variable and repeat. It then loops through all of the variables until it converges (probably 10 times).</p>
+<p>This gives the opportunity to impute on the fly. You can take the models for imputation and impute any new data (using the same ideas of cycling through until convergence).</p>
+<p>Currently it is possible to use <code>MICE</code><span class="citation" data-cites="vanbuuren"><sup><a href="#ref-vanbuuren" role="doc-biblioref">2</a></sup></span> do do a single imputation</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>model<span class="ot">=</span><span class="st">"exac_modsev_n ~ arm_ipd*eos_bl+arm_ipd*age_imp+arm_ipd*exac_bl+arm_ipd*sex+arm_ipd*smoking_bl+arm_ipd*fev1_bl+offset(trt_dur)"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>model<span class="ot">=</span><span class="fu">as.formula</span>(model)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>data<span class="ot">=</span>study_data<span class="sc">$</span>EFFECT<span class="sc">$</span>ad <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">mutate_at</span>(<span class="fu">c</span>(<span class="st">"exac_bl"</span>, <span class="st">"fev1_bl"</span>),<span class="sc">~</span><span class="fu">ifelse</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>), <span class="at">size =</span> <span class="fu">length</span>(.), <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.2</span>)),., <span class="cn">NA</span>)) </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>train<span class="ot">=</span><span class="fu">as.logical</span>(<span class="fu">rbinom</span>(<span class="fu">nrow</span>(data),<span class="dv">1</span>, <span class="fl">0.8</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">unpack</span>(<span class="fu">model_breakdown</span>(model))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>data.init<span class="ot">=</span>data <span class="sc">%&gt;%</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(train) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_all_vars</span>(model, <span class="at">data=</span>.) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">all_of</span>(mod.lhs)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">eos_bl=</span><span class="fu">mean</span>(eos_bl, <span class="at">na.rm=</span>T),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">arm_ipd=</span><span class="st">"ICS"</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">age_imp=</span><span class="fu">mean</span>(age_imp, <span class="at">na.rm=</span>T),</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">exac_bl=</span><span class="fu">mean</span>(exac_bl, <span class="at">na.rm=</span>T),</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>            <span class="at">smoking=</span><span class="st">"Former"</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">fev1_bl=</span><span class="fu">mean</span>(fev1_bl, <span class="at">na.rm=</span>T),</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">trt_dur=</span><span class="fu">mean</span>(trt_dur, <span class="at">na.rm=</span>T),</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>            <span class="at">n=</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">uncount</span>(n)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>m1<span class="ot">=</span>mice<span class="sc">::</span><span class="fu">mice</span>(data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(train) <span class="sc">%&gt;%</span> <span class="fu">get_all_vars</span>(model, <span class="at">data=</span>.) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">all_of</span>(mod.lhs)), <span class="at">method=</span><span class="st">"norm.predict"</span>,<span class="at">data.init=</span>data.init, <span class="at">m=</span><span class="dv">1</span>, <span class="at">maxit=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ iter imp variable
+  1   1  exac_bl  fev1_bl</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">complete</span>(m1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  arm_ipd eos_bl age_imp  exac_bl sex smoking_bl  fev1_bl    trt_dur
+1     ICS    0.2      55 1.000000   M     Former 0.760000 0.63244353
+2     ICS    0.1      65 1.415664   M    Current 1.012422 0.25188227
+3 Control    0.1      75 1.000000   M    Current 0.800000 0.07118412
+4     ICS    0.3      65 1.000000   M     Former 1.030000 1.01848049
+5     ICS    0.4      55 1.000000   M    Current 1.290000 1.01300479
+6     ICS    0.4      65 1.000000   M     Former 1.380000 0.10951403</code></pre>
+</div>
+</div>
+<p>But my concern here is that I can’t work out how to run a data-agnostic on the fly imputation</p>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+<div id="refs" class="references csl-bib-body" role="list">
+<div id="ref-sisk_imputation_2023" class="csl-entry" role="listitem">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Sisk R, Sperrin M, Peek N, Smeden M van, Martin GP. Imputation and missing indicators for handling missing data in the development and deployment of clinical prediction models: <span>A</span> simulation study. <em>Statistical Methods in Medical Research</em>. 2023;32(8):1461-1477. doi:<a href="https://doi.org/10.1177/09622802231165001">10.1177/09622802231165001</a></div>
+</div>
+<div id="ref-vanbuuren" class="csl-entry" role="listitem">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Van Buuren S, Groothuis-Oudshoorn K. mice: Multivariate Imputation by Chained Equations. doi:<a href="https://doi.org/10.32614/CRAN.package.mice">10.32614/CRAN.package.mice</a></div>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

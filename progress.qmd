@@ -1,0 +1,15 @@
+---
+title: "Progress"
+---
+
+-   No confirmed
+
+-   Sub models: working for normal out of the box methods
+
+    -   LASSO version in development, very slow and currently without a prediction model.
+
+-   LASSO for big model including interactions working
+
+-   Random forests working
+
+-   

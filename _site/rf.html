@@ -207,6 +207,12 @@ div.csl-indent {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./ri.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Imputation</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./rf.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Random Forests</span></a>
   </div>
@@ -215,6 +221,12 @@ div.csl-indent {
   <div class="sidebar-item-container"> 
   <a href="./splines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Splines</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./progress.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Models progress</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -259,10 +271,10 @@ div.csl-indent {
 </header>
 
 
-<p>Currently it looks like the random forest needs to have complete data and ones where there it is missing it seems to want to impute with mean impution. I really don’t like this approach. <span class="citation" data-cites="tang2017">Tang and Ishwaran (<a href="#ref-tang2017" role="doc-biblioref">2017</a>)</span></p>
+<p>Random forest needs to have complete data and ones where there it is missing it seems to want to impute with mean impution. I really don’t like this approach. <span class="citation" data-cites="tang2017">Tang and Ishwaran (<a href="#ref-tang2017" role="doc-biblioref">2017</a>)</span></p>
+<p>Takes sqrt(n) of the variables each time and builds a decision tree from those variables and then takes the average from all of the trees (normally 100)</p>
 <p>For our big, data driven model. We would end up borrowing across studies, which probably isn’t the end of the world. However, the predict function in the RF package doesn’t like incomplete data.</p>
 <p>Major question about interaction. I think that we would have add an interaction variable into the datasets but then theoretically it should only be in models when both of the arm and eos (eg) were both in the tree.</p>
-<p>Could we maybe build two sets of trees, one for people on ICS and one without?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>

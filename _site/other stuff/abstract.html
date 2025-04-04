@@ -155,6 +155,12 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../ri.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Imputation</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../rf.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Random Forests</span></a>
   </div>
@@ -163,6 +169,12 @@ ul.task-list li input[type="checkbox"] {
   <div class="sidebar-item-container"> 
   <a href="../splines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Splines</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../progress.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Models progress</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -216,7 +228,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="nihr-stats-conference">NIHR Stats conference</h2>
 <p>Missing data is the scourge of prediction models and mishandling of incomplete entries can lead to biased and/or unusable models.</p>
 <p>Pattern submodels (PSM) are a method proposed by Fletcher Mercaldo and Blume (2020) which allows a predictive model to be built with datasets with substantial missing data with various missingness mechanisms and without imputation. For each ‘pattern’ of missing data (e.g., FEV1 is missing but all other predictors are present), a model is fitted but only with the data that has this missingness pattern (subject to some other constraints). This leads to 2^p models being fitted (where p is the number of predictors being used). Furthermore, it is easy to make the models interpretable and transportable rather than the ‘blackbox’ of some machine learning techniques.</p>
-<p>Currently, there has been very little work since that has developed PSMs While C statistics and calibration curves can be defined for these models, other methods, such as regularisation and shrinkage, to avoid overftting have yet to be defined and so far have caused major questions for these ensemble models. There continues to be questions about how generalisable the models would be if the reasons for missing data are not the same between development and in-the-wild testing.</p>
+<p>Currently, there has been very little work since that has developed PSMs, despite garnering some interest in their implementation (currently 43 citations in Scopus). While C statistics and calibration curves can be defined for these models, other methods, such as regularisation and shrinkage, to avoid overftting have yet to be developed and so far have caused major questions for these ensemble models. There continues to be questions about how generalisable the models would be if the reasons for missing data are not the same between development and in-the-wild testing.</p>
 <p>As part of ICS-RECODE, we are using PSMs as a potential approach to handle data missingness within our study datasets. Maybe you could try PSMs for your next prediction model?</p>
 
 

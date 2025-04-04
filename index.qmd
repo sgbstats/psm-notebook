@@ -24,15 +24,17 @@ The aim is for their to be a prediction model that can be used in general practi
 
 ## Studies
 
-In ICS-Recode, clinical data is taken from across studies, with various degrees of missingness. Given that all of the data that is included in the development data are from clinical trials, there data is on the whole very complete. See [studies list](studies.qmd)
+In ICS-Recode @bate_predictors_2025, clinical data is taken from across studies, with various degrees of missingness. Given that all of the data that is included in the development data are from clinical trials, there data is on the whole very complete. See [studies list](studies.qmd)
 
 ## How do pattern submodels work?
 
-Within a models there are 2\^p missingness patterns, every combination of missing and not. Obviously not all patterns are present within the data. For each pattern of data, a model is fitted using only the data that has that pattern (apart from when there are insufficient data when a complete case models).
+Within a models there are 2\^p missingness patterns, every combination of missing and not. Obviously not all patterns are present within the data. For each pattern of data, a model is fitted using only the data that has that pattern (apart from when there are insufficient data, when a complete case models).
 
 Currently it is believed that the psm can handle MAR data because the pattern can take in information from the missingness.
 
 The benefit of these models is that in the wild, there may be reasonable and sensible amounts of missing data and it is useful for the model to be able to handle these users with incomplete data without having to revert to mean/mode imputation.
+
+You can add further requirements, like having mandatory variables to reduce the build time.
 
 ## What are the current concerns?
 

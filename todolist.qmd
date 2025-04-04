@@ -2,9 +2,6 @@
 title: "Random to do list"
 ---
 
-
 -   Remove the `%notin%` from all of my code
 
--   Splines in the models
-
--   Random forests
+-   Build the Pattern Regression Imputation

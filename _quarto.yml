@@ -20,10 +20,14 @@ website:
             href: submodels.qmd
           - text: "Helper Functions"
             href:  helper_functions.qmd
+      - text: "Regression Imputation"
+        href: ri.qmd
       - text: "Random Forests"
         href: rf.qmd
       - text: "Splines"
         href: splines.qmd
+      - text: "Models progress"
+        href: progress.qmd
       - text: "To-do list"
         href: todolist.qmd
             

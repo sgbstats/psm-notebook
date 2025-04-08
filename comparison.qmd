@@ -1,0 +1,87 @@
+---
+title: "Model Comparison"
+---
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+load("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\data/study_data.RDa")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/submodels.R")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/predict_submodels.R")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/print_submodels.R")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/model_breakdown.R")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/auc.R")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/auc_boot.R")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/unpack.R")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/missingness_pattern.R")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/remove_missing_vars.R")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/model_breakdown.R")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/unpack.R")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/regression_imputation.R")
+source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/regression_imputation_on_the_fly.R")
+```
+
+## PSM
+
+```{r, message=FALSE, warning=FALSE}
+cols_to_na=c("fev1_bl", "smoking_bl", "eos_bl")
+set.seed(2)
+data1=study_data$EFFECT$ad %>%
+  mutate(across(all_of(cols_to_na), ~ {
+    n <- length(.x)
+    na_indices <- sample(n, size = floor(0.2 * n))
+    .x[na_indices] <- NA
+    .x
+  })) 
+data1$train=as.logical(rbinom(nrow(data1),1, 0.8))
+data=data1
+
+model=exac_modsev_n ~ arm_ipd*eos_bl+age_imp+exac_bl+sex+smoking_bl+fev1_bl+offset(trt_dur)
+unpack(model_breakdown(model))
+submodels.object=submodels(data %>% filter(train), model, MASS::glm.nb,force_variables="trt_dur", contrasts=NULL, remove_model_data = c())
+
+newdata=data %>% filter(train)
+test=predict.submodels(newdata=newdata, submodels.object = submodels.object, se.fit=T,retain_lhs = T,include_mp=T, type='response')
+
+in_sample_psm=auc(test, "exac_modsev_n", "fit")
+
+newdata=data %>% filter(!train)
+test=predict.submodels(newdata=newdata, submodels.object = submodels.object, se.fit=T,retain_lhs = T,include_mp=T, type='response')
+
+out_sample_psm=auc(test, "exac_modsev_n", "fit")
+
+in_sample_psm
+
+out_sample_psm
+```
+
+## Regression Imputation
+
+```{r, message=FALSE, warning=FALSE}
+
+  data=data1%>% filter(train) %>% get_all_vars(model, data=.) %>% dplyr::select(-all_of(mod.lhs), -trt_dur, -arm_ipd)
+  
+imp_mod=regression_imp(data)
+
+data_merge=data1%>% filter(train) %>% dplyr::select(all_of(mod.lhs), arm_ipd, trt_dur) %>% cbind.data.frame(imp_mod$data_imp)
+
+mod=MASS::glm.nb(model, data_merge)
+
+test=cbind.data.frame(exac_modsev_n=data_merge$exac_modsev_n,
+                      fit=predict(mod, data_merge, type = "response"))
+
+in_sample_ri=auc(test, "exac_modsev_n", "fit")
+
+in_sample_ri
+
+newdata=data1%>% filter(!train) %>% get_all_vars(model, data=.) %>% dplyr::select(-all_of(mod.lhs), -trt_dur, -arm_ipd)
+nd2=regression_imp_on_the_fly(imp_mod, newdata)
+
+data_merge2=data1%>% filter(!train) %>% dplyr::select(all_of(mod.lhs), arm_ipd, trt_dur) %>% cbind.data.frame(nd2)
+
+test=cbind.data.frame(exac_modsev_n=data_merge2$exac_modsev_n,
+                      fit=predict(mod, data_merge2, type = "response"))
+
+out_sample_ri=auc(test, "exac_modsev_n", "fit")
+
+out_sample_ri
+
+```

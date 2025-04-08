@@ -212,6 +212,12 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./comparison.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Method Comparioson</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./rf.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Random Forests</span></a>
   </div>
@@ -244,7 +250,11 @@ div.csl-indent {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#references" id="toc-references" class="nav-link active" data-scroll-target="#references">References</a></li>
+  <li><a href="#home-made-version" id="toc-home-made-version" class="nav-link active" data-scroll-target="#home-made-version">Home made version</a></li>
+  <li><a href="#on-the-fly" id="toc-on-the-fly" class="nav-link" data-scroll-target="#on-the-fly">On the fly</a>
+  <ul class="collapse">
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -308,15 +318,238 @@ div.csl-indent {
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">complete</span>(m1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  arm_ipd eos_bl age_imp  exac_bl sex smoking_bl  fev1_bl    trt_dur
-1     ICS    0.2      55 1.000000   M     Former 0.760000 0.63244353
-2     ICS    0.1      65 1.415664   M    Current 1.012422 0.25188227
+1     ICS    0.2      55 1.489668   M     Former 0.760000 0.63244353
+2     ICS    0.0      55 1.000000   M     Former 1.224145 0.99931554
 3 Control    0.1      75 1.000000   M    Current 0.800000 0.07118412
-4     ICS    0.3      65 1.000000   M     Former 1.030000 1.01848049
-5     ICS    0.4      55 1.000000   M    Current 1.290000 1.01300479
-6     ICS    0.4      65 1.000000   M     Former 1.380000 0.10951403</code></pre>
+4     ICS    0.4      55 1.000000   M    Current 1.236267 1.01300479
+5     ICS    0.4      65 1.000000   M     Former 1.380000 0.10951403
+6     ICS    0.1      55 1.000000   F    Current 0.670000 0.45722108</code></pre>
 </div>
 </div>
-<p>But my concern here is that I can’t work out how to run a data-agnostic on the fly imputation</p>
+<p>But my concern here is that I can’t work out how to run a data-agnostic on the fly imputation so I made my own version.</p>
+<section id="home-made-version" class="level2">
+<h2 class="anchored" data-anchor-id="home-made-version">Home made version</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>regression_imp<span class="ot">=</span><span class="cf">function</span>(data, <span class="at">iter=</span><span class="dv">10</span>, <span class="at">remove_model_data=</span><span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"y"</span>, <span class="st">"fitted"</span>)){</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#getting the mean/mode for each column to initialise the data</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  calculate_summary <span class="ot">&lt;-</span> <span class="cf">function</span>(col) {</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.numeric</span>(col)) {</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(col, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">is.factor</span>(col)) {</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>      mode_val <span class="ot">&lt;-</span> <span class="fu">levels</span>(col)[<span class="fu">which.max</span>(<span class="fu">tabulate</span>(col))]</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">factor</span>(mode_val, <span class="at">levels =</span> <span class="fu">levels</span>(col))  <span class="co"># preserve factor structure</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      <span class="cn">NA</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="co">#initialised data</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  init <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), calculate_summary))</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">#filling the data in</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  df_filled <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">coalesce</span>(.x, init[[<span class="fu">cur_column</span>()]])))</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="co">#tracking the missing data</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  na_data<span class="ot">=</span>data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(.x), <span class="dv">0</span>, <span class="dv">1</span>)))</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  rs<span class="ot">=</span><span class="fu">rowSums</span>(na_data)</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="co">#getting the class of the data</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  class2<span class="ot">=</span><span class="cf">function</span>(x)</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">class</span>(x)[<span class="dv">1</span>])</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  t<span class="ot">=</span><span class="fu">sapply</span>(df_filled, class2)</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  <span class="co">#build each of the models</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  mod<span class="ot">=</span><span class="fu">list</span>()</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  interim<span class="ot">=</span><span class="fu">list</span>()</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  <span class="co">#repeat for each iteration</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter){</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    <span class="co">#build a model for each variable</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(data)){</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>      formula<span class="ot">=</span><span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="fu">names</span>(t)[i], <span class="st">"~."</span>))</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>      <span class="co"># uses only the known vlaues as the outcome</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>      tempdata<span class="ot">=</span>df_filled[na_data[i]<span class="sc">==</span><span class="dv">1</span>,] <span class="sc">%&gt;%</span> <span class="fu">droplevels</span>()</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>      <span class="co">#currently can only cope with numeric and binary</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(t[i]<span class="sc">==</span><span class="st">"numeric"</span>){</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>        mod[[<span class="fu">names</span>(data[i])]]<span class="ot">=</span><span class="fu">lm</span>(<span class="at">formula =</span> formula, <span class="at">data=</span>tempdata)</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>      }<span class="cf">else</span> <span class="cf">if</span>(t[i]<span class="sc">==</span><span class="st">"factor"</span>){</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>        mod[[<span class="fu">names</span>(data[i])]]<span class="ot">=</span><span class="fu">glm</span>(<span class="at">formula =</span> formula, <span class="at">data=</span>tempdata, <span class="at">family=</span><span class="st">"binomial"</span>)</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(df_filled)[<span class="dv">1</span>]){</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>      <span class="co"># skips complete rows</span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(rs[i]<span class="sc">==</span><span class="fu">dim</span>(df_filled)[<span class="dv">1</span>]){<span class="cf">next</span>}</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(df_filled)[<span class="dv">2</span>]){</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(na_data[i,j]<span class="sc">==</span><span class="dv">1</span>){</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>          <span class="co">#skips the known values</span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>          <span class="cf">next</span></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>          x<span class="ot">=</span><span class="fu">predict</span>(mod[[<span class="fu">names</span>(data[j])]], <span class="at">newdata=</span>df_filled[i,])</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(t[j]<span class="sc">==</span><span class="st">"factor"</span>){</span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>          <span class="co"># if it is binary then it uses the most likely value</span></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>          df_filled[i,j]<span class="ot">=</span><span class="fu">if_else</span>(x<span class="sc">&lt;</span><span class="dv">0</span>, <span class="fu">levels</span>(df_filled[,j])[<span class="dv">1</span>],<span class="fu">levels</span>(df_filled[,j])[<span class="dv">2</span>])</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>          df_filled[i,j]<span class="ot">=</span>x</span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>    interim[[k]]<span class="ot">=</span>df_filled</span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>  <span class="co">#removes individual data from the output</span></span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> remove_model_data){</span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>    mod[i][[i]]<span class="ot">=</span><span class="cn">NULL</span></span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="st">"data_imp"</span><span class="ot">=</span>df_filled, <span class="st">"mod"</span><span class="ot">=</span>mod, <span class="st">"init"</span><span class="ot">=</span>init))</span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cols_to_na<span class="ot">=</span><span class="fu">c</span>(<span class="st">"fev1_bl"</span>, <span class="st">"smoking_bl"</span>, <span class="st">"eos_bl"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>data1<span class="ot">=</span>study_data<span class="sc">$</span>EFFECT<span class="sc">$</span>ad <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(cols_to_na), <span class="sc">~</span> {</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> <span class="fu">length</span>(.x)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    na_indices <span class="ot">&lt;-</span> <span class="fu">sample</span>(n, <span class="at">size =</span> <span class="fu">floor</span>(<span class="fl">0.2</span> <span class="sc">*</span> n))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    .x[na_indices] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    .x</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  })) </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>data1<span class="sc">$</span>train<span class="ot">=</span><span class="fu">as.logical</span>(<span class="fu">rbinom</span>(<span class="fu">nrow</span>(data1),<span class="dv">1</span>, <span class="fl">0.8</span>))</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">unpack</span>(<span class="fu">model_breakdown</span>(model))</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="do">###</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>data<span class="ot">=</span>data1<span class="sc">%&gt;%</span> <span class="fu">filter</span>(train) <span class="sc">%&gt;%</span> <span class="fu">get_all_vars</span>(model, <span class="at">data=</span>.) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">all_of</span>(mod.lhs), <span class="sc">-</span>trt_dur)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>imp_mod<span class="ot">=</span><span class="fu">regression_imp</span>(data)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  arm_ipd eos_bl age_imp exac_bl sex smoking_bl fev1_bl
+1     ICS    0.2      55       1   M     Former    0.76
+2     ICS    0.0      55       1   M     Former    1.05
+3     ICS    0.1      65       1   M       &lt;NA&gt;    1.33
+4 Control    0.1      75       1   M    Current    0.80
+5     ICS    0.3      65       1   M     Former    1.03
+6     ICS    0.4      55       1   M    Current    1.29</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(imp_mod<span class="sc">$</span>data_imp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  arm_ipd eos_bl age_imp exac_bl sex smoking_bl fev1_bl
+1     ICS    0.2      55       1   M     Former    0.76
+2     ICS    0.0      55       1   M     Former    1.05
+3     ICS    0.1      65       1   M     Former    1.33
+4 Control    0.1      75       1   M    Current    0.80
+5     ICS    0.3      65       1   M     Former    1.03
+6     ICS    0.4      55       1   M    Current    1.29</code></pre>
+</div>
+</div>
+</section>
+<section id="on-the-fly" class="level2">
+<h2 class="anchored" data-anchor-id="on-the-fly">On the fly</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>regression_imp_on_the_fly<span class="ot">=</span><span class="cf">function</span>(imp_mod,newdata, <span class="at">init=</span>imp_mod[[<span class="st">"init"</span>]], <span class="at">iter=</span><span class="dv">10</span>){</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#getting the mean/mode for each column to initialise the data</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  calculate_summary <span class="ot">&lt;-</span> <span class="cf">function</span>(col) {</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.numeric</span>(col)) {</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mean</span>(col, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">is.factor</span>(col)) {</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>      mode_val <span class="ot">&lt;-</span> <span class="fu">levels</span>(col)[<span class="fu">which.max</span>(<span class="fu">tabulate</span>(col))]</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">factor</span>(mode_val, <span class="at">levels =</span> <span class="fu">levels</span>(col))  <span class="co"># preserve factor structure</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>      <span class="cn">NA</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">#only it is told to reinitialize the data</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(init)){</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    init <span class="ot">&lt;-</span> newdata <span class="sc">%&gt;%</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), calculate_summary))</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filling the data in</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  df_filled <span class="ot">&lt;-</span> newdata <span class="sc">%&gt;%</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">coalesce</span>(.x, init[[<span class="fu">cur_column</span>()]])))</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>  na_data<span class="ot">=</span>newdata <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(.x), <span class="dv">0</span>, <span class="dv">1</span>)))</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>  rs<span class="ot">=</span><span class="fu">rowSums</span>(na_data)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>  class2<span class="ot">=</span><span class="cf">function</span>(x)</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">class</span>(x)[<span class="dv">1</span>])</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>  t<span class="ot">=</span><span class="fu">sapply</span>(df_filled, class2)</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>  mod<span class="ot">=</span>imp_mod[[<span class="st">"mod"</span>]]</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>  <span class="co">#a reapet for each iteration</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter){</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(df_filled)[<span class="dv">1</span>]){</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>      <span class="co"># skips complete rows</span></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(rs[i]<span class="sc">==</span><span class="fu">dim</span>(df_filled)[<span class="dv">1</span>]){<span class="cf">next</span>}</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>      <span class="co">#skips if there is only one missing value as it will immediately converge</span></span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">dim</span>(df_filled)[<span class="dv">1</span>]<span class="sc">-</span>rs[i]<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>k<span class="sc">&gt;</span><span class="dv">1</span>){<span class="cf">next</span>}</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(df_filled)[<span class="dv">2</span>]){</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(na_data[i,j]<span class="sc">==</span><span class="dv">1</span>){</span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>          <span class="cf">next</span></span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>          x<span class="ot">=</span><span class="fu">predict</span>(mod[[<span class="fu">names</span>(data[j])]], <span class="at">newdata=</span>df_filled[i,])</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(t[j]<span class="sc">==</span><span class="st">"factor"</span>){</span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>          df_filled[i,j]<span class="ot">=</span><span class="fu">if_else</span>(x<span class="sc">&lt;</span><span class="dv">0</span>, <span class="fu">levels</span>(df_filled[,j])[<span class="dv">1</span>],<span class="fu">levels</span>(df_filled[,j])[<span class="dv">2</span>])</span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>          df_filled[i,j]<span class="ot">=</span>x</span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df_filled)</span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  arm_ipd eos_bl age_imp exac_bl sex smoking_bl fev1_bl
+1     ICS    0.4      75       2   M    Current    0.78
+2     ICS    0.2      75       1   M     Former    1.38
+3 Control    0.5      65       1   M       &lt;NA&gt;    1.00
+4     ICS    0.3      65       1   F    Current    0.71
+5 Control    0.4      65       1   M       &lt;NA&gt;      NA
+6     ICS     NA      55       2   M       &lt;NA&gt;    0.53</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  arm_ipd    eos_bl age_imp exac_bl sex smoking_bl  fev1_bl
+1     ICS 0.4000000      75       2   M    Current 0.780000
+2     ICS 0.2000000      75       1   M     Former 1.380000
+3 Control 0.5000000      65       1   M     Former 1.000000
+4     ICS 0.3000000      65       1   F    Current 0.710000
+5 Control 0.4000000      65       1   M     Former 1.114985
+6     ICS 0.2256478      55       2   M    Current 0.530000</code></pre>
+</div>
+</div>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
 <div id="refs" class="references csl-bib-body" role="list">
@@ -329,6 +562,7 @@ div.csl-indent {
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -232,6 +232,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#psm" id="toc-psm" class="nav-link active" data-scroll-target="#psm">PSM</a></li>
+  <li><a href="#regression-imputation" id="toc-regression-imputation" class="nav-link" data-scroll-target="#regression-imputation">Regression Imputation</a></li>
   </ul>
 </nav>
     </div>
@@ -295,6 +296,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>[1] 0.5790294</code></pre>
 </div>
 </div>
+</section>
+<section id="regression-imputation" class="level2">
+<h2 class="anchored" data-anchor-id="regression-imputation">Regression Imputation</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>  data<span class="ot">=</span>data1<span class="sc">%&gt;%</span> <span class="fu">filter</span>(train) <span class="sc">%&gt;%</span> <span class="fu">get_all_vars</span>(model, <span class="at">data=</span>.) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">all_of</span>(mod.lhs), <span class="sc">-</span>trt_dur, <span class="sc">-</span>arm_ipd)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  </span>

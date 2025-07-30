@@ -317,13 +317,13 @@ div.csl-indent {
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">complete</span>(m1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  arm_ipd eos_bl age_imp exac_bl sex smoking_bl  fev1_bl    trt_dur
-1     ICS    0.2      55       1   M     Former 0.760000 0.63244353
-2     ICS    0.0      55       1   M     Former 1.171107 0.99931554
-3     ICS    0.1      65       1   M    Current 1.330000 0.25188227
-4 Control    0.1      75       1   M    Current 0.800000 0.07118412
-5     ICS    0.4      55       1   M    Current 1.290000 1.01300479
-6     ICS    0.1      55       1   F    Current 0.920970 0.45722108</code></pre>
+<pre><code>  arm_ipd eos_bl age_imp  exac_bl sex smoking_bl fev1_bl    trt_dur
+1     ICS    0.1      65 1.000000   M    Current    1.33 0.25188227
+2 Control    0.1      75 1.455819   M    Current    0.80 0.07118412
+3     ICS    0.4      55 1.000000   M    Current    1.29 1.01300479
+4     ICS    0.1      55 1.000000   F    Current    0.67 0.45722108
+5 Control    0.5      65 1.296573   M    Current    1.20 0.63791923
+6     ICS    0.4      75 2.000000   M    Current    0.78 0.51471595</code></pre>
 </div>
 </div>
 <p>But my concern here is that I can’t work out how to run a data-agnostic on the fly imputation so I made my own version.</p>
@@ -380,7 +380,7 @@ div.csl-indent {
 <span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>      <span class="co">#currently can only cope with numeric and binary</span></span>
 <span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(t[i]<span class="sc">==</span><span class="st">"numeric"</span>){</span>
 <span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>        mod[[<span class="fu">names</span>(data[i])]]<span class="ot">=</span><span class="fu">lm</span>(<span class="at">formula =</span> formula, <span class="at">data=</span>tempdata)</span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>      }<span class="cf">else</span> <span class="cf">if</span>(t[i]<span class="sc">==</span><span class="st">"factor"</span>){</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>      }<span class="cf">else</span> <span class="cf">if</span>(t[i] <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"factor"</span>, <span class="st">"logical"</span>)){</span>
 <span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>        mod[[<span class="fu">names</span>(data[i])]]<span class="ot">=</span><span class="fu">glm</span>(<span class="at">formula =</span> formula, <span class="at">data=</span>tempdata, <span class="at">family=</span><span class="st">"binomial"</span>)</span>
 <span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>      }</span>
 <span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>      </span>
@@ -503,32 +503,27 @@ div.csl-indent {
 <span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>  <span class="co">#a reapet for each iteration</span></span>
 <span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iter){</span>
-<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(df_filled)[<span class="dv">1</span>]){</span>
-<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>      <span class="co"># skips complete rows</span></span>
-<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(rs[i]<span class="sc">==</span><span class="fu">dim</span>(df_filled)[<span class="dv">1</span>]){<span class="cf">next</span>}</span>
-<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>      <span class="co">#skips if there is only one missing value as it will immediately converge</span></span>
-<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">dim</span>(df_filled)[<span class="dv">1</span>]<span class="sc">-</span>rs[i]<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>k<span class="sc">&gt;</span><span class="dv">1</span>){<span class="cf">next</span>}</span>
-<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(df_filled)[<span class="dv">2</span>]){</span>
-<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(na_data[i,j]<span class="sc">==</span><span class="dv">1</span>){</span>
-<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>          <span class="cf">next</span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(df_filled)[<span class="dv">1</span>]){</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>      <span class="co"># cat(crayon::yellow(paste0(i, "\n")))</span></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(df_filled)[<span class="dv">2</span>]){</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>        <span class="co"># cat(crayon::blue(paste0(j, "\n")))</span></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(na_data[i,j]<span class="sc">==</span><span class="dv">1</span>){</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>          <span class="cf">next</span></span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>          x<span class="ot">=</span><span class="fu">predict</span>(mod[[<span class="fu">names</span>(newdata[j])]], <span class="at">newdata=</span>df_filled[i,])</span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(t[j] <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"factor"</span>, <span class="st">"logical"</span>)){</span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>          df_filled[i,j]<span class="ot">=</span><span class="fu">if_else</span>(x<span class="sc">&lt;</span><span class="dv">0</span>, <span class="fu">levels</span>(df_filled[,j])[<span class="dv">1</span>],<span class="fu">levels</span>(df_filled[,j])[<span class="dv">2</span>])</span>
 <span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
-<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>          x<span class="ot">=</span><span class="fu">predict</span>(mod[[<span class="fu">names</span>(data[j])]], <span class="at">newdata=</span>df_filled[i,])</span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>          df_filled[i,j]<span class="ot">=</span>x</span>
 <span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(t[j]<span class="sc">==</span><span class="st">"factor"</span>){</span>
-<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>          df_filled[i,j]<span class="ot">=</span><span class="fu">if_else</span>(x<span class="sc">&lt;</span><span class="dv">0</span>, <span class="fu">levels</span>(df_filled[,j])[<span class="dv">1</span>],<span class="fu">levels</span>(df_filled[,j])[<span class="dv">2</span>])</span>
-<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
-<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>          df_filled[i,j]<span class="ot">=</span>x</span>
-<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df_filled)</span>
-<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df_filled)</span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">

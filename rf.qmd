@@ -24,7 +24,7 @@ source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECO
 library(randomForest)
 library(tidyverse)
 
-load("data/study_data.RDa")
+
 
 ddm=study_data$EFFECT$ddm %>% 
   dplyr::select(usubjid, paramcd, aval) %>% 

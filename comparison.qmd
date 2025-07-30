@@ -30,7 +30,9 @@ data1=study_data$EFFECT$ad %>%
     na_indices <- sample(n, size = floor(0.2 * n))
     .x[na_indices] <- NA
     .x
-  })) 
+  })) %>% 
+  filter(trt_dur>0.5)
+
 data1$train=as.logical(rbinom(nrow(data1),1, 0.8))
 data=data1
 
@@ -84,4 +86,60 @@ out_sample_ri=auc(test, "exac_modsev_n", "fit")
 
 out_sample_ri
 
+```
+
+## RF with RI
+
+```{r,message=FALSE, warning=FALSE} 
+ddm=study_data$EFFECT$ddm %>% dplyr::select(usubjid, paramcd, aval) %>% pivot_wider(names_from=paramcd, values_from=aval) %>% dplyr::select(-BACT)
+
+ad=data1 %>% dplyr::select(usubjid, arm_ipd, trt_dur, age_imp, ics_bl, sex, cat_bl,fev1_bl, fev1percent_bl, fvc_bl, fev1fvc_bl, laba_bl, lama_bl, comorb_tot_bl, eos_bl, eos_pc_bl, reversibility_bl, smoking_bl, exac_bl, exac_modsev_n, train) 
+
+model=rate~.
+
+data2=merge(ad, ddm, by="usubjid") %>% 
+  filter(train)
+
+data_rf_ri=regression_imp(data2 %>% dplyr::select(-c(usubjid, arm_ipd, trt_dur, exac_modsev_n, train)))
+
+data_rf_merge=data2 %>%   
+  mutate(rate=exac_modsev_n/trt_dur) %>% 
+  drop_na(rate)%>% 
+  dplyr::select(rate, arm_ipd) %>% 
+  cbind.data.frame(data_rf_ri$data_imp) %>%
+  mutate(across(where(is.logical), as.integer),
+         interaction=eos_bl*if_else(arm_ipd=="ICS",1,0))
+
+library(randomForest)
+rf=randomForest(formula=model, data=data_rf_merge)
+
+test=cbind.data.frame(rate=data_rf_merge$rate,
+                      fit=predict(rf, data_rf_merge))
+
+in_sample_rf=auc(test, "rate", "fit")
+
+in_sample_rf
+
+
+newdata2=merge(ad, ddm, by="usubjid") %>% 
+  filter(!train)
+
+newdata_rf_ri=regression_imp_on_the_fly(data_rf_ri, newdata2 %>% dplyr::select(-c(usubjid, arm_ipd, trt_dur, exac_modsev_n, train)))
+
+newdata_rf_merge=newdata2 %>%   
+  mutate(rate=exac_modsev_n/trt_dur) %>% 
+  drop_na(rate)%>% 
+  dplyr::select(rate, arm_ipd) %>% 
+  cbind.data.frame(newdata_rf_ri) %>%
+  mutate(across(where(is.logical), as.integer),
+         interaction=eos_bl*if_else(arm_ipd=="ICS",1,0))
+
+z=predict(rf, newdata_rf_merge, se.fit=T)
+
+pred.out=data.frame(actual=newdata_rf_merge$rate,
+                    pred=z)
+
+out_sample_rf=auc(pred.out, "actual", "pred")
+
+out_sample_rf
 ```

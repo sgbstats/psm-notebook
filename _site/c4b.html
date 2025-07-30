@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Random Forests – Seb’s Notebook</title>
+<title>C for benefit – Seb’s Notebook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -89,12 +89,12 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ad8f35b0ccd18a1b354e06f9e8774801.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-ad8f35b0ccd18a1b354e06f9e8774801.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-b8f2c855b079012052688c8566a25f5c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-dark-b8f2c855b079012052688c8566a25f5c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -123,6 +123,35 @@ div.csl-indent {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -136,7 +165,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./rf.html">Random Forests</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./c4b.html">C-for-benefit</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -214,12 +243,12 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./comparison.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Method Comparioson</span></a>
+ <span class="menu-text">Method Comparison</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./rf.html" class="sidebar-item-text sidebar-link active">
+  <a href="./rf.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Random Forests</span></a>
   </div>
 </li>
@@ -227,6 +256,12 @@ div.csl-indent {
   <div class="sidebar-item-container"> 
   <a href="./splines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Splines</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./c4b.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">C-for-benefit</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -251,7 +286,7 @@ div.csl-indent {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#thoughts-about-imputing-data" id="toc-thoughts-about-imputing-data" class="nav-link active" data-scroll-target="#thoughts-about-imputing-data">Thoughts about imputing data</a></li>
+  <li><a href="#matching-procedure" id="toc-matching-procedure" class="nav-link active" data-scroll-target="#matching-procedure">Matching procedure</a></li>
   </ul>
 </nav>
     </div>
@@ -260,7 +295,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Random Forests</h1>
+<h1 class="title">C for benefit</h1>
 </div>
 
 
@@ -277,87 +312,146 @@ div.csl-indent {
 </header>
 
 
-<p>Random forest needs to have complete data and ones where there it is missing it seems to want to impute with mean impution. I really don’t like this approach. <span class="citation" data-cites="tang2017">Tang and Ishwaran (<a href="#ref-tang2017" role="doc-biblioref">2017</a>)</span></p>
-<p>Takes sqrt(n) of the variables each time and builds a decision tree from those variables and then takes the average from all of the trees (normally 100)</p>
-<p>For our big, data driven model. We would end up borrowing across studies, which probably isn’t the end of the world. However, the predict function in the RF package doesn’t like incomplete data.</p>
-<p>Major question about interaction. I think that we would have add an interaction variable into the datasets but then theoretically it should only be in models when both of the arm and eos (eg) were both in the tree.</p>
+<p>In C for benefit, the matching is based on predicted benefit, but what happens when there are substantially different baseline ‘hetrogeneous’ risks? This is based on <span class="citation" data-cites="klaveren2018">Klaveren et al. (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> which used a logistic model.</p>
+<p>Let’s consider a model</p>
+<p><span class="math display">\[
+Y \sim X_1 + X_2 + arm * X_3 + arm * X_4
+\]</span></p>
+<p>This can be rewritten as</p>
+<p><span class="math display">\[
+y_i= f(\beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + \beta_3 x_{3i} + \beta_4 x_{4i} + arm_i*(\beta_a + \beta_{3a} x_{3i} + \beta_{4a} x_{4i}), ...)
+\]</span></p>
+<p>where <span class="math inline">\(...\)</span> is other arguments as required. This can subsequently reduce</p>
+<p><span class="math display">\[
+y_i=f(\beta_0+ \beta_a arm_i+\beta_{homo,i}+\beta_{het,i}arm_i,...)
+\]</span></p>
+<p><span class="math display">\[
+\beta_{homo,i}=\beta_1 x_{1i} + \beta_2 x_{2i} + \beta_3 x_{3i} + \beta_4 x_{4i}
+\]</span></p>
+<p><span class="math display">\[
+\beta_{het,i}= \beta_{3a} x_{3i} + \beta_{4a} x_{4i}
+\]</span></p>
+<p>So in the case where <span class="math inline">\(\beta_a \gg \beta_{het,i}\)</span> and <span class="math inline">\(\beta_{homo,i} \gg \beta_{het,i}\)</span> , this reduces to essentially a homogeneous model and C-for-benefit doesn’t really apply. We will further consider only when <span class="math inline">\(\beta_{het,i}\)</span> is non-negligible. This does apply to larger and more complex models but we use this model wlog. <span class="math inline">\(\beta_0\)</span> can be folded into <span class="math inline">\(\beta_{homo,i}\)</span> and <span class="math inline">\(\beta_{arm}\)</span> can be folded into <span class="math inline">\(\beta_{het,i}\)</span> as they shift the values equally for all patients.</p>
+<p>Previous literature has generally used logistic regression with the ternary outcome (-1,0,1) corresponding to harm, no difference, and benefit respectively. In this analysis we extend the paired outcome to calculated as <span class="math inline">\(actual_{trt,j}-actual_{control,j}\)</span> where j is the <span class="math inline">\(j^{th}\)</span> matched pair. &lt;0 corresponds to harm and &gt;0 corresponds to benefit.</p>
+<section id="matching-procedure" class="level3">
+<h3 class="anchored" data-anchor-id="matching-procedure">Matching procedure</h3>
+<section id="lit-review" class="level4">
+<h4 class="anchored" data-anchor-id="lit-review">Lit review</h4>
+<p>It appears from <span class="citation" data-cites="klaveren2018">Klaveren et al. (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> that (assuming equal number in each group; in a case of unequal numbers extra people are removed at random), each arm is ranked on predicted treatment benefit. We take <span class="math inline">\(rank(\beta_{het,i})\)</span> in each arm and rank 1 in treatment is paired with rank 1 in control, two with two etc.</p>
+<p>Where there is a large homogeneous/baseline effect (that is the outcome is caused in large part by factor(s) that do not interact with treatment), the means that we may end up matching patients with equal/very similar</p>
+<p><span class="citation" data-cites="efthimiou2023">Efthimiou et al. (<a href="#ref-efthimiou2023" role="doc-biblioref">2023</a>)</span> add that C4B can be used by matching on covariates or on the predicted benefit. In a further paper by <span class="citation" data-cites="hoogland2024">Hoogland et al. (<a href="#ref-hoogland2024" role="doc-biblioref">2024</a>)</span> discuss matching on covariates (via mahlinobis distance) but in high dimensional data, this yields issues. <span class="citation" data-cites="klaveren2018">Klaveren et al. (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> briefly mentioned using MD as a sensitivity analysis but didn’t go into further detail. <span class="citation" data-cites="smit2025">Smit et al. (<a href="#ref-smit2025" role="doc-biblioref">2025</a>)</span> used a version called AUC-benefit although the definition was a tad ropey and didn’t use C4B as they didn’t like the matching.</p>
+</section>
+<section id="option-1-mahalanobis-distance-between-the-het-and-the-homo" class="level4">
+<h4 class="anchored" data-anchor-id="option-1-mahalanobis-distance-between-the-het-and-the-homo">Option 1: Mahalanobis distance between the het and the homo</h4>
+<p>After reducing the model down to our homo- and hetrogeneous effects, we can match the patients using Mahalanobis distance.</p>
+<p>After matching you calculate the</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>ddm<span class="ot">=</span>study_data<span class="sc">$</span>EFFECT<span class="sc">$</span>ddm <span class="sc">%&gt;%</span> </span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(usubjid, paramcd, aval) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from=</span>paramcd, <span class="at">values_from=</span>aval) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>BACT)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>ad<span class="ot">=</span>study_data<span class="sc">$</span>EFFECT<span class="sc">$</span>ad <span class="sc">%&gt;%</span> </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(usubjid, arm_ipd, ics_dose, ics_dose_24, trt_dur, age_imp, ics_bl, sex, cat_bl,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                fev1_bl, fev1percent_bl, fvc_bl, fev1fvc_bl, laba_bl, lama_bl, comorb_tot_bl, eos_bl, </span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                eos_pc_bl, reversibility_bl, smoking_bl, exac_bl, gold_grp, gold_stage, exac_modsev_n)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>model<span class="ot">=</span><span class="st">"rate~."</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>model<span class="ot">=</span><span class="fu">as.formula</span>(model)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>data<span class="ot">=</span><span class="fu">merge</span>(ad, ddm, <span class="at">by=</span><span class="st">"usubjid"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(trt_dur<span class="sc">&gt;</span><span class="fl">0.5</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="co">#dplyr::mutate_at(c("exac_bl", "fev1_bl"),~ifelse(sample(c(TRUE, FALSE), size = length(.), replace = TRUE, prob = c(0.8, 0.2)),., NA))%&gt;% </span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">interaction=</span>eos_bl<span class="sc">*</span><span class="fu">if_else</span>(arm_ipd<span class="sc">==</span><span class="st">"ICS"</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">rate=</span>exac_modsev_n<span class="sc">/</span>trt_dur) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(rate)<span class="sc">%&gt;%</span> </span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>trt_dur, <span class="sc">-</span>exac_modsev_n, <span class="sc">-</span>usubjid) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.logical), as.integer))</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>data2<span class="ot">=</span><span class="fu">na.roughfix</span>(data)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>train<span class="ot">=</span><span class="fu">as.logical</span>(<span class="fu">rbinom</span>(<span class="fu">nrow</span>(data),<span class="dv">1</span>, <span class="fl">0.8</span>))</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>rf<span class="ot">=</span><span class="fu">randomForest</span>(<span class="at">formula=</span>model, <span class="at">data=</span>data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(train) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>train), <span class="at">na.action =</span> na.omit)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">varImpPlot</span>(rf)</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>newdata<span class="ot">=</span>data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>train) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>train)<span class="sc">%&gt;%</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.roughfix</span>()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># In this we are using simulating some effects</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">124</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">arm =</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, n, <span class="at">replace =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">homo =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">hetro =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">25</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)<span class="sc">%&gt;%</span> </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total=</span>hetro<span class="sc">+</span>homo)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform full matching</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>m.out <span class="ot">&lt;-</span> <span class="fu">matchit</span>(arm <span class="sc">~</span> homo <span class="sc">+</span> hetro,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> data,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"nearest"</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                 <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(m.out)</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Get matched data with subclass info</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>matched_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m.out)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># # View first few rows of matched data</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co"># head(matched_data)</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Show who is matched together (by subclass)</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="ot">&lt;-</span> matched_data <span class="sc">%&gt;%</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(subclass, arm, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subclass)<span class="sc">%&gt;%</span> </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arm=</span><span class="fu">if_else</span>(arm<span class="sc">==</span><span class="dv">1</span>, <span class="st">"Trt"</span>, <span class="st">"Control"</span>))</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># View matched groups</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># print(matched_groups, n = 20)</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>z<span class="ot">=</span><span class="fu">predict</span>(rf, newdata, <span class="at">se.fit=</span>T)</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>pred.out<span class="ot">=</span><span class="fu">data.frame</span>(<span class="at">actual=</span>newdata<span class="sc">$</span>rate,</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>                    <span class="at">pred=</span>z)</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="fu">auc</span>(pred.out, <span class="st">"actual"</span>, <span class="st">"pred"</span>)</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>z1<span class="ot">=</span><span class="fu">predict</span>(rf, newdata, <span class="at">predict.all =</span> T)</span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>pred<span class="ot">=</span>z1<span class="sc">$</span>individual<span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span>  <span class="fu">mutate</span>(<span class="at">rn=</span><span class="fu">row_number</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols=</span><span class="sc">-</span><span class="st">"rn"</span>, <span class="at">values_to=</span><span class="st">"pred"</span>, <span class="at">names_to =</span> <span class="st">"tree"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">se.fit=</span><span class="fu">sd</span>(pred,<span class="at">na.rm=</span>T), <span class="at">.by=</span><span class="st">"rn"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">merge</span>(<span class="fu">data.frame</span>(<span class="at">pred=</span>z1<span class="sc">$</span>aggregate )<span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">rn=</span><span class="fu">row_number</span>()), <span class="at">by=</span><span class="st">"rn"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="sc">%&gt;%</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> hetro, <span class="at">y =</span> homo, <span class="at">group =</span> subclass, <span class="at">colour=</span>arm)) <span class="sc">+</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour=</span><span class="st">"Arm"</span>)<span class="sc">+</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="c4b_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<section id="thoughts-about-imputing-data" class="level2">
-<h2 class="anchored" data-anchor-id="thoughts-about-imputing-data">Thoughts about imputing data</h2>
+</div>
+</div>
+<p>In the figure above, The simulated data shows which of the control and the treated are matched together.</p>
+<p>A benefit of this is that the data can be shifted (e.g., folding in the intercept) and that it does not affect the match. The downside of this is that you cannot weight the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(subclass, total, arm) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> arm, <span class="at">values_from =</span> total) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">effect=</span>Trt<span class="sc">-</span>Control) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  subclass   Trt Control  effect
+  &lt;fct&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1 1         72.2    71.7  0.476 
+2 2         72.9    62.9  9.93  
+3 3         68.5    69.0 -0.499 
+4 4         65.6    65.5  0.0675
+5 5         63.1    62.0  1.11  
+6 6         86.9    81.9  5.05  </code></pre>
+</div>
+</div>
+<p>When looking at the actual C4B you then run the concordance off the effect column.</p>
+</section>
+<section id="option-2-excess-exacerbations" class="level4">
+<h4 class="anchored" data-anchor-id="option-2-excess-exacerbations">Option 2: Excess exacerbations</h4>
 <ul>
-<li><p>na.roughfix, isn’t a great option but may have some useful properties like actually wanting to reduce variance of predictor as a penalty for having high levels of incompleteness</p></li>
-<li><p>How we would deal with missing data in the test set may be more tricky.</p>
+<li><p>Matching only on the rank of the heterogeneous estimate</p></li>
+<li><p>We calculate the excess exacerbations based on <span class="math inline">\(actual_i-\mathbb{E}(exac_i|arm_i=control)\)</span></p>
 <ul>
-<li><p>I think we could use MICE to make n=20ish copies of the data to be predicted and then averaged over the prediction. Could be computationally intensive though (as then you be making 10k predictions.</p></li>
-<li><p>In practice you could end up having to impute on the client-side which may not be possible</p></li>
-<li><p>Or you use mean/mode imputation for new predictions.</p></li>
+<li><p>In the case of a pt in the control arm in real life then it would be the difference between predicted and actual</p></li>
+<li><p>In the case of pt in the trt group then the excess captures the treatment effect</p></li>
 </ul></li>
+<li><p>You then calculate the C4B based on the <span class="math inline">\(excess\sim rank\)</span></p></li>
+<li><p>This will only work for count or linear models.</p></li>
 </ul>
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-tang2017" class="csl-entry" role="listitem">
-Tang, Fei, and Hemant Ishwaran. 2017. <span>“Random Forest Missing Data Algorithms.”</span> <em>Statistical Analysis and Data Mining</em> 10 (6): 363–77. <a href="https://doi.org/10.1002/sam.11348">https://doi.org/10.1002/sam.11348</a>.
-</div>
-</div>
+
 
 
 </section>
+</section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-efthimiou2023" class="csl-entry" role="listitem">
+Efthimiou, Orestis, Jeroen Hoogland, Thomas P. A. Debray, Michael Seo, Toshiaki A. Furukawa, Matthias Egger, and Ian R. White. 2023. <span>“Measuring the Performance of Prediction Models to Personalize Treatment Choice.”</span> <em>Statistics in Medicine</em> 42 (8): 1188–1206. <a href="https://doi.org/10.1002/sim.9665">https://doi.org/10.1002/sim.9665</a>.
+</div>
+<div id="ref-hoogland2024" class="csl-entry" role="listitem">
+Hoogland, J., O. Efthimiou, T. L. Nguyen, and T. P. A. Debray. 2024. <span>“Evaluating Individualized Treatment Effect Predictions: A Model-Based Perspective on Discrimination and Calibration Assessment.”</span> <em>Statistics in Medicine</em> 43 (23): 4481–98. <a href="https://doi.org/10.1002/sim.10186">https://doi.org/10.1002/sim.10186</a>.
+</div>
+<div id="ref-klaveren2018" class="csl-entry" role="listitem">
+Klaveren, David van, Ewout W. Steyerberg, Patrick W. Serruys, and David M. Kent. 2018. <span>“The Proposed <span>‘</span>Concordance-Statistic for Benefit<span>’</span> Provided a Useful Metric When Modeling Heterogeneous Treatment Effects.”</span> <em>Journal of Clinical Epidemiology</em> 94 (February): 59–68. <a href="https://doi.org/10.1016/j.jclinepi.2017.10.021">https://doi.org/10.1016/j.jclinepi.2017.10.021</a>.
+</div>
+<div id="ref-smit2025" class="csl-entry" role="listitem">
+Smit, Jim M., Philip A. Van Der Zee, Sara C. M. Stoof, Michel E. Van Genderen, Dominic Snijders, Wim G. Boersma, Paola Confalonieri, et al. 2025. <span>“Predicting Benefit from Adjuvant Therapy with Corticosteroids in Community-Acquired Pneumonia: A Data-Driven Analysis of Randomised Trials.”</span> <em>The Lancet Respiratory Medicine</em> 13 (3): 221–33. <a href="https://doi.org/10.1016/S2213-2600(24)00405-3">https://doi.org/10.1016/S2213-2600(24)00405-3</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -584,8 +678,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -594,7 +686,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/notebook\.sebbate\.uk");
+      var filterRegex = new RegExp('/' + window.location.host + '/');
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -696,7 +788,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

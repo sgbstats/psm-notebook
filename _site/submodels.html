@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,12 +69,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ad8f35b0ccd18a1b354e06f9e8774801.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-ad8f35b0ccd18a1b354e06f9e8774801.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-b8f2c855b079012052688c8566a25f5c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-dark-b8f2c855b079012052688c8566a25f5c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -193,14 +193,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./comparison.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Method Comparioson</span></a>
+  <a href="./rf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Random Forests</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./rf.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Random Forests</span></a>
+  <a href="./comparison.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Model Comparison</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./c4b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">C-for-benefit</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -282,7 +288,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>submodels<span class="ot">&lt;-</span> <span class="cf">function</span>(data, model, model_fn,<span class="at">submodel_type=</span><span class="fu">c</span>(<span class="st">"psm"</span>, <span class="st">"ccsm"</span>), <span class="at">force_variables=</span><span class="fu">c</span>(),<span class="at">threshold_multiplier=</span><span class="dv">2</span>,<span class="at">remove_model_data=</span><span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"y"</span>, <span class="st">"fitted"</span>), ...){</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#house keeping</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  submodel_type<span class="ot">=</span>submodel_type[<span class="dv">1</span>] <span class="co">#picks the first of submodels</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  submodel_type<span class="ot">=</span><span class="fu">match.arg</span>(submodel_type,<span class="fu">c</span>(<span class="st">"psm"</span>, <span class="st">"ccsm"</span>)) <span class="co">#picks the first of submodels</span></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span>submodel_type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"psm"</span>, <span class="st">"ccsm"</span>)){</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"psm or ccsm required"</span>)</span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  }</span>
@@ -292,8 +298,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  model<span class="ot">=</span><span class="fu">as.formula</span>(model) <span class="co">#coerces the model formula into a formula class object</span></span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  mod.data<span class="ot">&lt;-</span> <span class="fu">get_all_vars</span>(model, <span class="at">data=</span>data) <span class="sc">%&gt;%</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(<span class="fu">all_of</span>(mod.lhs)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(<span class="fu">all_of</span>(force_variables))</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    tidyr<span class="sc">::</span><span class="fu">drop_na</span>(<span class="fu">all_of</span>(mod.lhs)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    tidyr<span class="sc">::</span><span class="fu">drop_na</span>(<span class="fu">all_of</span>(force_variables))</span>
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  model_names<span class="ot">=</span><span class="fu">names</span>(mod.data)</span>
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -332,48 +338,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>  reg.out <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">'list'</span>, <span class="fu">length</span>(all.patterns))</span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(reg.out) <span class="ot">&lt;-</span> mp.info<span class="sc">$</span>mp.info</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(reg.out) <span class="ot">&lt;-</span> mp.info<span class="sc">$</span>mp</span>
 <span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq</span>(<span class="fu">nrow</span>(mp.info))) {</span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    col.keep  <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">strsplit</span>(mp.info<span class="sc">$</span>mp[i],<span class="st">''</span>)[[<span class="dv">1</span>]]<span class="sc">==</span><span class="st">'0'</span>)</span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">length</span>(col.keep)<span class="sc">==</span><span class="dv">0</span>){</span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>      new.mod <span class="ot">&lt;-</span> <span class="fu">paste</span>(mod.lhs,<span class="dv">1</span>,<span class="at">sep=</span><span class="st">'~'</span>)</span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>      cols<span class="ot">=</span><span class="fu">names</span>(mod.data)[<span class="fu">names</span>(mod.data)<span class="sc">!=</span>mod.lhs]</span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>      vars_to_keep<span class="ot">=</span>cols[col.keep]</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  cols<span class="ot">=</span><span class="fu">names</span>(mod.data)[<span class="fu">names</span>(mod.data)<span class="sc">!=</span>mod.lhs]</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq</span>(<span class="fu">nrow</span>(mp.info))) {</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    col.keep  <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">strsplit</span>(mp.info<span class="sc">$</span>mp[i],<span class="st">''</span>)[[<span class="dv">1</span>]]<span class="sc">==</span><span class="st">'0'</span>)</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">length</span>(col.keep)<span class="sc">==</span><span class="dv">0</span>){</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>      new.mod <span class="ot">&lt;-</span> <span class="fu">paste</span>(mod.lhs,<span class="dv">1</span>,<span class="at">sep=</span><span class="st">'~'</span>)</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
 <span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>      new.mod<span class="ot">=</span><span class="fu">remove_missing_vars</span>(model, cols, vars_to_keep)</span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>    <span class="co"># makes sure that the right model is used so it will always use the complete case data if ccsm is chosen and then use ccsm if there is insufficient data points.</span></span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(mp.info<span class="sc">$</span>use.psm[i]<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>submodel_type<span class="sc">==</span><span class="st">"psm"</span>){</span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>      reg.out[[i]] <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">pattern=</span>vars_to_keep,</span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mp=</span>mp.info<span class="sc">$</span>mp[i],</span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mod=</span><span class="fu">model_fn</span>(<span class="at">formula=</span>new.mod,<span class="at">data=</span>mod.data[tmp.info[[i]],]))</span>
-<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
-<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>      reg.out[[i]] <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">pattern =</span> vars_to_keep,</span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mp=</span>mp.info<span class="sc">$</span>mp[i],</span>
-<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mod=</span><span class="fu">model_fn</span>(<span class="at">formula=</span>new.mod,<span class="at">data=</span>mod.data))</span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>    <span class="co">#this is a fix for vivli</span></span>
-<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> remove_model_data){</span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>      reg.out[i][[<span class="st">"mod"</span>]][[i]]<span class="ot">=</span><span class="cn">NULL</span></span>
-<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"model"</span>]]<span class="ot">=</span>model</span>
-<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"vars"</span>]]<span class="ot">=</span>var_names</span>
-<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"force_variables"</span>]]<span class="ot">=</span>force_variables</span>
-<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"mp.info"</span>]]<span class="ot">=</span>mp.info</span>
-<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"all.patterns"</span>]]<span class="ot">=</span>all.patterns</span>
-<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"submodel_type"</span>]]<span class="ot">=</span>submodel_type</span>
-<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"threshold"</span>]]<span class="ot">=</span>threshold</span>
-<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(reg.out)</span>
-<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>      vars_to_keep<span class="ot">=</span>cols[col.keep]</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>      new.mod<span class="ot">=</span><span class="fu">remove_missing_vars</span>(model, cols, vars_to_keep)</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>    <span class="co"># makes sure that the right model is used so it will always use the complete case data if ccsm is chosen and then use ccsm if there is insufficient data points.</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(mp.info<span class="sc">$</span>use.psm[i]<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>submodel_type<span class="sc">==</span><span class="st">"psm"</span>){</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>      reg.out[[i]] <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">pattern=</span>vars_to_keep,</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mp=</span>mp.info<span class="sc">$</span>mp[i],</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mod=</span><span class="fu">model_fn</span>(<span class="at">formula=</span>new.mod,<span class="at">data=</span>mod.data[tmp.info[[i]],]))</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>      reg.out[[i]] <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">pattern =</span> vars_to_keep,</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mp=</span>mp.info<span class="sc">$</span>mp[i],</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mod=</span><span class="fu">model_fn</span>(<span class="at">formula=</span>new.mod,<span class="at">data=</span>mod.data))</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>    <span class="co">#this is a fix for vivli</span></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> remove_model_data){</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>      reg.out[[i]][[<span class="st">"mod"</span>]][[j]]<span class="ot">=</span><span class="cn">NULL</span></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"model"</span>]]<span class="ot">=</span>model</span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"vars"</span>]]<span class="ot">=</span>var_names</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"force_variables"</span>]]<span class="ot">=</span>force_variables</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"mp.info"</span>]]<span class="ot">=</span>mp.info</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"all.patterns"</span>]]<span class="ot">=</span>all.patterns</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"submodel_type"</span>]]<span class="ot">=</span>submodel_type</span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>  reg.out[[<span class="st">"meta"</span>]][[<span class="st">"threshold"</span>]]<span class="ot">=</span>threshold</span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(reg.out)</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>stripped_model<span class="ot">=</span><span class="cf">function</span>(submodel.object){</span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(submodel.object[[<span class="st">"meta"</span>]][[<span class="st">"all.patterns"</span>]])){</span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>   strip <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>        <span class="at">coefficients =</span> submodel.object[[i]][[<span class="st">"mod"</span>]]<span class="sc">$</span>coefficients,</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>        <span class="at">terms =</span> submodel.object[[i]][[<span class="st">"mod"</span>]]<span class="sc">$</span>terms,</span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlevels =</span> submodel.object[[i]][[<span class="st">"mod"</span>]]<span class="sc">$</span>xlevels,</span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>        <span class="at">family =</span> submodel.object[[i]][[<span class="st">"mod"</span>]]<span class="sc">$</span>family</span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>  submodel.object[[i]][[<span class="st">"mod"</span>]]<span class="ot">=</span>strip</span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(submodel.object)</span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="basic-premise-of-the-function" class="level3">
 <h3 class="anchored" data-anchor-id="basic-premise-of-the-function">Basic premise of the function</h3>
@@ -396,15 +418,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#example</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>submodels.object[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[[1]]
-[[1]]$pattern
+<pre><code>$`00000000`
+$`00000000`$pattern
 [1] "arm_ipd"    "eos_bl"     "age_imp"    "exac_bl"    "sex"       
 [6] "smoking_bl" "fev1_bl"    "trt_dur"   
 
-[[1]]$mp
+$`00000000`$mp
 [1] "00000000"
 
-[[1]]$mod
+$`00000000`$mod
 
 Call:  model_fn(formula = new.mod, data = mod.data[tmp.info[[i]], ], 
     init.theta = 2.224975191, link = log)
@@ -461,7 +483,7 @@ Residual Deviance: 685.3    AIC: 1540</code></pre>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">#keeping the correct bits of data.</span></span>
 <span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  mod.data<span class="ot">&lt;-</span>newdata <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">any_of</span>(<span class="fu">c</span>(mod.lhs, submodels.object[[<span class="st">"meta"</span>]][[<span class="st">"vars"</span>]]))) <span class="sc">%&gt;%</span> </span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(<span class="fu">all_of</span>(submodels.object[[<span class="st">"meta"</span>]][[<span class="st">"force_variables"</span>]]))</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    tidyr<span class="sc">::</span><span class="fu">drop_na</span>(<span class="fu">all_of</span>(submodels.object[[<span class="st">"meta"</span>]][[<span class="st">"force_variables"</span>]]))</span>
 <span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">#its useful to have a copy</span></span>
 <span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  sdata<span class="ot">&lt;-</span> mod.data</span>
@@ -472,10 +494,10 @@ Residual Deviance: 685.3    AIC: 1540</code></pre>
 <span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> missing_vars){</span>
 <span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    sdata[,i] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
 <span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># getting the missingness patterns and setting up the data ready.</span></span>
 <span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unpack</span>(<span class="fu">missingness_pattern</span>(sdata <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">any_of</span>(mod.lhs))))</span>
-<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  mp.info<span class="ot">=</span>submodels.object[[<span class="st">"meta"</span>]][[<span class="st">"mp.info"</span>]] <span class="sc">%&gt;%</span> <span class="fu">filter</span>(mp <span class="sc">%in%</span> mp.info<span class="sc">$</span>mp)</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  mp.info<span class="ot">=</span>submodels.object[[<span class="st">"meta"</span>]][[<span class="st">"mp.info"</span>]]<span class="co"># %&gt;% filter(mp %in% mp.info$mp)</span></span>
 <span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>  pred.out<span class="ot">=</span>sdata[<span class="dv">0</span>,]</span>
 <span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>  pred.out<span class="sc">$</span>fit<span class="ot">=</span><span class="fu">numeric</span>(<span class="dv">0</span>)</span>
@@ -488,19 +510,19 @@ Residual Deviance: 685.3    AIC: 1540</code></pre>
 <span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>  <span class="co"># predicting for each missing pattern</span></span>
 <span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(mp.info)){</span>
-<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>    newdata<span class="ot">=</span>sdata[tmp.info[[mp.info<span class="sc">$</span>mp[i]]],]</span>
-<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>    pred<span class="ot">=</span><span class="fu">predict</span>(submodels.object[[i]][[<span class="st">"mod"</span>]], <span class="at">newdata=</span>newdata, <span class="at">se.fit=</span>se.fit,...)</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>    newdata_mp<span class="ot">=</span>sdata[tmp.info[[mp.info<span class="sc">$</span>mp[i]]],]</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">nrow</span>(newdata_mp)<span class="sc">==</span><span class="dv">0</span>){<span class="cf">next</span>}</span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>    pred<span class="ot">=</span><span class="fu">predict</span>(submodels.object[[i]][[<span class="st">"mod"</span>]], <span class="at">newdata=</span>newdata_mp, <span class="at">se.fit=</span>se.fit,...)</span>
 <span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(se.fit){</span>
-<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>      newdata<span class="sc">$</span>fit<span class="ot">=</span>pred<span class="sc">$</span>fit </span>
-<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>      newdata<span class="sc">$</span>se.fit<span class="ot">=</span>pred<span class="sc">$</span>se.fit</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>      newdata_mp<span class="sc">$</span>fit<span class="ot">=</span>pred<span class="sc">$</span>fit </span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>      newdata_mp<span class="sc">$</span>se.fit<span class="ot">=</span>pred<span class="sc">$</span>se.fit</span>
 <span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
-<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>      newdata<span class="sc">$</span>fit<span class="ot">=</span>pred.out</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>      newdata_mp<span class="sc">$</span>fit<span class="ot">=</span>pred.out</span>
 <span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(include_mp){</span>
-<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>      newdata<span class="sc">$</span>mp<span class="ot">=</span>mp.info<span class="sc">$</span>mp[i]</span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>      newdata_mp<span class="sc">$</span>mp<span class="ot">=</span>mp.info<span class="sc">$</span>mp[i]</span>
 <span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>    pred.out<span class="ot">=</span>pred.out <span class="sc">%&gt;%</span> <span class="fu">rbind</span>(newdata)</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>    pred.out<span class="ot">=</span>pred.out <span class="sc">%&gt;%</span> <span class="fu">rbind</span>(newdata_mp)</span>
 <span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span>retain_lhs){</span>
 <span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>    pred.out<span class="ot">=</span>pred.out <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">any_of</span>(mod.lhs))</span>
@@ -824,8 +846,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -936,7 +956,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

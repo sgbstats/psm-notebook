@@ -1,5 +1,8 @@
 project:
   type: website
+  render: 
+    - "*.qmd"
+    - "!comparison.qmd"
 
 website:
   title: "Seb's Notebook"
@@ -22,14 +25,14 @@ website:
             href:  helper_functions.qmd
       - text: "Regression Imputation"
         href: ri.qmd
-      - text: "Method Comparison"
-        href: comparison.qmd
       - text: "Random Forests"
         href: rf.qmd
-      - text: "Splines"
-        href: splines.qmd
+      - text: "Model Comparison"
+        href: comparison.qmd
       - text: "C-for-benefit"
         href: c4b.qmd
+      - text: "Splines"
+        href: splines.qmd
       - text: "Models progress"
         href: progress.qmd
       - text: "To-do list"

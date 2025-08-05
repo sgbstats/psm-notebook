@@ -5,6 +5,16 @@ bibliography: references.bib
 
 In C for benefit, the matching is based on predicted benefit, but what happens when there are substantially different baseline 'hetrogeneous' risks? This is based on @klaveren2018 which used a logistic model.
 
+#### Lit review
+
+It appears from @klaveren2018 that (assuming equal number in each group; in a case of unequal numbers extra people are removed at random), each arm is ranked on predicted treatment benefit. We take $rank(\beta_{het,i})$ in each arm and rank 1 in treatment is paired with rank 1 in control, two with two etc.
+
+Where there is a large homogeneous/baseline effect (that is the outcome is caused in large part by factor(s) that do not interact with treatment), the means that we may end up matching patients with equal/very similar
+
+@efthimiou2023 add that C4B can be used by matching on covariates or on the predicted benefit. In a further paper by @hoogland2024 discuss matching on covariates (via mahlinobis distance) but in high dimensional data, this yields issues. @klaveren2018 briefly mentioned using MD as a sensitivity analysis but didn't go into further detail. @smit2025 used a version called AUC-benefit although the definition was a tad ropey and didn't use C4B as they didn't like the matching.
+
+### Model decomposition
+
 Let's consider a model
 
 $$
@@ -37,82 +47,13 @@ Previous literature has generally used logistic regression with the ternary outc
 
 ### Matching procedure
 
-#### Lit review
+#### Option 1: Distance between the het and the homo
 
-It appears from @klaveren2018 that (assuming equal number in each group; in a case of unequal numbers extra people are removed at random), each arm is ranked on predicted treatment benefit. We take $rank(\beta_{het,i})$ in each arm and rank 1 in treatment is paired with rank 1 in control, two with two etc.
-
-Where there is a large homogeneous/baseline effect (that is the outcome is caused in large part by factor(s) that do not interact with treatment), the means that we may end up matching patients with equal/very similar
-
-@efthimiou2023 add that C4B can be used by matching on covariates or on the predicted benefit. In a further paper by @hoogland2024 discuss matching on covariates (via mahlinobis distance) but in high dimensional data, this yields issues. @klaveren2018 briefly mentioned using MD as a sensitivity analysis but didn't go into further detail. @smit2025 used a version called AUC-benefit although the definition was a tad ropey and didn't use C4B as they didn't like the matching.
-
-#### Option 1: Mahalanobis distance between the het and the homo
-
-After reducing the model down to our homo- and hetrogeneous effects, we can match the patients using Mahalanobis distance.
-
-After matching you calculate the
-
-```{r, warning=FALSE, message=FALSE}
-library(MatchIt)
-library(tidyverse)
-
-# In this we are using simulating some effects
-set.seed(124)
-n <- 100
-data <- data.frame(
-  arm = sample(0:1, n, replace = TRUE), 
-  homo = rnorm(n, mean = 50, sd = 10),
-  hetro = rnorm(n, mean = 25, sd = 4)
-)%>% 
-  mutate(total=hetro+homo)
-
-# Perform full matching
-m.out <- matchit(arm ~ homo + hetro,
-                 data = data,
-                 method = "nearest",
-                 ratio = 1,
-                 replace = FALSE)
-
-# Summary
-# summary(m.out)
-
-# Get matched data with subclass info
-matched_data <- match.data(m.out)
-
-# # View first few rows of matched data
-# head(matched_data)
-
-# Show who is matched together (by subclass)
-matched_groups <- matched_data %>%
-  select(subclass, arm, everything()) %>%
-  arrange(subclass)%>% 
-  mutate(arm=if_else(arm==1, "Trt", "Control"))
-# View matched groups
-# print(matched_groups, n = 20)
-
-
-matched_groups %>%
-  ggplot(aes(x = hetro, y = homo, group = subclass, colour=arm)) +
-  geom_line(color = "black") +
-  geom_point()+
-  labs(colour="Arm")+
-  theme_classic()
-
-
-```
-
-In the figure above, The simulated data shows which of the control and the treated are matched together.
+After reducing the model down to our homo- and hetrogeneous effects, we can match the patients using some distance metric.
 
 A benefit of this is that the data can be shifted (e.g., folding in the intercept) and that it does not affect the match. The downside of this is that you cannot weight the data.
 
-```{r}
-matched_groups %>% 
-  dplyr::select(subclass, total, arm) %>% 
-  pivot_wider(names_from = arm, values_from = total) %>% 
-  mutate(effect=Trt-Control) %>% 
-  head()
-```
-
-When looking at the actual C4B you then run the concordance off the effect column.
+When calculating C4B you rank the difference in the actual outcome and the rank of the mean hetro value.
 
 #### Option 2: Excess exacerbations
 
@@ -120,10 +61,399 @@ When looking at the actual C4B you then run the concordance off the effect colum
 
 -   We calculate the excess exacerbations based on $actual_i-\mathbb{E}(exac_i|arm_i=control)$
 
-    -   In the case of a pt in the control arm in real life then it would be the difference between predicted and actual
+-   In the case of a pt in the control arm in real life then it would be the difference between predicted and actual
 
-    -   In the case of pt in the trt group then the excess captures the treatment effect
+-   In the case of pt in the trt group then the excess captures the treatment effect
 
--   You then calculate the C4B based on the $excess\sim rank$
+-   You then calculate the C4B based on the $excess\sim rank(hetro)$.
+
+    -   In this case the hetro values are likely to be a lot closer than when using homo as part of the match.
 
 -   This will only work for count or linear models.
+
+#### A side note on Random Forests
+
+If we were to use the stratified random forests (the proper name I have forgotten), then $\beta_{homo}$ is the value of the control tree and the $\beta_{het}$ is the difference in the trees.
+
+### Implementation {#sec-implement}
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+load("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\data/study_data.RDa")
+set.seed(121)
+data1=study_data$EFFECT$ad
+data1$train=as.logical(rbinom(nrow(data1),1, 0.8))
+
+data=data1
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(MASS)
+library(tidyverse)
+
+# Data loaded out of sight
+train=data %>% filter(train)
+test=data %>% filter(!train)
+formula=exac_modsev_n ~ arm_ipd*eos_bl+age_imp+exac_bl+sex+arm_ipd*smoking_bl+fev1_bl+offset(trt_dur)
+
+model=glm.nb(formula, train, contrasts=NULL)
+
+summary(model)
+
+```
+
+**Concordance in train**
+
+```{r, message=FALSE, warning=FALSE}
+#finding the rate adjusted concordance
+train %>% 
+  cbind.data.frame(pred=predict(model, newdata = train, type="response")) %>%
+  mutate(rate=exac_modsev_n/trt_dur,
+         rate_p=pred/trt_dur) %>% 
+  lm(rate~rate_p, data=.) %>% 
+  survival::concordance()
+
+
+```
+
+**Concordance in test**
+
+```{r, message=FALSE, warning=FALSE}
+test %>% 
+  cbind.data.frame(pred=predict(model, newdata = test, type="response")) %>%
+  mutate(rate=exac_modsev_n/trt_dur,
+         rate_p=pred/trt_dur) %>% 
+  lm(rate~rate_p, data=.) %>% 
+  survival::concordance()
+  
+```
+
+FWIW this is a weird trial that has almost no ICS effect.
+
+#### Model decomosition
+
+```{r}
+decompose_model <- function(model, var, newdata=NULL, leave_var_as_binary=F) {
+  
+  model_data <- model$model
+  var0=var
+  levels=levels(model_data[[var0]])
+  var=paste0(var0,levels[2])
+  
+  
+  coeffs <- coef(model)
+  
+  if(is.null(newdata)){
+    X <- model.matrix(model)
+  }else{
+    X <- model.matrix(model, data=newdata)
+  }
+  coeff_names <- names(coeffs)
+  
+  # Identify components
+  homo_terms <- coeff_names[!grepl(paste0(var, ":"), coeff_names) & coeff_names != var]
+  hetro_terms <- coeff_names[grepl(paste0(var, ":"), coeff_names)]
+  
+  # Calculate homo component (as before)
+  homo_comp <- X[, homo_terms, drop = FALSE] %*% coeffs[homo_terms]
+  
+  # For hetro component: get the base terms without multiplying by var
+  # Extract the hetro coefficients and multiply by the base variables only
+  hetro_comp <- rep(0, nrow(X))
+  
+  for(term in hetro_terms) {
+    # Get the base variable name (remove "var:" prefix)
+    base_var <- gsub(paste0(var, ":"), "", term)
+    # Multiply coefficient by base variable only (not by var)
+    hetro_comp <- hetro_comp + coeffs[term] * X[, base_var]
+  }
+  
+  # Handle var main effect - add it to hetro component
+  if(var %in% coeff_names) {
+    hetro_comp <- hetro_comp + coeffs[var]
+  }
+  
+  # Extract the var data
+  var_data <- X[, var]
+  
+  out=data.frame(
+    homo = as.vector(homo_comp),
+    hetro = as.vector(hetro_comp),
+    var = as.vector(var_data)
+  )
+  colnames(out)[3] <- var0
+  
+  if(!leave_var_as_binary){
+    out[[var0]] <- ifelse(out[[var0]] == 1, levels[2], levels[1])
+  }
+  
+  if(!is.null(attr(model$terms, "offset"))){
+    
+    offset_name=(model %>% formula %>% all.vars())[attr(model$terms, "offset")]
+    
+    if(is.null(newdata)){
+      offset=model$offset
+    }else{
+      offset=newdata[[offset_name]]
+    }
+    
+    out[[offset_name]]=offset
+  }
+  return(out)
+}
+
+# Usage
+result <- decompose_model(model, "arm_ipd", leave_var_as_binary = T)
+head(result)
+
+test=data %>% filter(!train)
+result2 <- decompose_model(model, "arm_ipd", newdata=test, leave_var_as_binary = T)
+head(result2)
+```
+
+#### Option 1
+
+```{r}
+library(MatchIt)
+result_pre_match=result %>% 
+  mutate(rn=row_number()) %>% 
+  cbind.data.frame("exac_modsev_n"=train$exac_modsev_n)
+
+set.seed(123)
+min_size <- result_pre_match %>%
+  group_by(arm_ipd) %>%
+  summarise(n = n()) %>%
+  pull(n) %>%
+  min()
+
+result_balanced <- result_pre_match %>%
+  group_by(arm_ipd) %>%
+  sample_n(min_size, replace = F) %>%
+  ungroup() %>% 
+  arrange(rn)
+
+# Perform full matching
+m.out <- matchit(arm_ipd ~ homo + hetro,
+                 data = result_balanced,
+                 method = "optimal",
+                 ratio = 1,
+                 replace = FALSE)
+
+# Get matched data with subclass info
+matched_data <- match.data(m.out)
+
+# Show who is matched together (by subclass)
+matched_groups <- matched_data %>%
+  dplyr::select(subclass, arm_ipd, everything()) %>%
+  arrange(subclass)%>% 
+  mutate(arm_ipd=if_else(arm_ipd==0, "ICS", "Control"))
+
+#showing that density is preserved
+matched_groups %>% 
+  ggplot(aes(x=hetro, group=arm_ipd, col=arm_ipd))+
+  geom_density()
+
+matched_groups %>%
+  ggplot(aes(x = hetro, y = homo, group = subclass, colour=arm_ipd)) +
+  geom_line(color = "black") +
+  geom_point()+
+  labs(colour="Arm")+
+  theme_classic()
+
+### C4B 
+result_pre_match %>% merge(matched_data %>% dplyr::select(rn, hetro, subclass), .by="rn") %>% 
+mutate(rate=exac_modsev_n/trt_dur) %>% 
+  mutate(mean_het=mean(hetro), .by=subclass)%>% 
+  dplyr::select(rate, subclass, mean_het, arm_ipd) %>%
+  mutate(arm_ipd=if_else(arm_ipd==0, "ICS", "Control")) %>% 
+  pivot_wider(names_from = arm_ipd, values_from = rate) %>% 
+  mutate(diff=ICS-Control) %>% 
+  lm(diff~mean_het, data=.) %>% 
+  survival::concordance()
+
+
+```
+
+##### Validation
+
+```{r}
+library(MatchIt)
+result_pre_match=result2 %>% 
+  mutate(rn=row_number()) %>% 
+  cbind.data.frame("exac_modsev_n"=test$exac_modsev_n)
+
+set.seed(124)
+min_size <- result_pre_match %>%
+  group_by(arm_ipd) %>%
+  summarise(n = n()) %>%
+  pull(n) %>%
+  min()
+
+result_balanced <- result_pre_match %>%
+  group_by(arm_ipd) %>%
+  sample_n(min_size, replace = F) %>%
+  ungroup() %>% 
+  arrange(rn)
+
+# Perform full matching
+m.out <- matchit(arm_ipd ~ homo + hetro,
+                 data = result_balanced,
+                 method = "optimal",
+                 ratio = 1,
+                 replace = FALSE)
+
+# Get matched data with subclass info
+matched_data <- match.data(m.out)
+
+# Show who is matched together (by subclass)
+matched_groups <- matched_data %>%
+  dplyr::select(subclass, arm_ipd, everything()) %>%
+  arrange(subclass)%>% 
+  mutate(arm_ipd=if_else(arm_ipd==0, "ICS", "Control"))
+
+#showing that density is preserved
+matched_groups %>% 
+  ggplot(aes(x=hetro, group=arm_ipd, col=arm_ipd))+
+  geom_density()
+
+matched_groups %>%
+  ggplot(aes(x = hetro, y = homo, group = subclass, colour=arm_ipd)) +
+  geom_line(color = "black") +
+  geom_point()+
+  labs(colour="Arm")+
+  theme_classic()
+
+
+### C4B 
+result_pre_match %>% merge(matched_data %>% dplyr::select(rn, hetro, subclass), .by="rn") %>% 
+mutate(rate=exac_modsev_n/trt_dur) %>% 
+  mutate(mean_het=mean(hetro), .by=subclass)%>% 
+  dplyr::select(rate, subclass, mean_het, arm_ipd) %>%
+  mutate(arm_ipd=if_else(arm_ipd==0, "ICS", "Control")) %>% 
+  pivot_wider(names_from = arm_ipd, values_from = rate) %>% 
+  mutate(diff=ICS-Control) %>% 
+  lm(diff~mean_het, data=.) %>% 
+  survival::concordance()
+
+
+```
+
+#### Option 2
+
+```{r}
+library(MatchIt)
+result_pre_match=result %>% 
+  mutate(rn=row_number()) %>% 
+  cbind.data.frame("exac_modsev_n"=train$exac_modsev_n)
+
+set.seed(123)
+min_size <- result_pre_match %>%
+  group_by(arm_ipd) %>%
+  summarise(n = n()) %>%
+  pull(n) %>%
+  min()
+
+result_balanced <- result_pre_match %>%
+  group_by(arm_ipd) %>%
+  sample_n(min_size, replace = F) %>%
+  ungroup() %>% 
+  arrange(rn)
+
+results_excess=result_balanced %>% 
+  mutate(excess=exac_modsev_n/trt_dur-exp(homo))
+
+
+# Perform full matching
+m.out <- matchit(arm_ipd ~ hetro,
+                 data = result_balanced,
+                 method = "optimal",
+                 ratio = 1,
+                 replace = FALSE)
+
+# Get matched data with subclass info
+matched_data <- match.data(m.out)
+
+# Show who is matched together (by subclass)
+matched_groups <- matched_data %>%
+  dplyr::select(subclass, arm_ipd, everything()) %>%
+  arrange(subclass)%>% 
+  mutate(arm_ipd=if_else(arm_ipd==0, "ICS", "Control"))
+
+matched_groups %>%
+  ggplot(aes(x = arm_ipd, y = hetro, group = subclass, colour=arm_ipd)) +
+  geom_line(color = "black") +
+  geom_point()+
+  labs(colour="Arm")+
+  theme_classic()
+
+
+### C4B 
+result_pre_match %>% merge(matched_data %>% dplyr::select(rn, hetro, subclass), .by="rn") %>% 
+mutate(rate=exac_modsev_n/trt_dur) %>% 
+  mutate(mean_het=mean(hetro), .by=subclass)%>% 
+  dplyr::select(rate, subclass, mean_het, arm_ipd) %>%
+  mutate(arm_ipd=if_else(arm_ipd==0, "ICS", "Control")) %>% 
+  pivot_wider(names_from = arm_ipd, values_from = rate) %>% 
+  mutate(diff=ICS-Control) %>% 
+  lm(diff~mean_het, data=.) %>% 
+  survival::concordance()
+```
+
+##### Validation
+
+```{r}
+library(MatchIt)
+result_pre_match=result2 %>% 
+  mutate(rn=row_number()) %>% 
+  cbind.data.frame("exac_modsev_n"=test$exac_modsev_n)
+
+set.seed(124)
+min_size <- result_pre_match %>%
+  group_by(arm_ipd) %>%
+  summarise(n = n()) %>%
+  pull(n) %>%
+  min()
+
+result_balanced <- result_pre_match %>%
+  group_by(arm_ipd) %>%
+  sample_n(min_size, replace = F) %>%
+  ungroup() %>% 
+  arrange(rn)
+
+results_excess=result_balanced %>% 
+  mutate(excess=exac_modsev_n/trt_dur-exp(homo))
+
+
+# Perform full matching
+m.out <- matchit(arm_ipd ~ hetro,
+                 data = result_balanced,
+                 method = "optimal",
+                 ratio = 1,
+                 replace = FALSE)
+
+# Get matched data with subclass info
+matched_data <- match.data(m.out)
+
+# Show who is matched together (by subclass)
+matched_groups <- matched_data %>%
+  dplyr::select(subclass, arm_ipd, everything()) %>%
+  arrange(subclass)%>% 
+  mutate(arm_ipd=if_else(arm_ipd==0, "ICS", "Control"))
+
+matched_groups %>%
+  ggplot(aes(x = arm_ipd, y = hetro, group = subclass, colour=arm_ipd)) +
+  geom_line(color = "black") +
+  geom_point()+
+  labs(colour="Arm")+
+  theme_classic()
+
+### C4B 
+result_pre_match %>% merge(matched_data %>% dplyr::select(rn, hetro, subclass), .by="rn") %>% 
+mutate(rate=exac_modsev_n/trt_dur) %>% 
+  mutate(mean_het=mean(hetro), .by=subclass)%>% 
+  dplyr::select(rate, subclass, mean_het, arm_ipd) %>%
+  mutate(arm_ipd=if_else(arm_ipd==0, "ICS", "Control")) %>% 
+  pivot_wider(names_from = arm_ipd, values_from = rate) %>% 
+  mutate(diff=ICS-Control) %>% 
+  lm(diff~mean_het, data=.) %>% 
+  survival::concordance()
+```

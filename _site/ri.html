@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -88,12 +88,12 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ad8f35b0ccd18a1b354e06f9e8774801.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-ad8f35b0ccd18a1b354e06f9e8774801.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-b8f2c855b079012052688c8566a25f5c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-dark-b8f2c855b079012052688c8566a25f5c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -212,14 +212,20 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./comparison.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Method Comparioson</span></a>
+  <a href="./rf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Random Forests</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./rf.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Random Forests</span></a>
+  <a href="./comparison.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Model Comparison</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./c4b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">C-for-benefit</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -317,13 +323,13 @@ div.csl-indent {
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">complete</span>(m1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  arm_ipd eos_bl age_imp  exac_bl sex smoking_bl fev1_bl    trt_dur
-1     ICS    0.1      65 1.000000   M    Current    1.33 0.25188227
-2 Control    0.1      75 1.455819   M    Current    0.80 0.07118412
-3     ICS    0.4      55 1.000000   M    Current    1.29 1.01300479
-4     ICS    0.1      55 1.000000   F    Current    0.67 0.45722108
-5 Control    0.5      65 1.296573   M    Current    1.20 0.63791923
-6     ICS    0.4      75 2.000000   M    Current    0.78 0.51471595</code></pre>
+<pre><code>  arm_ipd eos_bl age_imp  exac_bl sex smoking_bl   fev1_bl   trt_dur
+1     ICS    0.0      55 1.000000   M     Former 1.0500000 0.9993155
+2     ICS    0.1      65 1.000000   M    Current 1.3300000 0.2518823
+3     ICS    0.3      65 1.000000   M     Former 1.1231480 1.0184805
+4     ICS    0.4      55 1.000000   M    Current 1.2900000 1.0130048
+5     ICS    0.4      65 1.372356   M     Former 1.3800000 0.1095140
+6     ICS    0.1      55 1.000000   F    Current 0.8998463 0.4572211</code></pre>
 </div>
 </div>
 <p>But my concern here is that I can’t work out how to run a data-agnostic on the fly imputation so I made my own version.</p>
@@ -787,8 +793,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -899,7 +903,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

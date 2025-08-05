@@ -242,26 +242,26 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./comparison.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Method Comparison</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./rf.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Random Forests</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./splines.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Splines</span></a>
+  <a href="./comparison.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Model Comparison</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./c4b.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">C-for-benefit</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./splines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Splines</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -286,7 +286,9 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#matching-procedure" id="toc-matching-procedure" class="nav-link active" data-scroll-target="#matching-procedure">Matching procedure</a></li>
+  <li><a href="#model-decomposition" id="toc-model-decomposition" class="nav-link active" data-scroll-target="#model-decomposition">Model decomposition</a></li>
+  <li><a href="#matching-procedure" id="toc-matching-procedure" class="nav-link" data-scroll-target="#matching-procedure">Matching procedure</a></li>
+  <li><a href="#sec-implement" id="toc-sec-implement" class="nav-link" data-scroll-target="#sec-implement">Implementation</a></li>
   </ul>
 </nav>
     </div>
@@ -313,6 +315,14 @@ window.Quarto = {
 
 
 <p>In C for benefit, the matching is based on predicted benefit, but what happens when there are substantially different baseline ‘hetrogeneous’ risks? This is based on <span class="citation" data-cites="klaveren2018">Klaveren et al. (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> which used a logistic model.</p>
+<section id="lit-review" class="level4">
+<h4 class="anchored" data-anchor-id="lit-review">Lit review</h4>
+<p>It appears from <span class="citation" data-cites="klaveren2018">Klaveren et al. (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> that (assuming equal number in each group; in a case of unequal numbers extra people are removed at random), each arm is ranked on predicted treatment benefit. We take <span class="math inline">\(rank(\beta_{het,i})\)</span> in each arm and rank 1 in treatment is paired with rank 1 in control, two with two etc.</p>
+<p>Where there is a large homogeneous/baseline effect (that is the outcome is caused in large part by factor(s) that do not interact with treatment), the means that we may end up matching patients with equal/very similar</p>
+<p><span class="citation" data-cites="efthimiou2023">Efthimiou et al. (<a href="#ref-efthimiou2023" role="doc-biblioref">2023</a>)</span> add that C4B can be used by matching on covariates or on the predicted benefit. In a further paper by <span class="citation" data-cites="hoogland2024">Hoogland et al. (<a href="#ref-hoogland2024" role="doc-biblioref">2024</a>)</span> discuss matching on covariates (via mahlinobis distance) but in high dimensional data, this yields issues. <span class="citation" data-cites="klaveren2018">Klaveren et al. (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> briefly mentioned using MD as a sensitivity analysis but didn’t go into further detail. <span class="citation" data-cites="smit2025">Smit et al. (<a href="#ref-smit2025" role="doc-biblioref">2025</a>)</span> used a version called AUC-benefit although the definition was a tad ropey and didn’t use C4B as they didn’t like the matching.</p>
+</section>
+<section id="model-decomposition" class="level3">
+<h3 class="anchored" data-anchor-id="model-decomposition">Model decomposition</h3>
 <p>Let’s consider a model</p>
 <p><span class="math display">\[
 Y \sim X_1 + X_2 + arm * X_3 + arm * X_4
@@ -333,108 +343,538 @@ y_i=f(\beta_0+ \beta_a arm_i+\beta_{homo,i}+\beta_{het,i}arm_i,...)
 \]</span></p>
 <p>So in the case where <span class="math inline">\(\beta_a \gg \beta_{het,i}\)</span> and <span class="math inline">\(\beta_{homo,i} \gg \beta_{het,i}\)</span> , this reduces to essentially a homogeneous model and C-for-benefit doesn’t really apply. We will further consider only when <span class="math inline">\(\beta_{het,i}\)</span> is non-negligible. This does apply to larger and more complex models but we use this model wlog. <span class="math inline">\(\beta_0\)</span> can be folded into <span class="math inline">\(\beta_{homo,i}\)</span> and <span class="math inline">\(\beta_{arm}\)</span> can be folded into <span class="math inline">\(\beta_{het,i}\)</span> as they shift the values equally for all patients.</p>
 <p>Previous literature has generally used logistic regression with the ternary outcome (-1,0,1) corresponding to harm, no difference, and benefit respectively. In this analysis we extend the paired outcome to calculated as <span class="math inline">\(actual_{trt,j}-actual_{control,j}\)</span> where j is the <span class="math inline">\(j^{th}\)</span> matched pair. &lt;0 corresponds to harm and &gt;0 corresponds to benefit.</p>
+</section>
 <section id="matching-procedure" class="level3">
 <h3 class="anchored" data-anchor-id="matching-procedure">Matching procedure</h3>
-<section id="lit-review" class="level4">
-<h4 class="anchored" data-anchor-id="lit-review">Lit review</h4>
-<p>It appears from <span class="citation" data-cites="klaveren2018">Klaveren et al. (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> that (assuming equal number in each group; in a case of unequal numbers extra people are removed at random), each arm is ranked on predicted treatment benefit. We take <span class="math inline">\(rank(\beta_{het,i})\)</span> in each arm and rank 1 in treatment is paired with rank 1 in control, two with two etc.</p>
-<p>Where there is a large homogeneous/baseline effect (that is the outcome is caused in large part by factor(s) that do not interact with treatment), the means that we may end up matching patients with equal/very similar</p>
-<p><span class="citation" data-cites="efthimiou2023">Efthimiou et al. (<a href="#ref-efthimiou2023" role="doc-biblioref">2023</a>)</span> add that C4B can be used by matching on covariates or on the predicted benefit. In a further paper by <span class="citation" data-cites="hoogland2024">Hoogland et al. (<a href="#ref-hoogland2024" role="doc-biblioref">2024</a>)</span> discuss matching on covariates (via mahlinobis distance) but in high dimensional data, this yields issues. <span class="citation" data-cites="klaveren2018">Klaveren et al. (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> briefly mentioned using MD as a sensitivity analysis but didn’t go into further detail. <span class="citation" data-cites="smit2025">Smit et al. (<a href="#ref-smit2025" role="doc-biblioref">2025</a>)</span> used a version called AUC-benefit although the definition was a tad ropey and didn’t use C4B as they didn’t like the matching.</p>
-</section>
-<section id="option-1-mahalanobis-distance-between-the-het-and-the-homo" class="level4">
-<h4 class="anchored" data-anchor-id="option-1-mahalanobis-distance-between-the-het-and-the-homo">Option 1: Mahalanobis distance between the het and the homo</h4>
-<p>After reducing the model down to our homo- and hetrogeneous effects, we can match the patients using Mahalanobis distance.</p>
-<p>After matching you calculate the</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># In this we are using simulating some effects</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">124</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">arm =</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, n, <span class="at">replace =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">homo =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>),</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">hetro =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">25</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)<span class="sc">%&gt;%</span> </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total=</span>hetro<span class="sc">+</span>homo)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform full matching</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>m.out <span class="ot">&lt;-</span> <span class="fu">matchit</span>(arm <span class="sc">~</span> homo <span class="sc">+</span> hetro,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> data,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"nearest"</span>,</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ratio =</span> <span class="dv">1</span>,</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                 <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(m.out)</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Get matched data with subclass info</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>matched_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m.out)</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># # View first few rows of matched data</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co"># head(matched_data)</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Show who is matched together (by subclass)</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="ot">&lt;-</span> matched_data <span class="sc">%&gt;%</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(subclass, arm, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subclass)<span class="sc">%&gt;%</span> </span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arm=</span><span class="fu">if_else</span>(arm<span class="sc">==</span><span class="dv">1</span>, <span class="st">"Trt"</span>, <span class="st">"Control"</span>))</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># View matched groups</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># print(matched_groups, n = 20)</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="sc">%&gt;%</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> hetro, <span class="at">y =</span> homo, <span class="at">group =</span> subclass, <span class="at">colour=</span>arm)) <span class="sc">+</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour=</span><span class="st">"Arm"</span>)<span class="sc">+</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="c4b_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>In the figure above, The simulated data shows which of the control and the treated are matched together.</p>
+<section id="option-1-distance-between-the-het-and-the-homo" class="level4">
+<h4 class="anchored" data-anchor-id="option-1-distance-between-the-het-and-the-homo">Option 1: Distance between the het and the homo</h4>
+<p>After reducing the model down to our homo- and hetrogeneous effects, we can match the patients using some distance metric.</p>
 <p>A benefit of this is that the data can be shifted (e.g., folding in the intercept) and that it does not affect the match. The downside of this is that you cannot weight the data.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="sc">%&gt;%</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(subclass, total, arm) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> arm, <span class="at">values_from =</span> total) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">effect=</span>Trt<span class="sc">-</span>Control) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 4
-  subclass   Trt Control  effect
-  &lt;fct&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-1 1         72.2    71.7  0.476 
-2 2         72.9    62.9  9.93  
-3 3         68.5    69.0 -0.499 
-4 4         65.6    65.5  0.0675
-5 5         63.1    62.0  1.11  
-6 6         86.9    81.9  5.05  </code></pre>
-</div>
-</div>
-<p>When looking at the actual C4B you then run the concordance off the effect column.</p>
+<p>When calculating C4B you rank the difference in the actual outcome and the rank of the mean hetro value.</p>
 </section>
 <section id="option-2-excess-exacerbations" class="level4">
 <h4 class="anchored" data-anchor-id="option-2-excess-exacerbations">Option 2: Excess exacerbations</h4>
 <ul>
 <li><p>Matching only on the rank of the heterogeneous estimate</p></li>
-<li><p>We calculate the excess exacerbations based on <span class="math inline">\(actual_i-\mathbb{E}(exac_i|arm_i=control)\)</span></p>
-<ul>
+<li><p>We calculate the excess exacerbations based on <span class="math inline">\(actual_i-\mathbb{E}(exac_i|arm_i=control)\)</span></p></li>
 <li><p>In the case of a pt in the control arm in real life then it would be the difference between predicted and actual</p></li>
 <li><p>In the case of pt in the trt group then the excess captures the treatment effect</p></li>
+<li><p>You then calculate the C4B based on the <span class="math inline">\(excess\sim rank(hetro)\)</span>.</p>
+<ul>
+<li>In this case the hetro values are likely to be a lot closer than when using homo as part of the match.</li>
 </ul></li>
-<li><p>You then calculate the C4B based on the <span class="math inline">\(excess\sim rank\)</span></p></li>
 <li><p>This will only work for count or linear models.</p></li>
 </ul>
+</section>
+<section id="a-side-note-on-random-forests" class="level4">
+<h4 class="anchored" data-anchor-id="a-side-note-on-random-forests">A side note on Random Forests</h4>
+<p>If we were to use the stratified random forests (the proper name I have forgotten), then <span class="math inline">\(\beta_{homo}\)</span> is the value of the control tree and the <span class="math inline">\(\beta_{het}\)</span> is the difference in the trees.</p>
+</section>
+</section>
+<section id="sec-implement" class="level3">
+<h3 class="anchored" data-anchor-id="sec-implement">Implementation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Data loaded out of sight</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>train<span class="ot">=</span>data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(train)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>test<span class="ot">=</span>data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>train)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>formula<span class="ot">=</span>exac_modsev_n <span class="sc">~</span> arm_ipd<span class="sc">*</span>eos_bl<span class="sc">+</span>age_imp<span class="sc">+</span>exac_bl<span class="sc">+</span>sex<span class="sc">+</span>arm_ipd<span class="sc">*</span>smoking_bl<span class="sc">+</span>fev1_bl<span class="sc">+</span><span class="fu">offset</span>(trt_dur)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>model<span class="ot">=</span><span class="fu">glm.nb</span>(formula, train, <span class="at">contrasts=</span><span class="cn">NULL</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm.nb(formula = formula, data = train, contrasts = NULL, init.theta = 1.579721965, 
+    link = log)
+
+Coefficients:
+                              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)                  -0.426164   0.418427  -1.018  0.30845    
+arm_ipdICS                   -0.092292   0.161818  -0.570  0.56844    
+eos_bl                        0.097007   0.376169   0.258  0.79650    
+age_imp                      -0.004368   0.005221  -0.837  0.40280    
+exac_bl                       0.263514   0.044302   5.948 2.71e-09 ***
+sexM                         -0.242416   0.091013  -2.664  0.00773 ** 
+smoking_blCurrent             0.145853   0.135921   1.073  0.28324    
+fev1_bl                      -0.815803   0.134386  -6.071 1.27e-09 ***
+arm_ipdICS:eos_bl             0.379882   0.456466   0.832  0.40528    
+arm_ipdICS:smoking_blCurrent -0.145446   0.165916  -0.877  0.38069    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for Negative Binomial(1.5797) family taken to be 1)
+
+    Null deviance: 1446.2  on 1417  degrees of freedom
+Residual deviance: 1336.5  on 1408  degrees of freedom
+AIC: 3154.1
+
+Number of Fisher Scoring iterations: 1
+
+              Theta:  1.580 
+          Std. Err.:  0.238 
+
+ 2 x log-likelihood:  -3132.089 </code></pre>
+</div>
+</div>
+<p><strong>Concordance in train</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#finding the rate adjusted concordance</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(<span class="at">pred=</span><span class="fu">predict</span>(model, <span class="at">newdata =</span> train, <span class="at">type=</span><span class="st">"response"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rate=</span>exac_modsev_n<span class="sc">/</span>trt_dur,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">rate_p=</span>pred<span class="sc">/</span>trt_dur) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(rate<span class="sc">~</span>rate_p, <span class="at">data=</span>.) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">concordance</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+concordance.lm(object = .)
+
+n= 1416 
+Concordance= 0.612 se= 0.01261
+concordant discordant     tied.x     tied.y    tied.xy 
+    401201     254373          3     346243          0 </code></pre>
+</div>
+</div>
+<p><strong>Concordance in test</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>test <span class="sc">%&gt;%</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(<span class="at">pred=</span><span class="fu">predict</span>(model, <span class="at">newdata =</span> test, <span class="at">type=</span><span class="st">"response"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rate=</span>exac_modsev_n<span class="sc">/</span>trt_dur,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">rate_p=</span>pred<span class="sc">/</span>trt_dur) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(rate<span class="sc">~</span>rate_p, <span class="at">data=</span>.) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">concordance</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+concordance.lm(object = .)
+
+n= 347 
+Concordance= 0.5507 se= 0.0258
+concordant discordant     tied.x     tied.y    tied.xy 
+     20956      17097          0      21978          0 </code></pre>
+</div>
+</div>
+<p>FWIW this is a weird trial that has almost no ICS effect.</p>
+<section id="model-decomosition" class="level4">
+<h4 class="anchored" data-anchor-id="model-decomosition">Model decomosition</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>decompose_model <span class="ot">&lt;-</span> <span class="cf">function</span>(model, var, <span class="at">newdata=</span><span class="cn">NULL</span>, <span class="at">leave_var_as_binary=</span>F) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  model_data <span class="ot">&lt;-</span> model<span class="sc">$</span>model</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  var0<span class="ot">=</span>var</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  levels<span class="ot">=</span><span class="fu">levels</span>(model_data[[var0]])</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  var<span class="ot">=</span><span class="fu">paste0</span>(var0,levels[<span class="dv">2</span>])</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  coeffs <span class="ot">&lt;-</span> <span class="fu">coef</span>(model)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(newdata)){</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(model)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(model, <span class="at">data=</span>newdata)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  coeff_names <span class="ot">&lt;-</span> <span class="fu">names</span>(coeffs)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Identify components</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  homo_terms <span class="ot">&lt;-</span> coeff_names[<span class="sc">!</span><span class="fu">grepl</span>(<span class="fu">paste0</span>(var, <span class="st">":"</span>), coeff_names) <span class="sc">&amp;</span> coeff_names <span class="sc">!=</span> var]</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  hetro_terms <span class="ot">&lt;-</span> coeff_names[<span class="fu">grepl</span>(<span class="fu">paste0</span>(var, <span class="st">":"</span>), coeff_names)]</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate homo component (as before)</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  homo_comp <span class="ot">&lt;-</span> X[, homo_terms, drop <span class="ot">=</span> <span class="cn">FALSE</span>] <span class="sc">%*%</span> coeffs[homo_terms]</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># For hetro component: get the base terms without multiplying by var</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract the hetro coefficients and multiply by the base variables only</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  hetro_comp <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">nrow</span>(X))</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(term <span class="cf">in</span> hetro_terms) {</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get the base variable name (remove "var:" prefix)</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    base_var <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="fu">paste0</span>(var, <span class="st">":"</span>), <span class="st">""</span>, term)</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Multiply coefficient by base variable only (not by var)</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    hetro_comp <span class="ot">&lt;-</span> hetro_comp <span class="sc">+</span> coeffs[term] <span class="sc">*</span> X[, base_var]</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Handle var main effect - add it to hetro component</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(var <span class="sc">%in%</span> coeff_names) {</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    hetro_comp <span class="ot">&lt;-</span> hetro_comp <span class="sc">+</span> coeffs[var]</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract the var data</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>  var_data <span class="ot">&lt;-</span> X[, var]</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  out<span class="ot">=</span><span class="fu">data.frame</span>(</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">homo =</span> <span class="fu">as.vector</span>(homo_comp),</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">hetro =</span> <span class="fu">as.vector</span>(hetro_comp),</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">var =</span> <span class="fu">as.vector</span>(var_data)</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(out)[<span class="dv">3</span>] <span class="ot">&lt;-</span> var0</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span>leave_var_as_binary){</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>    out[[var0]] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(out[[var0]] <span class="sc">==</span> <span class="dv">1</span>, levels[<span class="dv">2</span>], levels[<span class="dv">1</span>])</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(<span class="fu">attr</span>(model<span class="sc">$</span>terms, <span class="st">"offset"</span>))){</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>    offset_name<span class="ot">=</span>(model <span class="sc">%&gt;%</span> formula <span class="sc">%&gt;%</span> <span class="fu">all.vars</span>())[<span class="fu">attr</span>(model<span class="sc">$</span>terms, <span class="st">"offset"</span>)]</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.null</span>(newdata)){</span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>      offset<span class="ot">=</span>model<span class="sc">$</span>offset</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>      offset<span class="ot">=</span>newdata[[offset_name]]</span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>    out[[offset_name]]<span class="ot">=</span>offset</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a><span class="co"># Usage</span></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">decompose_model</span>(model, <span class="st">"arm_ipd"</span>, <span class="at">leave_var_as_binary =</span> T)</span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       homo       hetro arm_ipd    trt_dur
+1 -1.245897 -0.01631587       1 0.63244353
+2 -1.618430 -0.19974976       1 0.25188227
+3 -1.229731 -0.19974976       0 0.07118412
+4 -1.500140  0.02167233       1 1.01848049
+5 -1.513019 -0.08578515       1 1.01300479
+6 -1.775970  0.05966054       1 0.10951403</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>test<span class="ot">=</span>data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>train)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">decompose_model</span>(model, <span class="st">"arm_ipd"</span>, <span class="at">newdata=</span>test, <span class="at">leave_var_as_binary =</span> T)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(result2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        homo       hetro arm_ipd   trt_dur
+1 -1.5018812 -0.09229228       1 0.9993155
+2 -0.9207991 -0.08578515       1 0.5147159
+3 -0.6307467 -0.19974976       1 0.0109514
+4 -1.5877850 -0.04779694       0 1.0130048
+5 -1.1899362  0.09764874       0 0.4736482
+6 -0.8768315 -0.16176156       1 1.0266940</code></pre>
+</div>
+</div>
+</section>
+<section id="option-1" class="level4">
+<h4 class="anchored" data-anchor-id="option-1">Option 1</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'MatchIt' was built under R version 4.5.1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>result_pre_match<span class="ot">=</span>result <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rn=</span><span class="fu">row_number</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(<span class="st">"exac_modsev_n"</span><span class="ot">=</span>train<span class="sc">$</span>exac_modsev_n)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>min_size <span class="ot">&lt;-</span> result_pre_match <span class="sc">%&gt;%</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm_ipd) <span class="sc">%&gt;%</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(n) <span class="sc">%&gt;%</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">min</span>()</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>result_balanced <span class="ot">&lt;-</span> result_pre_match <span class="sc">%&gt;%</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm_ipd) <span class="sc">%&gt;%</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample_n</span>(min_size, <span class="at">replace =</span> F) <span class="sc">%&gt;%</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(rn)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform full matching</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>m.out <span class="ot">&lt;-</span> <span class="fu">matchit</span>(arm_ipd <span class="sc">~</span> homo <span class="sc">+</span> hetro,</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> result_balanced,</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"optimal"</span>,</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>                 <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Get matched data with subclass info</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>matched_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m.out)</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Show who is matched together (by subclass)</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="ot">&lt;-</span> matched_data <span class="sc">%&gt;%</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(subclass, arm_ipd, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subclass)<span class="sc">%&gt;%</span> </span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arm_ipd=</span><span class="fu">if_else</span>(arm_ipd<span class="sc">==</span><span class="dv">0</span>, <span class="st">"ICS"</span>, <span class="st">"Control"</span>))</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="co">#showing that density is preserved</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="sc">%&gt;%</span> </span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>hetro, <span class="at">group=</span>arm_ipd, <span class="at">col=</span>arm_ipd))<span class="sc">+</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="c4b_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> hetro, <span class="at">y =</span> homo, <span class="at">group =</span> subclass, <span class="at">colour=</span>arm_ipd)) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour=</span><span class="st">"Arm"</span>)<span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="c4b_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">### C4B </span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>result_pre_match <span class="sc">%&gt;%</span> <span class="fu">merge</span>(matched_data <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(rn, hetro, subclass), <span class="at">.by=</span><span class="st">"rn"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">rate=</span>exac_modsev_n<span class="sc">/</span>trt_dur) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_het=</span><span class="fu">mean</span>(hetro), <span class="at">.by=</span>subclass)<span class="sc">%&gt;%</span> </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(rate, subclass, mean_het, arm_ipd) <span class="sc">%&gt;%</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arm_ipd=</span><span class="fu">if_else</span>(arm_ipd<span class="sc">==</span><span class="dv">0</span>, <span class="st">"ICS"</span>, <span class="st">"Control"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> arm_ipd, <span class="at">values_from =</span> rate) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff=</span>ICS<span class="sc">-</span>Control) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(diff<span class="sc">~</span>mean_het, <span class="at">data=</span>.) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">concordance</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+concordance.lm(object = .)
+
+n= 476 
+Concordance= 0.4738 se= 0.01729
+concordant discordant     tied.x     tied.y    tied.xy 
+     45278      50426       2437      14088        821 </code></pre>
+</div>
+</div>
+<section id="validation" class="level5">
+<h5 class="anchored" data-anchor-id="validation">Validation</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>result_pre_match<span class="ot">=</span>result2 <span class="sc">%&gt;%</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rn=</span><span class="fu">row_number</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(<span class="st">"exac_modsev_n"</span><span class="ot">=</span>test<span class="sc">$</span>exac_modsev_n)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">124</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>min_size <span class="ot">&lt;-</span> result_pre_match <span class="sc">%&gt;%</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm_ipd) <span class="sc">%&gt;%</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(n) <span class="sc">%&gt;%</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">min</span>()</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>result_balanced <span class="ot">&lt;-</span> result_pre_match <span class="sc">%&gt;%</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm_ipd) <span class="sc">%&gt;%</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample_n</span>(min_size, <span class="at">replace =</span> F) <span class="sc">%&gt;%</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(rn)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform full matching</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>m.out <span class="ot">&lt;-</span> <span class="fu">matchit</span>(arm_ipd <span class="sc">~</span> homo <span class="sc">+</span> hetro,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> result_balanced,</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"optimal"</span>,</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>                 <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Get matched data with subclass info</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>matched_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m.out)</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Show who is matched together (by subclass)</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="ot">&lt;-</span> matched_data <span class="sc">%&gt;%</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(subclass, arm_ipd, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subclass)<span class="sc">%&gt;%</span> </span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arm_ipd=</span><span class="fu">if_else</span>(arm_ipd<span class="sc">==</span><span class="dv">0</span>, <span class="st">"ICS"</span>, <span class="st">"Control"</span>))</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a><span class="co">#showing that density is preserved</span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="sc">%&gt;%</span> </span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>hetro, <span class="at">group=</span>arm_ipd, <span class="at">col=</span>arm_ipd))<span class="sc">+</span></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="c4b_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> hetro, <span class="at">y =</span> homo, <span class="at">group =</span> subclass, <span class="at">colour=</span>arm_ipd)) <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour=</span><span class="st">"Arm"</span>)<span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="c4b_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">### C4B </span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>result_pre_match <span class="sc">%&gt;%</span> <span class="fu">merge</span>(matched_data <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(rn, hetro, subclass), <span class="at">.by=</span><span class="st">"rn"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">rate=</span>exac_modsev_n<span class="sc">/</span>trt_dur) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_het=</span><span class="fu">mean</span>(hetro), <span class="at">.by=</span>subclass)<span class="sc">%&gt;%</span> </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(rate, subclass, mean_het, arm_ipd) <span class="sc">%&gt;%</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arm_ipd=</span><span class="fu">if_else</span>(arm_ipd<span class="sc">==</span><span class="dv">0</span>, <span class="st">"ICS"</span>, <span class="st">"Control"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> arm_ipd, <span class="at">values_from =</span> rate) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff=</span>ICS<span class="sc">-</span>Control) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(diff<span class="sc">~</span>mean_het, <span class="at">data=</span>.) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">concordance</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+concordance.lm(object = .)
+
+n= 114 
+Concordance= 0.4695 se= 0.03587
+concordant discordant     tied.x     tied.y    tied.xy 
+      2465       2791         87       1037         61 </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="option-2" class="level4">
+<h4 class="anchored" data-anchor-id="option-2">Option 2</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>result_pre_match<span class="ot">=</span>result <span class="sc">%&gt;%</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rn=</span><span class="fu">row_number</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(<span class="st">"exac_modsev_n"</span><span class="ot">=</span>train<span class="sc">$</span>exac_modsev_n)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>min_size <span class="ot">&lt;-</span> result_pre_match <span class="sc">%&gt;%</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm_ipd) <span class="sc">%&gt;%</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(n) <span class="sc">%&gt;%</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">min</span>()</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>result_balanced <span class="ot">&lt;-</span> result_pre_match <span class="sc">%&gt;%</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm_ipd) <span class="sc">%&gt;%</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample_n</span>(min_size, <span class="at">replace =</span> F) <span class="sc">%&gt;%</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(rn)</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>results_excess<span class="ot">=</span>result_balanced <span class="sc">%&gt;%</span> </span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">excess=</span>exac_modsev_n<span class="sc">/</span>trt_dur<span class="sc">-</span><span class="fu">exp</span>(homo))</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform full matching</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>m.out <span class="ot">&lt;-</span> <span class="fu">matchit</span>(arm_ipd <span class="sc">~</span> hetro,</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> result_balanced,</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"optimal"</span>,</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>                 <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Get matched data with subclass info</span></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>matched_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m.out)</span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Show who is matched together (by subclass)</span></span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="ot">&lt;-</span> matched_data <span class="sc">%&gt;%</span></span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(subclass, arm_ipd, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subclass)<span class="sc">%&gt;%</span> </span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arm_ipd=</span><span class="fu">if_else</span>(arm_ipd<span class="sc">==</span><span class="dv">0</span>, <span class="st">"ICS"</span>, <span class="st">"Control"</span>))</span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="sc">%&gt;%</span></span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> arm_ipd, <span class="at">y =</span> hetro, <span class="at">group =</span> subclass, <span class="at">colour=</span>arm_ipd)) <span class="sc">+</span></span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour=</span><span class="st">"Arm"</span>)<span class="sc">+</span></span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="c4b_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">### C4B </span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>result_pre_match <span class="sc">%&gt;%</span> <span class="fu">merge</span>(matched_data <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(rn, hetro, subclass), <span class="at">.by=</span><span class="st">"rn"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">rate=</span>exac_modsev_n<span class="sc">/</span>trt_dur) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_het=</span><span class="fu">mean</span>(hetro), <span class="at">.by=</span>subclass)<span class="sc">%&gt;%</span> </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(rate, subclass, mean_het, arm_ipd) <span class="sc">%&gt;%</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arm_ipd=</span><span class="fu">if_else</span>(arm_ipd<span class="sc">==</span><span class="dv">0</span>, <span class="st">"ICS"</span>, <span class="st">"Control"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> arm_ipd, <span class="at">values_from =</span> rate) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff=</span>ICS<span class="sc">-</span>Control) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(diff<span class="sc">~</span>mean_het, <span class="at">data=</span>.) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">concordance</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+concordance.lm(object = .)
+
+n= 476 
+Concordance= 0.4875 se= 0.01741
+concordant discordant     tied.x     tied.y    tied.xy 
+     46938      49430       3450      11917       1315 </code></pre>
+</div>
+</div>
+<section id="validation-1" class="level5">
+<h5 class="anchored" data-anchor-id="validation-1">Validation</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>result_pre_match<span class="ot">=</span>result2 <span class="sc">%&gt;%</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rn=</span><span class="fu">row_number</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind.data.frame</span>(<span class="st">"exac_modsev_n"</span><span class="ot">=</span>test<span class="sc">$</span>exac_modsev_n)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">124</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>min_size <span class="ot">&lt;-</span> result_pre_match <span class="sc">%&gt;%</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm_ipd) <span class="sc">%&gt;%</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(n) <span class="sc">%&gt;%</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">min</span>()</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>result_balanced <span class="ot">&lt;-</span> result_pre_match <span class="sc">%&gt;%</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(arm_ipd) <span class="sc">%&gt;%</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample_n</span>(min_size, <span class="at">replace =</span> F) <span class="sc">%&gt;%</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(rn)</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>results_excess<span class="ot">=</span>result_balanced <span class="sc">%&gt;%</span> </span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">excess=</span>exac_modsev_n<span class="sc">/</span>trt_dur<span class="sc">-</span><span class="fu">exp</span>(homo))</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform full matching</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>m.out <span class="ot">&lt;-</span> <span class="fu">matchit</span>(arm_ipd <span class="sc">~</span> hetro,</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> result_balanced,</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"optimal"</span>,</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>                 <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Get matched data with subclass info</span></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>matched_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m.out)</span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Show who is matched together (by subclass)</span></span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="ot">&lt;-</span> matched_data <span class="sc">%&gt;%</span></span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(subclass, arm_ipd, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(subclass)<span class="sc">%&gt;%</span> </span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arm_ipd=</span><span class="fu">if_else</span>(arm_ipd<span class="sc">==</span><span class="dv">0</span>, <span class="st">"ICS"</span>, <span class="st">"Control"</span>))</span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>matched_groups <span class="sc">%&gt;%</span></span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> arm_ipd, <span class="at">y =</span> hetro, <span class="at">group =</span> subclass, <span class="at">colour=</span>arm_ipd)) <span class="sc">+</span></span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour=</span><span class="st">"Arm"</span>)<span class="sc">+</span></span>
+<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="c4b_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">### C4B </span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>result_pre_match <span class="sc">%&gt;%</span> <span class="fu">merge</span>(matched_data <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(rn, hetro, subclass), <span class="at">.by=</span><span class="st">"rn"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">rate=</span>exac_modsev_n<span class="sc">/</span>trt_dur) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_het=</span><span class="fu">mean</span>(hetro), <span class="at">.by=</span>subclass)<span class="sc">%&gt;%</span> </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(rate, subclass, mean_het, arm_ipd) <span class="sc">%&gt;%</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arm_ipd=</span><span class="fu">if_else</span>(arm_ipd<span class="sc">==</span><span class="dv">0</span>, <span class="st">"ICS"</span>, <span class="st">"Control"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> arm_ipd, <span class="at">values_from =</span> rate) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff=</span>ICS<span class="sc">-</span>Control) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(diff<span class="sc">~</span>mean_het, <span class="at">data=</span>.) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">concordance</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+concordance.lm(object = .)
+
+n= 114 
+Concordance= 0.5157 se= 0.03457
+concordant discordant     tied.x     tied.y    tied.xy 
+      2639       2474        144       1102         82 </code></pre>
+</div>
+</div>
 
 
 
+</section>
 </section>
 </section>
 
@@ -686,7 +1126,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/notebook\.sebbate\.uk");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

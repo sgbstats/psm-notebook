@@ -243,7 +243,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#example-effect" id="toc-example-effect" class="nav-link" data-scroll-target="#example-effect">Example: EFFECT</a></li>
   </ul></li>
   <li><a href="#predict.submodels" id="toc-predict.submodels" class="nav-link" data-scroll-target="#predict.submodels">predict.submodels</a></li>
-  <li><a href="#auc" id="toc-auc" class="nav-link" data-scroll-target="#auc">auc</a></li>
   </ul>
 </nav>
     </div>
@@ -559,62 +558,6 @@ Residual Deviance: 685.3    AIC: 1540</code></pre>
 6 0.3797390 0.18877008 01000010</code></pre>
 </div>
 </div>
-</section>
-<section id="auc" class="level1">
-<h1>auc</h1>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @data A dataframe to test</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' @actual @predicted column names of the actual and predicted values</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @invert whether the predictor should be inverted (eg if the lower predictor value is associated with a higher actual score then force_inversion may be the right pick). invert_option takes the higher of the mean and 1-mean. No invert is the mean and force_invert is 1-mean</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @boot whether the bootstrap estiamet should be used. </span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>auc<span class="ot">=</span><span class="cf">function</span>(data, actual, predicted,<span class="at">invert=</span><span class="fu">c</span>(<span class="st">"invert_optional"</span>, <span class="st">"no_inversion"</span>, <span class="st">"force_inversion"</span>), <span class="at">boot=</span>F,...){</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  invert<span class="ot">=</span>invert[<span class="dv">1</span>]</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span>invert <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"invert_optional"</span>, <span class="st">"no_inversion"</span>, <span class="st">"force_inversion"</span>)){</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"Choose invert option correctly"</span>)</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  x<span class="ot">=</span><span class="fu">cbind.data.frame</span>(data[actual], data[predicted])</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(x)<span class="ot">=</span><span class="fu">c</span>(<span class="st">"actual"</span>, <span class="st">"predicted"</span>)</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">#cross join on the data to make every combination and then filter so that there is one row for each pair of data points, minus those that equal actual outcomes.</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  y<span class="ot">=</span><span class="fu">cross_join</span>(x,x) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(predicted.x<span class="sc">&lt;</span>predicted.y, actual.x<span class="sc">!=</span>actual.y) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">correct=</span>actual.x<span class="sc">&lt;</span>actual.y)</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(invert<span class="sc">==</span><span class="st">"invert_optional"</span>){</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    auc<span class="ot">=</span><span class="fu">max</span>(<span class="fu">mean</span>(y<span class="sc">$</span>correct),<span class="dv">1</span><span class="sc">-</span><span class="fu">mean</span>(y<span class="sc">$</span>correct))</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(invert<span class="sc">==</span><span class="st">"no_inversion"</span>){</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    auc<span class="ot">=</span><span class="fu">mean</span>(y<span class="sc">$</span>correct)</span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(invert<span class="sc">==</span><span class="st">"force_inversion"</span>){</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    auc<span class="ot">=</span><span class="dv">1</span><span class="sc">-</span><span class="fu">mean</span>(y<span class="sc">$</span>correct)</span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  }  </span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(boot)</span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>  {</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    b<span class="ot">=</span>boot<span class="sc">::</span><span class="fu">boot</span>(x, <span class="at">statistic=</span>auc_boot, <span class="at">R=</span><span class="dv">1000</span>, <span class="at">actual=</span><span class="st">"actual"</span>, <span class="at">predicted=</span><span class="st">"predicted"</span>, <span class="at">invert=</span>invert)</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    b1<span class="ot">=</span>boot<span class="sc">::</span><span class="fu">boot.ci</span>(b, <span class="at">type=</span><span class="st">"norm"</span>)</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    b2<span class="ot">=</span>b1<span class="sc">$</span>normal</span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">data.frame</span>(<span class="st">"t"</span><span class="ot">=</span>auc,</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"lower"</span><span class="ot">=</span>b2[<span class="dv">2</span>],</span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"upper"</span><span class="ot">=</span>b2[<span class="dv">3</span>]))</span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span>boot){</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(auc)</span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ul>
-<li><p>Housekeeping</p></li>
-<li><p>Cross join on the data to make every combination and then filter so that there is one row for each pair of data points, minus those that equal actual outcomes.</p></li>
-<li><p>Output the mean proportion of correct answers (with invert if necessary)</p></li>
-<li><p>Run Boostrap if desired.</p></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auc</span>(test, <span class="st">"exac_modsev_n"</span>, <span class="st">"fit"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.5790294</code></pre>
-</div>
-</div>
 
 
 </section>
@@ -854,7 +797,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/notebook\.sebbate\.uk");
+      var filterRegex = new RegExp('/' + window.location.host + '/');
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

@@ -129,7 +129,7 @@ test %>%
 
 FWIW this is a weird trial that has almost no ICS effect.
 
-#### Model decomosition
+#### Model decomposition
 
 ```{r}
 decompose_model <- function(model, var, newdata=NULL, leave_var_as_binary=F) {
@@ -358,13 +358,13 @@ result_balanced <- result_pre_match %>%
   ungroup() %>% 
   arrange(rn)
 
-results_excess=result_balanced %>% 
+result_excess=result_balanced %>% 
   mutate(excess=exac_modsev_n/trt_dur-exp(homo))
 
 
 # Perform full matching
 m.out <- matchit(arm_ipd ~ hetro,
-                 data = result_balanced,
+                 data = result_excess,
                  method = "optimal",
                  ratio = 1,
                  replace = FALSE)
@@ -419,13 +419,13 @@ result_balanced <- result_pre_match %>%
   ungroup() %>% 
   arrange(rn)
 
-results_excess=result_balanced %>% 
+result_excess=result_balanced %>% 
   mutate(excess=exac_modsev_n/trt_dur-exp(homo))
 
 
 # Perform full matching
 m.out <- matchit(arm_ipd ~ hetro,
-                 data = result_balanced,
+                 data = result_excess,
                  method = "optimal",
                  ratio = 1,
                  replace = FALSE)

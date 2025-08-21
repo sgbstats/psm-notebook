@@ -37,8 +37,6 @@ source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECO
 source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/predict_submodels.R")
 source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/print_submodels.R")
 source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/model_breakdown.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/auc.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/auc_boot.R")
 source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/unpack.R")
 source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/missingness_pattern.R")
 source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/remove_missing_vars.R")
@@ -88,21 +86,4 @@ head(test %>%
        mutate(rn=row_number(), .by="mp") %>% 
        arrange(rn) %>% 
        dplyr::select(-rn))
-```
-
-# auc
-
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\auc.R", echo=TRUE, message=FALSE, warning=FALSE}
-```
-
--   Housekeeping
-
--   Cross join on the data to make every combination and then filter so that there is one row for each pair of data points, minus those that equal actual outcomes.
-
--   Output the mean proportion of correct answers (with invert if necessary)
-
--   Run Boostrap if desired.
-
-```{r}
-auc(test, "exac_modsev_n", "fit")
 ```

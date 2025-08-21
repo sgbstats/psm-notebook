@@ -13,9 +13,6 @@ Major question about interaction. I think that we would have add an interaction 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 load("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\data/study_data.RDa")
-
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/auc.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/auc_boot.R")
 ```
 
 ```{r,message=FALSE, warning=FALSE, eval=F}
@@ -64,7 +61,8 @@ z=predict(rf, newdata, se.fit=T)
 pred.out=data.frame(actual=newdata$rate,
                     pred=z)
 
-auc(pred.out, "actual", "pred")
+pred.out %>% lm(actual~pred, data=.) %>% survival::concordance()
+
 
 
 z1=predict(rf, newdata, predict.all = T)

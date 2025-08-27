@@ -163,3 +163,10 @@ head(result2$decomposed_model)
 c4b(result2, method="optimal")
 c4b(result2, method="excess")
 ```
+
+
+### Non-paramteric models
+```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\decompose_model_non_parametric.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+```
+
+Note: that if you are using a custom model, e.g., submodels then it needs a structured return and a propoer predict.

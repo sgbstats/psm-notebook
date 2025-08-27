@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>C for benefit – Seb’s Notebook</title>
+<title>C-for-benefit – Seb’s Notebook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -289,6 +289,7 @@ window.Quarto = {
   <li><a href="#model-decomposition" id="toc-model-decomposition" class="nav-link active" data-scroll-target="#model-decomposition">Model decomposition</a></li>
   <li><a href="#matching-procedure" id="toc-matching-procedure" class="nav-link" data-scroll-target="#matching-procedure">Matching procedure</a></li>
   <li><a href="#sec-implement" id="toc-sec-implement" class="nav-link" data-scroll-target="#sec-implement">Implementation</a></li>
+  <li><a href="#non-paramteric-models" id="toc-non-paramteric-models" class="nav-link" data-scroll-target="#non-paramteric-models">Non-paramteric models</a></li>
   </ul>
 </nav>
     </div>
@@ -297,7 +298,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">C for benefit</h1>
+<h1 class="title">C-for-benefit</h1>
 </div>
 
 
@@ -469,7 +470,7 @@ concordant discordant     tied.x     tied.y    tied.xy
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @newdata any new data to be provided, defaults to null</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @leave_as_binary whether to undo the labeliling</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>decompose_model <span class="ot">&lt;-</span> <span class="cf">function</span>(model, var, <span class="at">newdata=</span><span class="cn">NULL</span>, <span class="at">leave_var_as_binary=</span>F) {</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>decompose_model <span class="ot">&lt;-</span> <span class="cf">function</span>(model, var, <span class="at">newdata=</span><span class="cn">NULL</span>, <span class="at">leave_var_as_binary=</span>T) {</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  model_data <span class="ot">&lt;-</span> model<span class="sc">$</span>model</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  var0<span class="ot">=</span>var</span>
@@ -539,8 +540,14 @@ concordant discordant     tied.x     tied.y    tied.xy
 <span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">nrow</span>(out)<span class="sc">!=</span><span class="fu">nrow</span>(model_data)){<span class="fu">stop</span>(<span class="st">"Row mismatch"</span>)}</span>
 <span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="st">"decomposed_model"</span><span class="ot">=</span>out, <span class="st">"data"</span><span class="ot">=</span>model_data, <span class="st">"var"</span><span class="ot">=</span>var0, <span class="st">"outcome"</span><span class="ot">=</span><span class="fu">as.character</span>(model<span class="sc">$</span>terms)[<span class="dv">2</span>]))</span>
-<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">structure</span>(</span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="st">"decomposed_model"</span><span class="ot">=</span>out,</span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>         <span class="st">"data"</span><span class="ot">=</span>model_data,</span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>         <span class="st">"var"</span><span class="ot">=</span>var0,</span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>         <span class="st">"outcome"</span><span class="ot">=</span><span class="fu">as.character</span>(model<span class="sc">$</span>terms)[<span class="dv">2</span>]),</span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">class=</span><span class="st">"decompose_model"</span></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Usage</span></span>
@@ -615,7 +622,7 @@ concordant discordant     tied.x     tied.y    tied.xy
 <span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>  matched_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m.out)</span>
-<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>  result_pre_match <span class="sc">%&gt;%</span></span>
 <span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>    <span class="fu">merge</span>(matched_data <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(rn, subclass), ., <span class="at">by=</span><span class="st">"rn"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">mean_het =</span> <span class="fu">mean</span>(hetro), <span class="at">.by=</span>subclass) <span class="sc">%&gt;%</span></span>
@@ -684,11 +691,45 @@ concordant discordant     tied.x     tied.y    tied.xy
       3109       2455         79        718         80 </code></pre>
 </div>
 </div>
-
-
-
 </section>
 </section>
+</section>
+<section id="non-paramteric-models" class="level3">
+<h3 class="anchored" data-anchor-id="non-paramteric-models">Non-paramteric models</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>decompose_model_non_parametric<span class="ot">=</span><span class="cf">function</span>(model, var, data, <span class="at">leave_var_as_binary=</span>T, ...){</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  model_data<span class="ot">=</span>data</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  var0<span class="ot">=</span>var</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  levels<span class="ot">=</span><span class="fu">levels</span>(model_data[[var0]])</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  var<span class="ot">=</span><span class="fu">paste0</span>(var0, levels[<span class="dv">2</span>])</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  pred_homo<span class="ot">=</span><span class="fu">predict</span>(model, data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="sc">!</span><span class="at">var0:=</span>levels[<span class="dv">1</span>]),...)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  pred_hetero<span class="ot">=</span><span class="fu">predict</span>(model, data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="sc">!</span><span class="at">var0:=</span>levels[<span class="dv">2</span>]),...)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  out<span class="ot">=</span><span class="fu">cbind.data.frame</span>(<span class="st">"homo"</span><span class="ot">=</span>pred_homo,</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"hetero"</span><span class="ot">=</span>pred_hetero<span class="sc">-</span>pred_homo,</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">var=</span>data[[var0]]) <span class="sc">%&gt;%</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="sc">!</span><span class="at">var0:=</span>var)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(leave_var_as_binary)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    out[[var0]]<span class="ot">=</span><span class="fu">as.numeric</span>(out[[var0]])<span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">structure</span>(</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="st">"decomposed_model"</span><span class="ot">=</span>out,</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>         <span class="st">"data"</span><span class="ot">=</span>model_data,</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>         <span class="st">"var"</span><span class="ot">=</span>var0,</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>         <span class="st">"outcome"</span><span class="ot">=</span><span class="fu">as.character</span>(model<span class="sc">$</span>terms)[<span class="dv">2</span>]),</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">class=</span><span class="st">"decompose_model"</span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note: that if you are using a custom model, e.g., submodels then it needs a structured return and a propoer predict.</p>
+
+
+
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
@@ -939,7 +980,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/notebook\.sebbate\.uk");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

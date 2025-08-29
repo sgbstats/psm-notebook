@@ -29,8 +29,11 @@ website:
         href: rf.qmd
       - text: "Model Comparison"
         href: comparison.qmd
-      - text: "C-for-benefit"
+      - section: "C-for-benefit"
         href: c4b.qmd
+        contents: 
+          - text: "Applications of C4B"
+            href: c4bwild.qmd
       - text: "Splines"
         href: splines.qmd
       - text: "Models progress"
@@ -38,7 +41,7 @@ website:
       - text: "To-do list"
         href: todolist.qmd
             
-
+csl: csl/harvard-cite-them-right.csl
   
 format:
   html:

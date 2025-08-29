@@ -11,7 +11,9 @@ It appears from @klaveren2018 that (assuming equal number in each group; in a ca
 
 Where there is a large homogeneous/baseline effect (that is the outcome is caused in large part by factor(s) that do not interact with treatment), the means that we may end up matching patients with equal/very similar
 
-@efthimiou2023 add that C4B can be used by matching on covariates or on the predicted benefit. In a further paper by @hoogland2024 discuss matching on covariates (via mahlinobis distance) but in high dimensional data, this yields issues. @klaveren2018 briefly mentioned using MD as a sensitivity analysis but didn't go into further detail. @smit2025 used a version called AUC-benefit although the definition was a tad ropey and didn't use C4B as they didn't like the matching.
+@efthimiou2023 add that C4B can be used by matching on covariates or on the predicted benefit. In a further paper by @hoogland2024 and @maas2023 discuss matching on covariates (via mahalinobis distance) but in high dimensional data, this yields issues with high sentimentality and that MD won't account for the weights of each predictor in the model and will consider each one equally. @klaveren2018 briefly mentioned using MD as a sensitivity analysis but didn't go into further detail. @smit2025 used a version called AUC-benefit although the definition was a tad ropey and didn't use C4B as they didn't like the matching.
+
+In all the papers so far on the topic they all consider either binary or survival and have not yet extended their work to linear/count. A review of studies that have applied the C4B is linked [here](c4bwild.qmd).
 
 ### Model decomposition
 
@@ -138,7 +140,6 @@ FWIW this is a weird trial that has almost no ICS effect.
 ```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\decompose_model.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 ```
 
-
 ```{r}
 # Usage
 result <- decompose_model(model, "arm_ipd", leave_var_as_binary = T)
@@ -164,9 +165,11 @@ c4b(result2, method="optimal")
 c4b(result2, method="excess")
 ```
 
+### Non-paramteric appraoch
 
-### Non-paramteric models
 ```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\decompose_model_non_parametric.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 ```
 
-Note: that if you are using a custom model, e.g., submodels then it needs a structured return and a propoer predict.
+Note: that if you are using a custom model, e.g., submodels then it needs a structured return and a proper predict. Where you get a raw prediction (e.g., in a Random Forest) then you need to add a link function to get it in terms of a GLM.
+
+One issue that arises when using non-parametric models is that where the glm would use some link function the non-parametric model may not which could lead to scaling issues. I think that the solution is to use a link function on the predict if linear predictors aren't returnable from the native predict.

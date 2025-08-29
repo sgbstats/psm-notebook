@@ -1,0 +1,84 @@
+---
+title: "Applications of C4B"
+bibliography: references.bib
+---
+
+It has been noted that a C\>0.6 would be very good and highly unusual [@klaveren2018]
+
+Search criteria
+
+-   Cites @klaveren2018
+
+-   RCT (includes scores from RCTs that are used in simulation studies)
+
+-   Reports 'C-for-benefit' (or words to that effect)
+
+-   Excludes: protocols, simulation studies only, reviews
+
+| Ref | Method | Dev C4B | Val C4B |
+|----|----|----|----|
+| @afshar2024 | ML | 0.63 | ? |
+| @bond2024 | Cox | 0.66 (Optimism corrected) | 0.65, 0.68, 0.69 in different cohorts |
+| @bouvier2024[^1] | Logistic | 0.52 |  |
+| @bress2021 | Cox | 0.55 |  |
+| @buell2024 | Logistic | 0.55 |  |
+| @chen2017 | ML | 0.61 |  |
+| @dewinkel2024 | Logistic | 0.57 |  |
+| @hara2021 | Logistic | ND |  |
+| @hariton2021 | Light Gradient Boosting Machine | 0.682 |  |
+| @helmink2023 | Cox | 0.609 |  |
+| @herzog | ML | 0.55 |  |
+| @hoogland2023[^2] | Logisitic | 0.5 |  |
+| @inoue2023 | RF | 0.90 |  |
+| @inoue2023heterogeneity | Causal Forest | 0.87 |  |
+| @jakobsen2023 | Causal Forest | 0.59 |  |
+| @klaveren2018 (Stroke TPI) | Logistic | 0.578 |  |
+| @klaveren2018 (Syntax) | Cox | 0.59 (optimism corrected) |  |
+| @lv2022 | Cox | 0.569-0.675 |  |
+| @lv2024 | Competing Risk | 0.696 | 0.675 |
+| @nuutinen2025 | Logistic | 0.53 |  |
+| @rekkas2023 (Gusto) | Logistic | NR (for GUSTO) |  |
+| @roblin | Cox | 0.571-0.641 |  |
+| @saller2022 | GLM Tree(?) |  | NR |
+| @takahashi2020 | Cox | NR |  |
+| @trinks-roerdink2023 | Cox | 0.58 |  |
+| @venema2021 | Logistic | 0.53 | 0.58 (Registry) |
+| @watanabe2025 | ML | 0.71 |  |
+
+: Papers that have used C4B
+
+[^1]: This was a one-stage IPDMA
+
+[^2]: IPDMA
+
+In this rapid review there has been some interest in the C-for-benefit, although not always applied correctly (e.g., @hara2021) and very rarely used in a validation set although some do explicitaly correct for optimism [@klaveren2018]. There are some results that do appear to be too-good-to-be-true [@inoue2023heterogeneity; @inoue2023], especially without validation in the text and RF being prone to overfitting without tuning or cross validation [@barreñada2024].
+
+On the whole it was unusual (with the exception of @watanabe2025, @dewinkel2024, @herzog) that both the global C and the C-for-benefit were reported.
+
+There is some criticism of C4B [@verstraete2023] on the grounds of lack of interpretability but doens't go much further.
+
+The better quality work tended to have at least one of the Dutch prediction usual suspects (Steyerberg, van Klarven, van Smeden) in the author line.
+
+How C4B has been applied is frequently unclear, e.g., @lv2022 has very similar C-for-risk and C-for-benefit scores which hasn't been seen in other studies.
+
+In the original method you have the ternary outcome of {-1, 0, 1} denoting {harm, no difference, benefit} however with a survival model you would end up with {harm, unknown due to censoring, benefit} like in the implementation of Harrell's C [@harrell2015] where when comparing pairs of observations those of the form of A being censored prior to B having an event would not be included in the calculation.[^3] The issue that one has is that pairs could be chosen but not have a valid status. Essentially the status of all pairs must have an ordered output. One option that may have been applied is implementing an arbitrary cut-off point and dichotomising. @efthimiou2025 extended the original method to survival models where unknown is interpreted as no difference.
+
+[^3]: Where A has an event prior to B being censored then that would be counted, where both are censored, then again they are not counted.
+
+### What is missing?
+
+#### C4B outside of logistic
+
+There are relatively few CPMs that examine neither a binary nor survival outcome. So it is not massively surprising that there is little work on models not in these forms.
+
+#### Matching approaches
+
+In more recent papers, there is a brief mention of using Mahalanobis distance, and only since @hoogland2024 and mentioned in @maas2023. I think there are better approaches. There is also a need to report what the matching technique is.
+
+#### What is a good C4B?
+
+@klaveren2018 stated that 0.6 was a good score and that would be consistent with the results from the studies so far. I think there is a need for simulation with various types of model and variance to see how global discrimination correlates with C4B.
+
+#### Validation
+
+There were very few studies that explicitly state that the discrimination is optimism corrected/internal-external validated of validated in an independent cohort.

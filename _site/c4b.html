@@ -58,7 +58,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -252,12 +251,23 @@ window.Quarto = {
  <span class="menu-text">Model Comparison</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./c4b.html" class="sidebar-item-text sidebar-link active">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./c4b.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">C-for-benefit</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./c4bwild.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Applications of C4B</span></a>
   </div>
 </li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./splines.html" class="sidebar-item-text sidebar-link">
@@ -289,7 +299,7 @@ window.Quarto = {
   <li><a href="#model-decomposition" id="toc-model-decomposition" class="nav-link active" data-scroll-target="#model-decomposition">Model decomposition</a></li>
   <li><a href="#matching-procedure" id="toc-matching-procedure" class="nav-link" data-scroll-target="#matching-procedure">Matching procedure</a></li>
   <li><a href="#sec-implement" id="toc-sec-implement" class="nav-link" data-scroll-target="#sec-implement">Implementation</a></li>
-  <li><a href="#non-paramteric-models" id="toc-non-paramteric-models" class="nav-link" data-scroll-target="#non-paramteric-models">Non-paramteric models</a></li>
+  <li><a href="#non-paramteric-appraoch" id="toc-non-paramteric-appraoch" class="nav-link" data-scroll-target="#non-paramteric-appraoch">Non-paramteric appraoch</a></li>
   </ul>
 </nav>
     </div>
@@ -315,12 +325,13 @@ window.Quarto = {
 </header>
 
 
-<p>In C for benefit, the matching is based on predicted benefit, but what happens when there are substantially different baseline ‘hetrogeneous’ risks? This is based on <span class="citation" data-cites="klaveren2018">Klaveren et al. (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> which used a logistic model.</p>
+<p>In C for benefit, the matching is based on predicted benefit, but what happens when there are substantially different baseline ‘hetrogeneous’ risks? This is based on <span class="citation" data-cites="klaveren2018">Klaveren <em>et al.</em> (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> which used a logistic model.</p>
 <section id="lit-review" class="level4">
 <h4 class="anchored" data-anchor-id="lit-review">Lit review</h4>
-<p>It appears from <span class="citation" data-cites="klaveren2018">Klaveren et al. (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> that (assuming equal number in each group; in a case of unequal numbers extra people are removed at random), each arm is ranked on predicted treatment benefit. We take <span class="math inline">\(rank(\beta_{het,i})\)</span> in each arm and rank 1 in treatment is paired with rank 1 in control, two with two etc.</p>
+<p>It appears from <span class="citation" data-cites="klaveren2018">Klaveren <em>et al.</em> (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> that (assuming equal number in each group; in a case of unequal numbers extra people are removed at random), each arm is ranked on predicted treatment benefit. We take <span class="math inline">\(rank(\beta_{het,i})\)</span> in each arm and rank 1 in treatment is paired with rank 1 in control, two with two etc.</p>
 <p>Where there is a large homogeneous/baseline effect (that is the outcome is caused in large part by factor(s) that do not interact with treatment), the means that we may end up matching patients with equal/very similar</p>
-<p><span class="citation" data-cites="efthimiou2023">Efthimiou et al. (<a href="#ref-efthimiou2023" role="doc-biblioref">2023</a>)</span> add that C4B can be used by matching on covariates or on the predicted benefit. In a further paper by <span class="citation" data-cites="hoogland2024">Hoogland et al. (<a href="#ref-hoogland2024" role="doc-biblioref">2024</a>)</span> discuss matching on covariates (via mahlinobis distance) but in high dimensional data, this yields issues. <span class="citation" data-cites="klaveren2018">Klaveren et al. (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> briefly mentioned using MD as a sensitivity analysis but didn’t go into further detail. <span class="citation" data-cites="smit2025">Smit et al. (<a href="#ref-smit2025" role="doc-biblioref">2025</a>)</span> used a version called AUC-benefit although the definition was a tad ropey and didn’t use C4B as they didn’t like the matching.</p>
+<p><span class="citation" data-cites="efthimiou2023">Efthimiou <em>et al.</em> (<a href="#ref-efthimiou2023" role="doc-biblioref">2023</a>)</span> add that C4B can be used by matching on covariates or on the predicted benefit. In a further paper by <span class="citation" data-cites="hoogland2024">Hoogland <em>et al.</em> (<a href="#ref-hoogland2024" role="doc-biblioref">2024</a>)</span> and <span class="citation" data-cites="maas2023">Maas <em>et al.</em> (<a href="#ref-maas2023" role="doc-biblioref">2023</a>)</span> discuss matching on covariates (via mahalinobis distance) but in high dimensional data, this yields issues with high sentimentality and that MD won’t account for the weights of each predictor in the model and will consider each one equally. <span class="citation" data-cites="klaveren2018">Klaveren <em>et al.</em> (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> briefly mentioned using MD as a sensitivity analysis but didn’t go into further detail. <span class="citation" data-cites="smit2025">Smit <em>et al.</em> (<a href="#ref-smit2025" role="doc-biblioref">2025</a>)</span> used a version called AUC-benefit although the definition was a tad ropey and didn’t use C4B as they didn’t like the matching.</p>
+<p>In all the papers so far on the topic they all consider either binary or survival and have not yet extended their work to linear/count. A review of studies that have applied the C4B is linked <a href="./c4bwild.html">here</a>.</p>
 </section>
 <section id="model-decomposition" class="level3">
 <h3 class="anchored" data-anchor-id="model-decomposition">Model decomposition</h3>
@@ -694,56 +705,70 @@ concordant discordant     tied.x     tied.y    tied.xy
 </section>
 </section>
 </section>
-<section id="non-paramteric-models" class="level3">
-<h3 class="anchored" data-anchor-id="non-paramteric-models">Non-paramteric models</h3>
+<section id="non-paramteric-appraoch" class="level3">
+<h3 class="anchored" data-anchor-id="non-paramteric-appraoch">Non-paramteric appraoch</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>decompose_model_non_parametric<span class="ot">=</span><span class="cf">function</span>(model, var, data, <span class="at">leave_var_as_binary=</span>T, ...){</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  model_data<span class="ot">=</span>data</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  var0<span class="ot">=</span>var</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  levels<span class="ot">=</span><span class="fu">levels</span>(model_data[[var0]])</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  var<span class="ot">=</span><span class="fu">paste0</span>(var0, levels[<span class="dv">2</span>])</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  pred_homo<span class="ot">=</span><span class="fu">predict</span>(model, data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="sc">!</span><span class="at">var0:=</span>levels[<span class="dv">1</span>]),...)</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  pred_hetero<span class="ot">=</span><span class="fu">predict</span>(model, data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="sc">!</span><span class="at">var0:=</span>levels[<span class="dv">2</span>]),...)</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  out<span class="ot">=</span><span class="fu">cbind.data.frame</span>(<span class="st">"homo"</span><span class="ot">=</span>pred_homo,</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"hetero"</span><span class="ot">=</span>pred_hetero<span class="sc">-</span>pred_homo,</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">var=</span>data[[var0]]) <span class="sc">%&gt;%</span></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="sc">!</span><span class="at">var0:=</span>var)</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(leave_var_as_binary)</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  {</span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    out[[var0]]<span class="ot">=</span><span class="fu">as.numeric</span>(out[[var0]])<span class="sc">-</span><span class="dv">1</span></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @model a glm to be decomposed</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @var the variable to be decomposed over</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @data any new data to be provided, defaults to null</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @link the link function if necessary</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' @leave_as_binary whether to undo the labeliling</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>decompose_model_non_parametric<span class="ot">=</span><span class="cf">function</span>(model, var, data, <span class="at">link=</span>identity, <span class="at">leave_var_as_binary=</span>T, ...){</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  model_data<span class="ot">=</span>data</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  var0<span class="ot">=</span>var</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  levels<span class="ot">=</span><span class="fu">levels</span>(model_data[[var0]])</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  var<span class="ot">=</span><span class="fu">paste0</span>(var0, levels[<span class="dv">2</span>])</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  pred_homo<span class="ot">=</span><span class="fu">link</span>(<span class="fu">predict</span>(model, data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="sc">!</span><span class="at">var0:=</span>levels[<span class="dv">1</span>]),...))</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  pred_hetero<span class="ot">=</span><span class="fu">link</span>(<span class="fu">predict</span>(model, data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="sc">!</span><span class="at">var0:=</span>levels[<span class="dv">2</span>]),...))</span>
 <span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">structure</span>(</span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="st">"decomposed_model"</span><span class="ot">=</span>out,</span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>         <span class="st">"data"</span><span class="ot">=</span>model_data,</span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>         <span class="st">"var"</span><span class="ot">=</span>var0,</span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>         <span class="st">"outcome"</span><span class="ot">=</span><span class="fu">as.character</span>(model<span class="sc">$</span>terms)[<span class="dv">2</span>]),</span>
-<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">class=</span><span class="st">"decompose_model"</span></span>
-<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  out<span class="ot">=</span><span class="fu">cbind.data.frame</span>(<span class="st">"homo"</span><span class="ot">=</span>pred_homo,</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"hetero"</span><span class="ot">=</span>pred_hetero<span class="sc">-</span>pred_homo,</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>                       <span class="at">var=</span>data[[var0]]) <span class="sc">%&gt;%</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="sc">!</span><span class="at">var0:=</span>var)</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(leave_var_as_binary)</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>    out[[var0]]<span class="ot">=</span><span class="fu">as.numeric</span>(out[[var0]])<span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">structure</span>(</span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="st">"decomposed_model"</span><span class="ot">=</span>out,</span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>         <span class="st">"data"</span><span class="ot">=</span>model_data,</span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>         <span class="st">"var"</span><span class="ot">=</span>var0,</span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>         <span class="st">"outcome"</span><span class="ot">=</span><span class="fu">as.character</span>(model<span class="sc">$</span>terms)[<span class="dv">2</span>]),</span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">class=</span><span class="st">"decompose_model"</span></span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Note: that if you are using a custom model, e.g., submodels then it needs a structured return and a propoer predict.</p>
+<p>Note: that if you are using a custom model, e.g., submodels then it needs a structured return and a proper predict. Where you get a raw prediction (e.g., in a Random Forest) then you need to add a link function to get it in terms of a GLM.</p>
+<p>One issue that arises when using non-parametric models is that where the glm would use some link function the non-parametric model may not which could lead to scaling issues. I think that the solution is to use a link function on the predict if linear predictors aren’t returnable from the native predict.</p>
 
 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="list">
 <div id="ref-efthimiou2023" class="csl-entry" role="listitem">
-Efthimiou, Orestis, Jeroen Hoogland, Thomas P. A. Debray, Michael Seo, Toshiaki A. Furukawa, Matthias Egger, and Ian R. White. 2023. <span>“Measuring the Performance of Prediction Models to Personalize Treatment Choice.”</span> <em>Statistics in Medicine</em> 42 (8): 1188–1206. <a href="https://doi.org/10.1002/sim.9665">https://doi.org/10.1002/sim.9665</a>.
+Efthimiou, O. <em>et al.</em> (2023) <span>“Measuring the performance of prediction models to personalize treatment choice,”</span> <em>Statistics in Medicine</em>, 42(8), pp. 1188–1206. Available at: <a href="https://doi.org/10.1002/sim.9665">https://doi.org/10.1002/sim.9665</a>.
 </div>
 <div id="ref-hoogland2024" class="csl-entry" role="listitem">
-Hoogland, J., O. Efthimiou, T. L. Nguyen, and T. P. A. Debray. 2024. <span>“Evaluating Individualized Treatment Effect Predictions: A Model-Based Perspective on Discrimination and Calibration Assessment.”</span> <em>Statistics in Medicine</em> 43 (23): 4481–98. <a href="https://doi.org/10.1002/sim.10186">https://doi.org/10.1002/sim.10186</a>.
+Hoogland, J. <em>et al.</em> (2024) <span>“Evaluating individualized treatment effect predictions: A model-based perspective on discrimination and calibration assessment,”</span> <em>Statistics in Medicine</em>, 43(23), pp. 4481–4498. Available at: <a href="https://doi.org/10.1002/sim.10186">https://doi.org/10.1002/sim.10186</a>.
 </div>
 <div id="ref-klaveren2018" class="csl-entry" role="listitem">
-Klaveren, David van, Ewout W. Steyerberg, Patrick W. Serruys, and David M. Kent. 2018. <span>“The Proposed <span>‘</span>Concordance-Statistic for Benefit<span>’</span> Provided a Useful Metric When Modeling Heterogeneous Treatment Effects.”</span> <em>Journal of Clinical Epidemiology</em> 94 (February): 59–68. <a href="https://doi.org/10.1016/j.jclinepi.2017.10.021">https://doi.org/10.1016/j.jclinepi.2017.10.021</a>.
+Klaveren, D. van <em>et al.</em> (2018) <span>“The proposed <span>‘</span>concordance-statistic for benefit<span>’</span> provided a useful metric when modeling heterogeneous treatment effects,”</span> <em>Journal of Clinical Epidemiology</em>, 94, pp. 59–68. Available at: <a href="https://doi.org/10.1016/j.jclinepi.2017.10.021">https://doi.org/10.1016/j.jclinepi.2017.10.021</a>.
+</div>
+<div id="ref-maas2023" class="csl-entry" role="listitem">
+Maas, C.C.H.M. <em>et al.</em> (2023) <span>“Performance metrics for models designed to predict treatment effect,”</span> <em>BMC Medical Research Methodology</em>, 23(1), p. 165. Available at: <a href="https://doi.org/10.1186/s12874-023-01974-w">https://doi.org/10.1186/s12874-023-01974-w</a>.
 </div>
 <div id="ref-smit2025" class="csl-entry" role="listitem">
-Smit, Jim M., Philip A. Van Der Zee, Sara C. M. Stoof, Michel E. Van Genderen, Dominic Snijders, Wim G. Boersma, Paola Confalonieri, et al. 2025. <span>“Predicting Benefit from Adjuvant Therapy with Corticosteroids in Community-Acquired Pneumonia: A Data-Driven Analysis of Randomised Trials.”</span> <em>The Lancet Respiratory Medicine</em> 13 (3): 221–33. <a href="https://doi.org/10.1016/S2213-2600(24)00405-3">https://doi.org/10.1016/S2213-2600(24)00405-3</a>.
+Smit, J.M. <em>et al.</em> (2025) <span>“Predicting benefit from adjuvant therapy with corticosteroids in community-acquired pneumonia: A data-driven analysis of randomised trials,”</span> <em>The Lancet Respiratory Medicine</em>, 13(3), pp. 221–233. Available at: <a href="https://doi.org/10.1016/S2213-2600(24)00405-3">https://doi.org/10.1016/S2213-2600(24)00405-3</a>.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

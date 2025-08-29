@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>sandbox – Seb’s Notebook</title>
+<title>Applications of C4B – Seb’s Notebook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,41 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
 }
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
 }
-</style>
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -116,9 +101,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
-      Seb's Notebook
-      </li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./c4b.html">C-for-benefit</a></li><li class="breadcrumb-item"><a href="./c4bwild.html">Applications of C4B</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -216,7 +199,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./c4bwild.html" class="sidebar-item-text sidebar-link">
+  <a href="./c4bwild.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Applications of C4B</span></a>
   </div>
 </li>
@@ -245,15 +228,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-is-missing" id="toc-what-is-missing" class="nav-link active" data-scroll-target="#what-is-missing">What is missing?</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./c4b.html">C-for-benefit</a></li><li class="breadcrumb-item"><a href="./c4bwild.html">Applications of C4B</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">sandbox</h1>
+<h1 class="title">Applications of C4B</h1>
 </div>
 
 
@@ -270,43 +259,330 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] FALSE</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] TRUE</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  u w
-1 a b</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  u w
-1 b c</code></pre>
-</div>
-</div>
-<pre><code>head(mtcars)
-</code></pre>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/test.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
-Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
-</div>
-</div>
+<p>It has been noted that a C&gt;0.6 would be very good and highly unusual <span class="citation" data-cites="klaveren2018">(<a href="#ref-klaveren2018" role="doc-biblioref">Klaveren <em>et al.</em>, 2018</a>)</span></p>
+<p>Search criteria</p>
+<ul>
+<li><p>Cites <span class="citation" data-cites="klaveren2018">Klaveren <em>et al.</em> (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span></p></li>
+<li><p>RCT (includes scores from RCTs that are used in simulation studies)</p></li>
+<li><p>Reports ‘C-for-benefit’ (or words to that effect)</p></li>
+<li><p>Excludes: protocols, simulation studies only, reviews</p></li>
+</ul>
+<table class="caption-top table">
+<caption>Papers that have used C4B</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ref</th>
+<th>Method</th>
+<th>Dev C4B</th>
+<th>Val C4B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="citation" data-cites="afshar2024">Afshar <em>et al.</em> (<a href="#ref-afshar2024" role="doc-biblioref">2024</a>)</span></td>
+<td>ML</td>
+<td>0.63</td>
+<td>?</td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="bond2024">Bond <em>et al.</em> (<a href="#ref-bond2024" role="doc-biblioref">2024</a>)</span></td>
+<td>Cox</td>
+<td>0.66 (Optimism corrected)</td>
+<td>0.65, 0.68, 0.69 in different cohorts</td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="bouvier2024">Bouvier <em>et al.</em> (<a href="#ref-bouvier2024" role="doc-biblioref">2024</a>)</span><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></td>
+<td>Logistic</td>
+<td>0.52</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="bress2021">Bress <em>et al.</em> (<a href="#ref-bress2021" role="doc-biblioref">2021</a>)</span></td>
+<td>Cox</td>
+<td>0.55</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="buell2024">Buell <em>et al.</em> (<a href="#ref-buell2024" role="doc-biblioref">2024</a>)</span></td>
+<td>Logistic</td>
+<td>0.55</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="chen2017">Chen <em>et al.</em> (<a href="#ref-chen2017" role="doc-biblioref">2017</a>)</span></td>
+<td>ML</td>
+<td>0.61</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="dewinkel2024">Winkel <em>et al.</em> (<a href="#ref-dewinkel2024" role="doc-biblioref">2024</a>)</span></td>
+<td>Logistic</td>
+<td>0.57</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="hara2021">Hara <em>et al.</em> (<a href="#ref-hara2021" role="doc-biblioref">2021</a>)</span></td>
+<td>Logistic</td>
+<td>ND</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="hariton2021">Hariton <em>et al.</em> (<a href="#ref-hariton2021" role="doc-biblioref">2021</a>)</span></td>
+<td>Light Gradient Boosting Machine</td>
+<td>0.682</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="helmink2023">Helmink <em>et al.</em> (<a href="#ref-helmink2023" role="doc-biblioref">2023</a>)</span></td>
+<td>Cox</td>
+<td>0.609</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="herzog">Herzog <em>et al.</em> (<a href="#ref-herzog" role="doc-biblioref">2025</a>)</span></td>
+<td>ML</td>
+<td>0.55</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="hoogland2023">Hoogland <em>et al.</em> (<a href="#ref-hoogland2023" role="doc-biblioref">2023</a>)</span><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></td>
+<td>Logisitic</td>
+<td>0.5</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="inoue2023">Inoue, Athey and Tsugawa (<a href="#ref-inoue2023" role="doc-biblioref">2023</a>)</span></td>
+<td>RF</td>
+<td>0.90</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="inoue2023heterogeneity">Inoue <em>et al.</em> (<a href="#ref-inoue2023heterogeneity" role="doc-biblioref">2023</a>)</span></td>
+<td>Causal Forest</td>
+<td>0.87</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="jakobsen2023">Jakobsen <em>et al.</em> (<a href="#ref-jakobsen2023" role="doc-biblioref">2023</a>)</span></td>
+<td>Causal Forest</td>
+<td>0.59</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="klaveren2018">Klaveren <em>et al.</em> (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> (Stroke TPI)</td>
+<td>Logistic</td>
+<td>0.578</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="klaveren2018">Klaveren <em>et al.</em> (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> (Syntax)</td>
+<td>Cox</td>
+<td>0.59 (optimism corrected)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="lv2022">Lv <em>et al.</em> (<a href="#ref-lv2022" role="doc-biblioref">2022</a>)</span></td>
+<td>Cox</td>
+<td>0.569-0.675</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="lv2024">Lv <em>et al.</em> (<a href="#ref-lv2024" role="doc-biblioref">2024</a>)</span></td>
+<td>Competing Risk</td>
+<td>0.696</td>
+<td>0.675</td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="nuutinen2025">Nuutinen <em>et al.</em> (<a href="#ref-nuutinen2025" role="doc-biblioref">2025</a>)</span></td>
+<td>Logistic</td>
+<td>0.53</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="rekkas2023">Rekkas <em>et al.</em> (<a href="#ref-rekkas2023" role="doc-biblioref">2023</a>)</span> (Gusto)</td>
+<td>Logistic</td>
+<td>NR (for GUSTO)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="roblin">Roblin, Cournède and Michiels (<a href="#ref-roblin" role="doc-biblioref">2025</a>)</span></td>
+<td>Cox</td>
+<td>0.571-0.641</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="saller2022">Saller <em>et al.</em> (<a href="#ref-saller2022" role="doc-biblioref">2022</a>)</span></td>
+<td>GLM Tree(?)</td>
+<td></td>
+<td>NR</td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="takahashi2020">Takahashi <em>et al.</em> (<a href="#ref-takahashi2020" role="doc-biblioref">2020</a>)</span></td>
+<td>Cox</td>
+<td>NR</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="trinks-roerdink2023">Trinks-Roerdink <em>et al.</em> (<a href="#ref-trinks-roerdink2023" role="doc-biblioref">2023</a>)</span></td>
+<td>Cox</td>
+<td>0.58</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="citation" data-cites="venema2021">Venema <em>et al.</em> (<a href="#ref-venema2021" role="doc-biblioref">2021</a>)</span></td>
+<td>Logistic</td>
+<td>0.53</td>
+<td>0.58 (Registry)</td>
+</tr>
+<tr class="odd">
+<td><span class="citation" data-cites="watanabe2025">Watanabe <em>et al.</em> (<a href="#ref-watanabe2025" role="doc-biblioref">2025</a>)</span></td>
+<td>ML</td>
+<td>0.71</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>In this rapid review there has been some interest in the C-for-benefit, although not always applied correctly (e.g., <span class="citation" data-cites="hara2021">Hara <em>et al.</em> (<a href="#ref-hara2021" role="doc-biblioref">2021</a>)</span>) and very rarely used in a validation set although some do explicitaly correct for optimism <span class="citation" data-cites="klaveren2018">(<a href="#ref-klaveren2018" role="doc-biblioref">Klaveren <em>et al.</em>, 2018</a>)</span>. There are some results that do appear to be too-good-to-be-true <span class="citation" data-cites="inoue2023heterogeneity inoue2023">(<a href="#ref-inoue2023heterogeneity" role="doc-biblioref">Inoue <em>et al.</em>, 2023</a>; <a href="#ref-inoue2023" role="doc-biblioref">Inoue, Athey and Tsugawa, 2023</a>)</span>, especially without validation in the text and RF being prone to overfitting without tuning or cross validation <span class="citation" data-cites="barreñada2024">(<a href="#ref-barreñada2024" role="doc-biblioref">Barreñada <em>et al.</em>, 2024</a>)</span>.</p>
+<p>On the whole it was unusual (with the exception of <span class="citation" data-cites="watanabe2025">Watanabe <em>et al.</em> (<a href="#ref-watanabe2025" role="doc-biblioref">2025</a>)</span>, <span class="citation" data-cites="dewinkel2024">Winkel <em>et al.</em> (<a href="#ref-dewinkel2024" role="doc-biblioref">2024</a>)</span>, <span class="citation" data-cites="herzog">Herzog <em>et al.</em> (<a href="#ref-herzog" role="doc-biblioref">2025</a>)</span>) that both the global C and the C-for-benefit were reported.</p>
+<p>There is some criticism of C4B <span class="citation" data-cites="verstraete2023">(<a href="#ref-verstraete2023" role="doc-biblioref">Verstraete <em>et al.</em>, 2023</a>)</span> on the grounds of lack of interpretability but doens’t go much further.</p>
+<p>The better quality work tended to have at least one of the Dutch prediction usual suspects (Steyerberg, van Klarven, van Smeden) in the author line.</p>
+<p>How C4B has been applied is frequently unclear, e.g., <span class="citation" data-cites="lv2022">Lv <em>et al.</em> (<a href="#ref-lv2022" role="doc-biblioref">2022</a>)</span> has very similar C-for-risk and C-for-benefit scores which hasn’t been seen in other studies.</p>
+<p>In the original method you have the ternary outcome of {-1, 0, 1} denoting {harm, no difference, benefit} however with a survival model you would end up with {harm, unknown due to censoring, benefit} like in the implementation of Harrell’s C <span class="citation" data-cites="harrell2015">(<a href="#ref-harrell2015" role="doc-biblioref">Harrell, 2015</a>)</span> where when comparing pairs of observations those of the form of A being censored prior to B having an event would not be included in the calculation.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> The issue that one has is that pairs could be chosen but not have a valid status. Essentially the status of all pairs must have an ordered output. One option that may have been applied is implementing an arbitrary cut-off point and dichotomising. <span class="citation" data-cites="efthimiou2025">Efthimiou <em>et al.</em> (<a href="#ref-efthimiou2025" role="doc-biblioref">2025</a>)</span> extended the original method to survival models where unknown is interpreted as no difference.</p>
+<section id="what-is-missing" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-missing">What is missing?</h3>
+<section id="c4b-outside-of-logistic" class="level4">
+<h4 class="anchored" data-anchor-id="c4b-outside-of-logistic">C4B outside of logistic</h4>
+<p>There are relatively few CPMs that examine neither a binary nor survival outcome. So it is not massively surprising that there is little work on models not in these forms.</p>
+</section>
+<section id="matching-approaches" class="level4">
+<h4 class="anchored" data-anchor-id="matching-approaches">Matching approaches</h4>
+<p>In more recent papers, there is a brief mention of using Mahalanobis distance, and only since <span class="citation" data-cites="hoogland2024">Hoogland <em>et al.</em> (<a href="#ref-hoogland2024" role="doc-biblioref">2024</a>)</span> and mentioned in <span class="citation" data-cites="maas2023">Maas <em>et al.</em> (<a href="#ref-maas2023" role="doc-biblioref">2023</a>)</span>. I think there are better approaches. There is also a need to report what the matching technique is.</p>
+</section>
+<section id="what-is-a-good-c4b" class="level4">
+<h4 class="anchored" data-anchor-id="what-is-a-good-c4b">What is a good C4B?</h4>
+<p><span class="citation" data-cites="klaveren2018">Klaveren <em>et al.</em> (<a href="#ref-klaveren2018" role="doc-biblioref">2018</a>)</span> stated that 0.6 was a good score and that would be consistent with the results from the studies so far. I think there is a need for simulation with various types of model and variance to see how global discrimination correlates with C4B.</p>
+</section>
+<section id="validation" class="level4">
+<h4 class="anchored" data-anchor-id="validation">Validation</h4>
+<p>There were very few studies that explicitly state that the discrimination is optimism corrected/internal-external validated of validated in an independent cohort.</p>
 
 
 
-</main> <!-- /main -->
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="list">
+<div id="ref-afshar2024" class="csl-entry" role="listitem">
+Afshar, M. <em>et al.</em> (2024) <span>“Machine learning<span></span>driven analysis of individualized treatment effects comparing buprenorphine and naltrexone in opioid use disorder relapse prevention,”</span> <em>Journal of Addiction Medicine</em>, 18(5), p. 511. Available at: <a href="https://doi.org/10.1097/ADM.0000000000001313">https://doi.org/10.1097/ADM.0000000000001313</a>.
+</div>
+<div id="ref-barreñada2024" class="csl-entry" role="listitem">
+Barreñada, L. <em>et al.</em> (2024) <span>“Understanding overfitting in random forest for probability estimation: A visualization and simulation study,”</span> <em>Diagnostic and Prognostic Research</em>, 8(1), p. 14. Available at: <a href="https://doi.org/10.1186/s41512-024-00177-1">https://doi.org/10.1186/s41512-024-00177-1</a>.
+</div>
+<div id="ref-bond2024" class="csl-entry" role="listitem">
+Bond, M.J.G. <em>et al.</em> (2024) <span>“Predicting benefit from FOLFOXIRI plus bevacizumab in patients with metastatic colorectal cancer,”</span> <em>JCO Clinical Cancer Informatics</em>, (8), p. e2400037. Available at: <a href="https://doi.org/10.1200/CCI.24.00037">https://doi.org/10.1200/CCI.24.00037</a>.
+</div>
+<div id="ref-bouvier2024" class="csl-entry" role="listitem">
+Bouvier, F. <em>et al.</em> (2024) <span>“Estimating individualized treatment effects using an individual participant data meta-analysis,”</span> <em>BMC Medical Research Methodology</em>, 24(1), p. 74. Available at: <a href="https://doi.org/10.1186/s12874-024-02202-9">https://doi.org/10.1186/s12874-024-02202-9</a>.
+</div>
+<div id="ref-bress2021" class="csl-entry" role="listitem">
+Bress, A.P. <em>et al.</em> (2021) <span>“Patient selection for intensive blood pressure management based on benefit and adverse events,”</span> <em>JACC</em>, 77(16), pp. 1977–1990. Available at: <a href="https://doi.org/10.1016/j.jacc.2021.02.058">https://doi.org/10.1016/j.jacc.2021.02.058</a>.
+</div>
+<div id="ref-buell2024" class="csl-entry" role="listitem">
+Buell, K.G. <em>et al.</em> (2024) <span>“Individualized treatment effects of oxygen targets in mechanically ventilated critically ill adults,”</span> <em>JAMA</em>, 331(14), pp. 1195–1204. Available at: <a href="https://doi.org/10.1001/jama.2024.2933">https://doi.org/10.1001/jama.2024.2933</a>.
+</div>
+<div id="ref-chen2017" class="csl-entry" role="listitem">
+Chen, Y.-X. <em>et al.</em> (2017) <span>“Histopathological classification and renal outcome in patients with antineutrophil cytoplasmic antibodies-associated renal vasculitis: A study of 186 patients and metaanalysis,”</span> <em>J Rheumatol</em>, 44(3), pp. 304–313. Available at: <a href="https://doi.org/10.3899/jrheum.160866">https://doi.org/10.3899/jrheum.160866</a>.
+</div>
+<div id="ref-efthimiou2025" class="csl-entry" role="listitem">
+Efthimiou, O. <em>et al.</em> (2025) <span>“Measuring the Performance of Survival Models to Personalize Treatment Choices,”</span> <em>Statistics in Medicine</em>, 44(7), p. e70050. Available at: <a href="https://doi.org/10.1002/sim.70050">https://doi.org/10.1002/sim.70050</a>.
+</div>
+<div id="ref-hara2021" class="csl-entry" role="listitem">
+Hara, H. <em>et al.</em> (2021) <span>“External validation of the SYNTAX score II 2020,”</span> <em>JACC</em>, 78(12), pp. 1227–1238. Available at: <a href="https://doi.org/10.1016/j.jacc.2021.07.027">https://doi.org/10.1016/j.jacc.2021.07.027</a>.
+</div>
+<div id="ref-hariton2021" class="csl-entry" role="listitem">
+Hariton, E. <em>et al.</em> (2021) <span>“A machine learning algorithm can optimize the day of trigger to improve in&nbsp;vitro fertilization outcomes,”</span> <em>Fertility and Sterility</em>, 116(5), pp. 1227–1235. Available at: <a href="https://doi.org/10.1016/j.fertnstert.2021.06.018">https://doi.org/10.1016/j.fertnstert.2021.06.018</a>.
+</div>
+<div id="ref-harrell2015" class="csl-entry" role="listitem">
+Harrell, F.E. (2015) <em>Regression modeling strategies : With applications to linear models, logistic and ordinal regression, and survival analysis</em>. Second edition. Cham: Springer (Springer series in statistics). Available at: <a href="https://doi.org/10.1007/978-3-319-19425-7">https://doi.org/10.1007/978-3-319-19425-7</a>.
+</div>
+<div id="ref-helmink2023" class="csl-entry" role="listitem">
+Helmink, M.A.G. <em>et al.</em> (2023) <span>“Variability in benefit from intensive insulin therapy on cardiovascular events in individuals with type 1 diabetes: A post hoc analysis of the DCCT/EDIC study,”</span> <em>Diabetic Medicine</em>, 40(11), p. e15183. Available at: <a href="https://doi.org/10.1111/dme.15183">https://doi.org/10.1111/dme.15183</a>.
+</div>
+<div id="ref-herzog" class="csl-entry" role="listitem">
+Herzog, L. <em>et al.</em> (2025) <span>“Outcome prediction and individualized treatment effect estimation in patients with large vessel occlusion stroke.”</span> Available at: <a href="https://doi.org/10.48550/arXiv.2507.03046">https://doi.org/10.48550/arXiv.2507.03046</a>.
+</div>
+<div id="ref-hoogland2023" class="csl-entry" role="listitem">
+Hoogland, J. <em>et al.</em> (2023) <span>“Prognosis and prediction of antibiotic benefit in adults with clinically diagnosed acute rhinosinusitis: an individual participant data meta-analysis,”</span> <em>Diagnostic and Prognostic Research</em>, 7(1), p. 16. Available at: <a href="https://doi.org/10.1186/s41512-023-00154-0">https://doi.org/10.1186/s41512-023-00154-0</a>.
+</div>
+<div id="ref-hoogland2024" class="csl-entry" role="listitem">
+Hoogland, J. <em>et al.</em> (2024) <span>“Evaluating individualized treatment effect predictions: A model-based perspective on discrimination and calibration assessment,”</span> <em>Statistics in Medicine</em>, 43(23), pp. 4481–4498. Available at: <a href="https://doi.org/10.1002/sim.10186">https://doi.org/10.1002/sim.10186</a>.
+</div>
+<div id="ref-inoue2023heterogeneity" class="csl-entry" role="listitem">
+Inoue, K. <em>et al.</em> (2023) <span>“Heterogeneity in the association between the presence of coronary artery calcium and cardiovascular events: A machine-learning approach in the MESA study,”</span> <em>Circulation</em>, 147(2), pp. 132–141.
+</div>
+<div id="ref-inoue2023" class="csl-entry" role="listitem">
+Inoue, K., Athey, S. and Tsugawa, Y. (2023) <span>“Machine-learning-based high-benefit approach versus conventional high-risk approach in blood pressure management,”</span> <em>International Journal of Epidemiology</em>, 52(4), pp. 1243–1256. Available at: <a href="https://doi.org/10.1093/ije/dyad037">https://doi.org/10.1093/ije/dyad037</a>.
+</div>
+<div id="ref-jakobsen2023" class="csl-entry" role="listitem">
+Jakobsen, K.D. <em>et al.</em> (2023) <span>“Machine learning identifies risk factors associated with long-term sick leave following COVID-19 in Danish population,”</span> <em>Communications Medicine</em>, 3(1), p. 188. Available at: <a href="https://doi.org/10.1038/s43856-023-00423-5">https://doi.org/10.1038/s43856-023-00423-5</a>.
+</div>
+<div id="ref-klaveren2018" class="csl-entry" role="listitem">
+Klaveren, D. van <em>et al.</em> (2018) <span>“The proposed <span>‘</span>concordance-statistic for benefit<span>’</span> provided a useful metric when modeling heterogeneous treatment effects,”</span> <em>Journal of Clinical Epidemiology</em>, 94, pp. 59–68. Available at: <a href="https://doi.org/10.1016/j.jclinepi.2017.10.021">https://doi.org/10.1016/j.jclinepi.2017.10.021</a>.
+</div>
+<div id="ref-lv2022" class="csl-entry" role="listitem">
+Lv, Y. <em>et al.</em> (2022) <span>“CLIF-c AD score predicts survival benefit from pre-emptive TIPS in individuals with child-pugh b cirrhosis and acute variceal bleeding,”</span> <em>JHEP Reports</em>, 4(12), p. 100621. Available at: <a href="https://doi.org/10.1016/j.jhepr.2022.100621">https://doi.org/10.1016/j.jhepr.2022.100621</a>.
+</div>
+<div id="ref-lv2024" class="csl-entry" role="listitem">
+Lv, Y. <em>et al.</em> (2024) <span>“Development and validation of a prognostic score to identify the optimal candidate for preemptive TIPS in patients with cirrhosis and acute variceal bleeding,”</span> <em>Hepatology</em>, 79(1), p. 118. Available at: <a href="https://doi.org/10.1097/HEP.0000000000000548">https://doi.org/10.1097/HEP.0000000000000548</a>.
+</div>
+<div id="ref-maas2023" class="csl-entry" role="listitem">
+Maas, C.C.H.M. <em>et al.</em> (2023) <span>“Performance metrics for models designed to predict treatment effect,”</span> <em>BMC Medical Research Methodology</em>, 23(1), p. 165. Available at: <a href="https://doi.org/10.1186/s12874-023-01974-w">https://doi.org/10.1186/s12874-023-01974-w</a>.
+</div>
+<div id="ref-nuutinen2025" class="csl-entry" role="listitem">
+Nuutinen, M. <em>et al.</em> (2025) <span>“Effect of discontinuing antipsychotic medications on the risk of hospitalization in long-term care: a machine learning-based analysis,”</span> <em>BMC Medicine</em>, 23(1), p. 484. Available at: <a href="https://doi.org/10.1186/s12916-025-04304-7">https://doi.org/10.1186/s12916-025-04304-7</a>.
+</div>
+<div id="ref-rekkas2023" class="csl-entry" role="listitem">
+Rekkas, A. <em>et al.</em> (2023) <span>“Estimating individualized treatment effects from&nbsp;randomized controlled trials: a simulation study to compare risk-based approaches,”</span> <em>BMC Medical Research Methodology</em>, 23(1), p. 74. Available at: <a href="https://doi.org/10.1186/s12874-023-01889-6">https://doi.org/10.1186/s12874-023-01889-6</a>.
+</div>
+<div id="ref-roblin" class="csl-entry" role="listitem">
+Roblin, E., Cournède, P.-H. and Michiels, S. (2025) <span>“Evaluation of machine-learning models to measure individualized treatment effects from randomized clinical trial data with time-to-event outcomes.”</span> Available at: <a href="https://doi.org/10.48550/arXiv.2506.12277">https://doi.org/10.48550/arXiv.2506.12277</a>.
+</div>
+<div id="ref-saller2022" class="csl-entry" role="listitem">
+Saller, T. <em>et al.</em> (2022) <span>“Association between post-operative delirium and use of volatile anesthetics in the elderly: A real-world big data approach,”</span> <em>Journal of Clinical Anesthesia</em>, 83, p. 110957. Available at: <a href="https://doi.org/10.1016/j.jclinane.2022.110957">https://doi.org/10.1016/j.jclinane.2022.110957</a>.
+</div>
+<div id="ref-takahashi2020" class="csl-entry" role="listitem">
+Takahashi, K. <em>et al.</em> (2020) <span>“Redevelopment and validation of the SYNTAX score II to individualise decision making between percutaneous and surgical revascularisation in patients with complex coronary artery disease: Secondary analysis of the multicentre randomised controlled SYNTAXES trial with external cohort validation,”</span> <em>The Lancet</em>, 396(10260), pp. 1399–1412. Available at: <a href="https://doi.org/10.1016/S0140-6736(20)32114-0">https://doi.org/10.1016/S0140-6736(20)32114-0</a>.
+</div>
+<div id="ref-trinks-roerdink2023" class="csl-entry" role="listitem">
+Trinks-Roerdink, E.M. <em>et al.</em> (2023) <span>“Integrated care in patients with atrial fibrillation- a predictive heterogeneous treatment effect analysis of the ALL-IN trial,”</span> <em>PLOS ONE</em>, 18(10), p. e0292586. Available at: <a href="https://doi.org/10.1371/journal.pone.0292586">https://doi.org/10.1371/journal.pone.0292586</a>.
+</div>
+<div id="ref-venema2021" class="csl-entry" role="listitem">
+Venema, E. <em>et al.</em> (2021) <span>“Prediction of outcome and endovascular treatment benefit: Validation and update of the MR PREDICTS decision tool,”</span> <em>Stroke</em>, 52(9), pp. 2764–2772. Available at: <a href="https://doi.org/10.1161/STROKEAHA.120.032935">https://doi.org/10.1161/STROKEAHA.120.032935</a>.
+</div>
+<div id="ref-verstraete2023" class="csl-entry" role="listitem">
+Verstraete, K. <em>et al.</em> (2023) <span>“Estimating individual treatment effects on COPD exacerbations by causal machine learning on randomised controlled trials,”</span> <em>Thorax</em>, 78(10), pp. 983–989. Available at: <a href="https://doi.org/10.1136/thorax-2022-219382">https://doi.org/10.1136/thorax-2022-219382</a>.
+</div>
+<div id="ref-watanabe2025" class="csl-entry" role="listitem">
+Watanabe, R. <em>et al.</em> (2025) <span>“Machine learning-based high-benefit approach versus traditional high-risk approach in statin therapy: the Shizuoka Kokuho database study,”</span> <em>Scientific Reports</em>, 15(1), p. 27627. Available at: <a href="https://doi.org/10.1038/s41598-025-11236-y">https://doi.org/10.1038/s41598-025-11236-y</a>.
+</div>
+<div id="ref-dewinkel2024" class="csl-entry" role="listitem">
+Winkel, J. de <em>et al.</em> (2024) <span>“Personalized decision-making for aneurysm treatment of aneurysmal subarachnoid hemorrhage: development and validation of a clinical prediction tool,”</span> <em>BMC Neurology</em>, 24(1), p. 65. Available at: <a href="https://doi.org/10.1186/s12883-024-03546-x">https://doi.org/10.1186/s12883-024-03546-x</a>.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>This was a one-stage IPDMA<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>IPDMA<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Where A has an event prior to B being censored then that would be counted, where both are censored, then again they are not counted.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

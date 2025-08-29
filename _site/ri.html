@@ -222,12 +222,23 @@ div.csl-indent {
  <span class="menu-text">Model Comparison</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./c4b.html" class="sidebar-item-text sidebar-link">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./c4b.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">C-for-benefit</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./c4bwild.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Applications of C4B</span></a>
   </div>
 </li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./splines.html" class="sidebar-item-text sidebar-link">
@@ -323,13 +334,13 @@ div.csl-indent {
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">complete</span>(m1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  arm_ipd eos_bl age_imp exac_bl sex smoking_bl fev1_bl   trt_dur
-1     ICS    0.1      65       1   M    Current    1.33 0.2518823
-2     ICS    0.4      55       1   M    Current    1.29 1.0130048
-3     ICS    0.4      65       1   M     Former    1.38 0.1095140
-4 Control    0.3      65       1   M     Former    0.74 0.4462697
-5 Control    0.5      65       1   M    Current    1.20 0.6379192
-6     ICS    0.2      75       1   M     Former    1.38 0.9774127</code></pre>
+<pre><code>  arm_ipd eos_bl age_imp  exac_bl sex smoking_bl fev1_bl    trt_dur
+1     ICS    0.0      55 1.000000   M     Former    1.05 0.99931554
+2     ICS    0.1      65 1.000000   M    Current    1.33 0.25188227
+3 Control    0.1      75 1.000000   M    Current    0.80 0.07118412
+4     ICS    0.3      65 1.000000   M     Former    1.03 1.01848049
+5     ICS    0.4      55 1.401292   M    Current    1.29 1.01300479
+6     ICS    0.1      55 1.000000   F    Current    0.67 0.45722108</code></pre>
 </div>
 </div>
 <p>But my concern here is that I can’t work out how to run a data-agnostic on the fly imputation so I made my own version.</p>

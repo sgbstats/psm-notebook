@@ -69,7 +69,7 @@ When calculating C4B you rank the difference in the actual outcome and the rank 
 
 -   You then calculate the C4B based on the $excess\sim rank(hetro)$.
 
-    -   In this case the hetro values are likely to be a lot closer than when using homo as part of the match.
+-   In this case the hetro values are likely to be a lot closer than when using homo as part of the match.
 
 -   This will only work for count or linear models.
 
@@ -82,8 +82,9 @@ If we were to use the stratified random forests (the proper name I have forgotte
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 load("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\data/study_data.RDa")
 
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\decompose_model.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\c4b.R")
+source("R\\prediction\\decompose_model.R")
+source("decompose_model_non_parametric.R")
+source("R\\prediction\\c4b.R")
 
 set.seed(121)
 data1=study_data$EFFECT$ad
@@ -97,8 +98,8 @@ library(MASS)
 library(tidyverse)
 
 # Data loaded out of sight
-train=data %>% filter(train) %>%  mutate(rate=exac_modsev_n/trt_dur)
-test=data %>% filter(!train) %>%  mutate(rate=exac_modsev_n/trt_dur)
+train=data %>% filter(trt_dur>0.25)%>% filter(train) %>%  mutate(rate=exac_modsev_n/trt_dur)
+test=data %>% filter(trt_dur>0.25) %>% filter(!train) %>%  mutate(rate=exac_modsev_n/trt_dur)
 formula=rate ~ arm_ipd*eos_bl+age_imp+exac_bl+sex+arm_ipd*smoking_bl+fev1_bl
 
 model=glm.nb(formula, train, contrasts=NULL)
@@ -142,7 +143,7 @@ FWIW this is a weird trial that has almost no ICS effect.
 
 ```{r}
 # Usage
-result <- decompose_model(model, "arm_ipd", leave_var_as_binary = T)
+result <- decompose_model(model, arm_ipd, leave_var_as_binary = T)
 head(result$decomposed_model)
 
 ```
@@ -151,18 +152,14 @@ head(result$decomposed_model)
 ```
 
 ```{r,echo=TRUE, message=FALSE, warning=FALSE}
-c4b(result, method="optimal")
-c4b(result, method="excess")
+c4b(model, rate, arm_ipd,data=train, method= "parametric", "decompose")
 ```
 
 ##### Validation
 
 ```{r,echo=TRUE, message=FALSE, warning=FALSE}
 
-result2 <- decompose_model(model, "arm_ipd", newdata=test, leave_var_as_binary = T)
-head(result2$decomposed_model)
-c4b(result2, method="optimal")
-c4b(result2, method="excess")
+c4b(model, rate, arm_ipd,data=test, method= "parametric", "decompose")
 ```
 
 ### Non-paramteric appraoch

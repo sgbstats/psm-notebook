@@ -12,7 +12,7 @@ predict.submodels <- function(newdata, submodels.object,se.fit=TRUE,retain_lhs=F
   
   #keeping the correct bits of data.
   mod.data<-newdata %>% dplyr::select(any_of(c(mod.lhs, submodels.object[["meta"]][["vars"]]))) %>% 
-    drop_na(all_of(submodels.object[["meta"]][["force_variables"]]))
+    tidyr::drop_na(all_of(submodels.object[["meta"]][["force_variables"]]))
   
   #its useful to have a copy
   sdata<- mod.data
@@ -23,10 +23,10 @@ predict.submodels <- function(newdata, submodels.object,se.fit=TRUE,retain_lhs=F
   for(i in missing_vars){
     sdata[,i] <- NA
   }
-
+  
   # getting the missingness patterns and setting up the data ready.
   unpack(missingness_pattern(sdata %>% dplyr::select(-any_of(mod.lhs))))
-  mp.info=submodels.object[["meta"]][["mp.info"]] %>% filter(mp %in% mp.info$mp)
+  mp.info=submodels.object[["meta"]][["mp.info"]]# %>% filter(mp %in% mp.info$mp)
   
   pred.out=sdata[0,]
   pred.out$fit=numeric(0)
@@ -39,19 +39,19 @@ predict.submodels <- function(newdata, submodels.object,se.fit=TRUE,retain_lhs=F
   
   # predicting for each missing pattern
   for(i in 1:nrow(mp.info)){
-    newdata=sdata[tmp.info[[mp.info$mp[i]]],]
-    
-    pred=predict(submodels.object[[i]][["mod"]], newdata=newdata, se.fit=se.fit,...)
+    newdata_mp=sdata[tmp.info[[mp.info$mp[i]]],]
+    if(nrow(newdata_mp)==0){next}
+    pred=predict(submodels.object[[i]][["mod"]], newdata=newdata_mp, se.fit=se.fit,...)
     if(se.fit){
-      newdata$fit=pred$fit 
-      newdata$se.fit=pred$se.fit
+      newdata_mp$fit=pred$fit 
+      newdata_mp$se.fit=pred$se.fit
     }else{
-      newdata$fit=pred.out
+      newdata_mp$fit=pred.out
     }
     if(include_mp){
-      newdata$mp=mp.info$mp[i]
+      newdata_mp$mp=mp.info$mp[i]
     }
-    pred.out=pred.out %>% rbind(newdata)
+    pred.out=pred.out %>% rbind(newdata_mp)
   }
   if(!retain_lhs){
     pred.out=pred.out %>% dplyr::select(-any_of(mod.lhs))

@@ -10,7 +10,7 @@
 submodels<- function(data, model, model_fn,submodel_type=c("psm", "ccsm"), force_variables=c(),threshold_multiplier=2,remove_model_data=c("model", "y", "fitted"), ...){
   
   #house keeping
-  submodel_type=submodel_type[1] #picks the first of submodels
+  submodel_type=match.arg(submodel_type,c("psm", "ccsm")) #picks the first of submodels
   if(!submodel_type %in% c("psm", "ccsm")){
     stop("psm or ccsm required")
   }
@@ -20,8 +20,8 @@ submodels<- function(data, model, model_fn,submodel_type=c("psm", "ccsm"), force
   
   model=as.formula(model) #coerces the model formula into a formula class object
   mod.data<- get_all_vars(model, data=data) %>%
-    drop_na(all_of(mod.lhs)) %>%
-    drop_na(all_of(force_variables))
+    tidyr::drop_na(all_of(mod.lhs)) %>%
+    tidyr::drop_na(all_of(force_variables))
   
   model_names=names(mod.data)
   
@@ -60,15 +60,17 @@ submodels<- function(data, model, model_fn,submodel_type=c("psm", "ccsm"), force
   }
   
   reg.out <- vector('list', length(all.patterns))
-  names(reg.out) <- mp.info$mp.info
+  names(reg.out) <- mp.info$mp
   
+  cols=names(mod.data)[names(mod.data)!=mod.lhs]
   
   for(i in seq(nrow(mp.info))) {
     col.keep  <- which(strsplit(mp.info$mp[i],'')[[1]]=='0')
+    
     if(length(col.keep)==0){
       new.mod <- paste(mod.lhs,1,sep='~')
     } else {
-      cols=names(mod.data)[names(mod.data)!=mod.lhs]
+      
       vars_to_keep=cols[col.keep]
       
       new.mod=remove_missing_vars(model, cols, vars_to_keep)
@@ -88,8 +90,8 @@ submodels<- function(data, model, model_fn,submodel_type=c("psm", "ccsm"), force
       
     }
     #this is a fix for vivli
-    for(i in remove_model_data){
-      reg.out[i][["mod"]][[i]]=NULL
+    for(j in remove_model_data){
+      reg.out[[i]][["mod"]][[j]]=NULL
     }
   }
   reg.out[["meta"]][["model"]]=model
@@ -101,4 +103,18 @@ submodels<- function(data, model, model_fn,submodel_type=c("psm", "ccsm"), force
   reg.out[["meta"]][["threshold"]]=threshold
   
   return(reg.out)
+}
+
+stripped_model=function(submodel.object){
+  for(i in 1:length(submodel.object[["meta"]][["all.patterns"]])){
+   strip = list(
+        coefficients = submodel.object[[i]][["mod"]]$coefficients,
+        terms = submodel.object[[i]][["mod"]]$terms,
+        xlevels = submodel.object[[i]][["mod"]]$xlevels,
+        family = submodel.object[[i]][["mod"]]$family
+      )
+  
+  submodel.object[[i]][["mod"]]=strip
+  }
+  return(submodel.object)
 }

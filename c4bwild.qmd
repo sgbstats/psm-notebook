@@ -16,7 +16,7 @@ Search criteria
 -   Excludes: protocols, simulation studies only, reviews
 
 | Ref | Method | Dev C4B | Val C4B |
-|----|----|----|----|
+|------------------|------------------|------------------|------------------|
 | @afshar2024 | ML | 0.63 | ? |
 | @bond2024 | Cox | 0.66 (Optimism corrected) | 0.65, 0.68, 0.69 in different cohorts |
 | @bouvier2024[^1] | Logistic | 0.52 |  |
@@ -82,3 +82,7 @@ In more recent papers, there is a brief mention of using Mahalanobis distance, a
 #### Validation
 
 There were very few studies that explicitly state that the discrimination is optimism corrected/internal-external validated of validated in an independent cohort.
+
+#### Optimism correction
+
+Should the optimism bootstrap be on the original data or a bootstrap of the matched data? My intuition says the former.

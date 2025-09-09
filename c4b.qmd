@@ -83,7 +83,7 @@ If we were to use the stratified random forests (the proper name I have forgotte
 load("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\data/study_data.RDa")
 
 source("R\\prediction\\decompose_model.R")
-source("decompose_model_non_parametric.R")
+source("R\\prediction\\decompose_model_non_parametric.R")
 source("R\\prediction\\c4b.R")
 
 set.seed(121)
@@ -138,7 +138,7 @@ FWIW this is a weird trial that has almost no ICS effect.
 
 #### Model decomposition
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\decompose_model.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, file="R\\prediction\\decompose_model.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 ```
 
 ```{r}
@@ -148,7 +148,7 @@ head(result$decomposed_model)
 
 ```
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\c4b.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, file="R\\prediction\\c4b.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 ```
 
 ```{r,echo=TRUE, message=FALSE, warning=FALSE}
@@ -164,7 +164,7 @@ c4b(model, rate, arm_ipd,data=test, method= "parametric", "decompose")
 
 ### Non-paramteric appraoch
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\decompose_model_non_parametric.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, file="R\\prediction\\decompose_model_non_parametric.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 ```
 
 Note: that if you are using a custom model, e.g., submodels then it needs a structured return and a proper predict. Where you get a raw prediction (e.g., in a Random Forest) then you need to add a link function to get it in terms of a GLM.

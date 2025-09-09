@@ -540,10 +540,8 @@ y_i=f(\beta_0+ \beta_a arm_i+\beta_{homo,i}+\beta_{het,i}arm_i,...)
 <li><p>We calculate the excess exacerbations based on <span class="math inline">\(actual_i-\mathbb{E}(exac_i|arm_i=control)\)</span></p></li>
 <li><p>In the case of a pt in the control arm in real life then it would be the difference between predicted and actual</p></li>
 <li><p>In the case of pt in the trt group then the excess captures the treatment effect</p></li>
-<li><p>You then calculate the C4B based on the <span class="math inline">\(excess\sim rank(hetro)\)</span>.</p>
-<ul>
-<li>In this case the hetro values are likely to be a lot closer than when using homo as part of the match.</li>
-</ul></li>
+<li><p>You then calculate the C4B based on the <span class="math inline">\(excess\sim rank(hetro)\)</span>.</p></li>
+<li><p>In this case the hetro values are likely to be a lot closer than when using homo as part of the match.</p></li>
 <li><p>This will only work for count or linear models.</p></li>
 </ul>
 </section>
@@ -1026,7 +1024,7 @@ Smit, J.M. <em>et al.</em> (2025) <span>“Predicting benefit from adjuvant ther
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/notebook\.sebbate\.uk");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

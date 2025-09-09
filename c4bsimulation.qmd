@@ -5,8 +5,8 @@ title: "C4B simulation"
 The question has arisen to what is the association between global C and 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\decompose_model.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\c4b.R")
+source("R\\prediction\\decompose_model.R")
+source("R\\prediction\\c4b.R")
 
 ```
 

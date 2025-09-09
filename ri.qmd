@@ -18,8 +18,8 @@ Currently it is possible to use `MICE` @vanbuuren do do a single imputation
 library(tidyverse)
 
 load("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\data/study_data.RDa")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/model_breakdown.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/unpack.R")
+source("R/prediction/model_breakdown.R")
+source("R/prediction/unpack.R")
 ```
 
 ```{r,message=FALSE, warning=FALSE, eval=TRUE}
@@ -55,14 +55,13 @@ But my concern here is that I can't work out how to run a data-agnostic on the f
 
 ## Home made version
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\regression_imputation.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, file="R\\prediction\\regression_imputation.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 load("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\data/study_data.RDa")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/regression_imputation.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/regression_imputation_on_the_fly.R")
-source("R/prediction/prediction.R")
+source("R/prediction/regression_imputation.R")
+source("R/prediction/regression_imputation_on_the_fly.R")
 ```
 
 ```{r}
@@ -90,7 +89,7 @@ head(imp_mod$data_imp)
 
 ## On the fly
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\regression_imputation_on_the_fly.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, file="R\\prediction\\regression_imputation_on_the_fly.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}

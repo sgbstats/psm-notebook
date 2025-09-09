@@ -235,7 +235,7 @@ main <- function() {
     
     # Generate filename with timestamp
     timestamp <- format(Sys.time(), "%Y%m%d_%H%M%S")
-    csv_filename <- paste0("sourced_R_files", ".csv")
+    csv_filename <- paste0("junk/sourced_R_files", ".csv")
     
     # Write to CSV
     write.csv(df_files, csv_filename, row.names = FALSE)
@@ -253,7 +253,7 @@ if (sys.nframe() == 0) {
 }
 
 path_prefix <- "C:\\\\Users\\\\mbbx4sb5\\\\Dropbox (The University of Manchester)\\\\00_ICS_RECODE_Shared\\\\"
-x=read.csv("sourced_R_files.csv")%>% filter(grepl("\\.R$", file_path, ignore.case = TRUE)) %>% 
+x=read.csv("junk/sourced_R_files.csv")%>% filter(grepl("\\.R$", file_path, ignore.case = TRUE)) %>% 
   mutate(clean=gsub(path_prefix, "", file_path, fixed = TRUE))
 
 for(i in x$clean){

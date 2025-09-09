@@ -2,7 +2,7 @@
 title: "C4B simulation"
 ---
 
-The question has arisen to what is the association between global C and 
+The question has arisen to what is the association between global C and
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 source("R\\prediction\\decompose_model.R")
@@ -38,8 +38,6 @@ linear_predictor <- function(data, formula, coefs) {
 formula=out~a+arm*b+error
 ```
 
-
-
 ```{r, message=FALSE, warning=FALSE, eval=FALSE}
 error=c(seq(from=0, to=2, by=0.25),seq(from=2.5, to=10, by=0.5),seq(from=11, to=20, by=1))/2
 #weight is the proportion that is given to the homo (and 1-weight is given to the Homo)
@@ -65,14 +63,14 @@ for(j in weight){
     c_global_lm=c(c_global_lm, x_lm$concordance)
     
     dm_lm=decompose_model(mod_lm,var="arm")
-    c_benefit_lm=c(c_benefit_lm,(c4b(dm_lm))$concordance)
+    c_benefit_lm=c(c_benefit_lm,(c4b(mod_lm,data=data2, outcome = eta, var=arm, matching = "decompose",method="parametric" ))$concordance)
     
     mod_log=glm(res~a+arm*b,data2, family="binomial")
     x_log=mod_log%>% concordance()
     c_global_log=c(c_global_log, x_log$concordance)
     
     dm_log=decompose_model(mod_log,var="arm")
-    c_benefit_log=c(c_benefit_log,(c4b(dm_log))$concordance)
+    c_benefit_log=c(c_benefit_log,(c4b(mod_lm,data=data2, outcome = res, var=arm, matching = "decompose",method="parametric" ))$concordance)
     
     
     error2=c(error2, i)
@@ -95,6 +93,7 @@ load(file="data/c4bsim.RDa")
 ```
 
 ## Linear Model
+
 ```{r, message=FALSE, warning=FALSE}
 out%>% 
   mutate(weight2=factor(weight2)) %>% 

@@ -10,7 +10,7 @@ title: "Submodels"
 library(tidyverse)
 ```
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\submodels.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, file="R\\prediction\\submodels.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 ```
 
 ### Basic premise of the function
@@ -33,13 +33,13 @@ Note: some missingness added for good measure and 80/20 test train ratio
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 load("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\data/study_data.RDa")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/submodels.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/predict_submodels.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/print_submodels.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/model_breakdown.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/unpack.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/missingness_pattern.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/remove_missing_vars.R")
+source("R/prediction/submodels.R")
+source("R/prediction/predict_submodels.R")
+source("R/prediction/print_submodels.R")
+source("R/prediction/model_breakdown.R")
+source("R/prediction/unpack.R")
+source("R/prediction/missingness_pattern.R")
+source("R/prediction/remove_missing_vars.R")
 
 cols_to_na=c("fev1_bl", "smoking_bl", "eos_bl")
 set.seed(2)
@@ -73,7 +73,7 @@ To do: think about classes of the object so that you can just use predict() and 
 
 # predict.submodels
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\predict_submodels.R", echo=TRUE, message=FALSE, warning=FALSE, eval=F}
+```{r, file="R\\prediction\\predict_submodels.R", echo=TRUE, message=FALSE, warning=FALSE, eval=F}
 ```
 
 -   Various bits of house keeping getting the model ready (maybe the model_breakdown function can be removed and inheritted from the main function)

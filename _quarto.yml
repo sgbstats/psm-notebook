@@ -34,6 +34,8 @@ website:
         contents: 
           - text: "Applications of C4B"
             href: c4bwild.qmd
+          - text: "Simulation of C4B"
+            href: c4bsimulation.qmd
       - text: "Splines"
         href: splines.qmd
       - text: "Models progress"

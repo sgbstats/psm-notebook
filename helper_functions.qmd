@@ -4,13 +4,13 @@ title: "Helper functions"
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # load("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\data/study_data.RDa")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/submodels.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/predict_submodels.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/print_submodels.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/model_breakdown.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/unpack.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/missingness_pattern.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/remove_missing_vars.R")
+source("R/prediction/submodels.R")
+source("R/prediction/predict_submodels.R")
+source("R/prediction/print_submodels.R")
+source("R/prediction/model_breakdown.R")
+source("R/prediction/unpack.R")
+source("R/prediction/missingness_pattern.R")
+source("R/prediction/remove_missing_vars.R")
 
 # data=study_data$EFFECT$ad
 # data=data %>% dplyr::mutate_at(c("exac_bl", "fev1_bl"),~ifelse(sample(c(TRUE, FALSE), size = length(.), replace = TRUE, prob = c(0.8, 0.2)),., NA))
@@ -20,26 +20,26 @@ source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECO
 
 # missingness_pattern
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\missingness_pattern.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, file="R\\prediction\\missingness_pattern.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 ```
 
 # remove_missing_vars
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\remove_missing_vars.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, file="R\\prediction\\remove_missing_vars.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 ```
 
 # print.submodels
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\print_submodels.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, file="R\\prediction\\print_submodels.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 
 ```
 
 # model_breakdown
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\model_breakdown.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, file="R\\prediction\\model_breakdown.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 ```
 
 # unpack
 
-```{r, file="C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R\\prediction\\unpack.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, file="R\\prediction\\unpack.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 ```

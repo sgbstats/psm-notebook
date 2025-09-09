@@ -4,17 +4,17 @@ title: "Model Comparison"
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 load("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\data/study_data.RDa")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/submodels.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/predict_submodels.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/print_submodels.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/model_breakdown.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/unpack.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/missingness_pattern.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/remove_missing_vars.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/model_breakdown.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/unpack.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/regression_imputation.R")
-source("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\R/prediction/regression_imputation_on_the_fly.R")
+source("R/prediction/submodels.R")
+source("R/prediction/predict_submodels.R")
+source("R/prediction/print_submodels.R")
+source("R/prediction/model_breakdown.R")
+source("R/prediction/unpack.R")
+source("R/prediction/missingness_pattern.R")
+source("R/prediction/remove_missing_vars.R")
+source("R/prediction/model_breakdown.R")
+source("R/prediction/unpack.R")
+source("R/prediction/regression_imputation.R")
+source("R/prediction/regression_imputation_on_the_fly.R")
 ```
 
 ## PSM

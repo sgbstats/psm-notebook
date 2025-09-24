@@ -2,7 +2,7 @@
 title: "C4B simulation"
 ---
 
-The question has arisen to what is the association between global C and
+*The question has arisen to what is the association between global C and*
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 source("R\\prediction\\decompose_model.R")
@@ -48,36 +48,36 @@ c_global_log=c()
 c_benefit_log=c()
 error2=c()
 weight2=c()
-
-for(j in weight){
-  for(i in error){
-    
-    coefs=c(0,1.2*j,1*j,1*(1-j),i,1.2*(1-j))
-    data2=linear_predictor(data, formula, coefs) %>% 
-      mutate(p=exp(eta)/(1+exp(eta)),
-             rn=row_number()) %>% 
-      mutate(res=rbinom(1,1,p), .by="rn")
-    mod_lm=lm(eta~a+arm*b,data2 )
-    
-    x_lm=mod_lm%>% concordance()
-    c_global_lm=c(c_global_lm, x_lm$concordance)
-    
-    dm_lm=decompose_model(mod_lm,var="arm")
-    c_benefit_lm=c(c_benefit_lm,(c4b(mod_lm,data=data2, outcome = eta, var=arm, matching = "decompose",method="parametric" ))$concordance)
-    
-    mod_log=glm(res~a+arm*b,data2, family="binomial")
-    x_log=mod_log%>% concordance()
-    c_global_log=c(c_global_log, x_log$concordance)
-    
-    dm_log=decompose_model(mod_log,var="arm")
-    c_benefit_log=c(c_benefit_log,(c4b(mod_lm,data=data2, outcome = res, var=arm, matching = "decompose",method="parametric" ))$concordance)
-    
-    
-    error2=c(error2, i)
-    weight2=c(weight2, j)
+for(k in 1:10){
+  for(j in weight){
+    for(i in error){
+      
+      coefs=c(0,1.2*j,1*j,1*(1-j),i,1.2*(1-j))
+      data2=linear_predictor(data, formula, coefs) %>% 
+        mutate(p=exp(eta)/(1+exp(eta)),
+               rn=row_number()) %>% 
+        mutate(res=rbinom(1,1,p), .by="rn")
+      mod_lm=lm(eta~a+arm*b,data2 )
+      
+      x_lm=mod_lm%>% concordance()
+      c_global_lm=c(c_global_lm, x_lm$concordance)
+      
+      dm_lm=decompose_model(mod_lm,var="arm")
+      c_benefit_lm=c(c_benefit_lm,(c4b(mod_lm,data=data2, outcome = eta, var=arm, matching = "decompose",method="parametric" ))$concordance)
+      
+      mod_log=glm(res~a+arm*b,data2, family="binomial")
+      x_log=mod_log%>% concordance()
+      c_global_log=c(c_global_log, x_log$concordance)
+      
+      dm_log=decompose_model(mod_log,var="arm")
+      c_benefit_log=c(c_benefit_log,(c4b(mod_lm,data=data2, outcome = res, var=arm, matching = "decompose",method="parametric" ))$concordance)
+      
+      
+      error2=c(error2, i)
+      weight2=c(weight2, j)
+    }
   }
 }
-
 out=cbind.data.frame(error2,weight2, c_global_lm, c_benefit_lm, c_global_log, c_benefit_log) 
 
 ```
@@ -92,13 +92,13 @@ load(file="data/c4bsim.RDa")
 
 ```
 
-## Linear Model
+## *Linear Model*
 
 ```{r, message=FALSE, warning=FALSE}
 out%>% 
   mutate(weight2=factor(weight2)) %>% 
   ggplot(aes(x=c_global_lm, y=c_benefit_lm, col=weight2))+
-  geom_line()+
+  geom_smooth(se=F, linewidth=.5)+
   lims(x=c(0.5,1),
        y=c(0.5,.8))+
   labs(x="C Global",
@@ -107,15 +107,15 @@ out%>%
   theme_bw()
 ```
 
-## Logistic
+## *Logistic*
 
 ```{r, message=FALSE, warning=FALSE}
 out%>% 
   mutate(weight2=factor(weight2)) %>% 
   ggplot(aes(x=c_global_log, y=c_benefit_log, col=weight2))+
-  geom_line()+
+  geom_smooth(se=F, linewidth=0.5)+
   lims(x=c(0.5,.8),
-       y=c(0.5,.65))+
+       y=c(0.5,.55))+
   labs(x="C Global",
        y="C-for-benefit",
        col="Homo weight")+

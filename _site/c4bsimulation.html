@@ -416,8 +416,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#linear-model" id="toc-linear-model" class="nav-link active" data-scroll-target="#linear-model">Linear Model</a></li>
-  <li><a href="#logistic" id="toc-logistic" class="nav-link" data-scroll-target="#logistic">Logistic</a></li>
+  <li><a href="#linear-model" id="toc-linear-model" class="nav-link active" data-scroll-target="#linear-model"><em>Linear Model</em></a></li>
+  <li><a href="#logistic" id="toc-logistic" class="nav-link" data-scroll-target="#logistic"><em>Logistic</em></a></li>
   </ul>
 </nav>
     </div>
@@ -444,7 +444,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>The question has arisen to what is the association between global C and</p>
+<p><em>The question has arisen to what is the association between global C and c4b. In this we simulate data both as a linear model and a logistic model and progressively add more noise until we get the desired properties</em></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
@@ -482,51 +482,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>c_benefit_log<span class="ot">=</span><span class="fu">c</span>()</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>error2<span class="ot">=</span><span class="fu">c</span>()</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>weight2<span class="ot">=</span><span class="fu">c</span>()</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(j <span class="cf">in</span> weight){</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> error){</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    coefs<span class="ot">=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">1.2</span><span class="sc">*</span>j,<span class="dv">1</span><span class="sc">*</span>j,<span class="dv">1</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>j),i,<span class="fl">1.2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>j))</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    data2<span class="ot">=</span><span class="fu">linear_predictor</span>(data, formula, coefs) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">p=</span><span class="fu">exp</span>(eta)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(eta)),</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">rn=</span><span class="fu">row_number</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">res=</span><span class="fu">rbinom</span>(<span class="dv">1</span>,<span class="dv">1</span>,p), <span class="at">.by=</span><span class="st">"rn"</span>)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    mod_lm<span class="ot">=</span><span class="fu">lm</span>(eta<span class="sc">~</span>a<span class="sc">+</span>arm<span class="sc">*</span>b,data2 )</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    x_lm<span class="ot">=</span>mod_lm<span class="sc">%&gt;%</span> <span class="fu">concordance</span>()</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    c_global_lm<span class="ot">=</span><span class="fu">c</span>(c_global_lm, x_lm<span class="sc">$</span>concordance)</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    dm_lm<span class="ot">=</span><span class="fu">decompose_model</span>(mod_lm,<span class="at">var=</span><span class="st">"arm"</span>)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    c_benefit_lm<span class="ot">=</span><span class="fu">c</span>(c_benefit_lm,(<span class="fu">c4b</span>(mod_lm,<span class="at">data=</span>data2, <span class="at">outcome =</span> eta, <span class="at">var=</span>arm, <span class="at">matching =</span> <span class="st">"decompose"</span>,<span class="at">method=</span><span class="st">"parametric"</span> ))<span class="sc">$</span>concordance)</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    mod_log<span class="ot">=</span><span class="fu">glm</span>(res<span class="sc">~</span>a<span class="sc">+</span>arm<span class="sc">*</span>b,data2, <span class="at">family=</span><span class="st">"binomial"</span>)</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    x_log<span class="ot">=</span>mod_log<span class="sc">%&gt;%</span> <span class="fu">concordance</span>()</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    c_global_log<span class="ot">=</span><span class="fu">c</span>(c_global_log, x_log<span class="sc">$</span>concordance)</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    dm_log<span class="ot">=</span><span class="fu">decompose_model</span>(mod_log,<span class="at">var=</span><span class="st">"arm"</span>)</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    c_benefit_log<span class="ot">=</span><span class="fu">c</span>(c_benefit_log,(<span class="fu">c4b</span>(mod_lm,<span class="at">data=</span>data2, <span class="at">outcome =</span> res, <span class="at">var=</span>arm, <span class="at">matching =</span> <span class="st">"decompose"</span>,<span class="at">method=</span><span class="st">"parametric"</span> ))<span class="sc">$</span>concordance)</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    error2<span class="ot">=</span><span class="fu">c</span>(error2, i)</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    weight2<span class="ot">=</span><span class="fu">c</span>(weight2, j)</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>out<span class="ot">=</span><span class="fu">cbind.data.frame</span>(error2,weight2, c_global_lm, c_benefit_lm, c_global_log, c_benefit_log) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>){</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  data<span class="ot">=</span><span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">6000</span>), <span class="at">ncol=</span><span class="dv">3</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arm=</span><span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"trt"</span>, <span class="st">"control"</span>), <span class="at">each=</span><span class="dv">1000</span>, <span class="at">times=</span><span class="dv">1</span>), <span class="at">ordered =</span> F),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">out=</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"a"</span><span class="ot">=</span>X1, <span class="at">b=</span>X2, <span class="at">error=</span>X3)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> weight){</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> error){</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      coefs<span class="ot">=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">1.2</span><span class="sc">*</span>j,<span class="dv">1</span><span class="sc">*</span>j,<span class="dv">1</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>j),i,<span class="fl">1.2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>j))</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>      data2<span class="ot">=</span><span class="fu">linear_predictor</span>(data, formula, coefs) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">p=</span><span class="fu">exp</span>(eta)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(eta)),</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>               <span class="at">rn=</span><span class="fu">row_number</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">res=</span><span class="fu">rbinom</span>(<span class="dv">1</span>,<span class="dv">1</span>,p), <span class="at">.by=</span><span class="st">"rn"</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      mod_lm<span class="ot">=</span><span class="fu">lm</span>(eta<span class="sc">~</span>a<span class="sc">+</span>arm<span class="sc">*</span>b,data2 )</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>      x_lm<span class="ot">=</span>mod_lm<span class="sc">%&gt;%</span> <span class="fu">concordance</span>()</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>      c_global_lm<span class="ot">=</span><span class="fu">c</span>(c_global_lm, x_lm<span class="sc">$</span>concordance)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>      dm_lm<span class="ot">=</span><span class="fu">decompose_model</span>(mod_lm,<span class="at">var=</span><span class="st">"arm"</span>)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>      c_benefit_lm<span class="ot">=</span><span class="fu">c</span>(c_benefit_lm,(<span class="fu">c4b</span>(mod_lm,<span class="at">data=</span>data2, <span class="at">outcome =</span> eta, <span class="at">var=</span>arm, <span class="at">matching =</span> <span class="st">"decompose"</span>,<span class="at">method=</span><span class="st">"parametric"</span> ))<span class="sc">$</span>concordance)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>      mod_log<span class="ot">=</span><span class="fu">glm</span>(res<span class="sc">~</span>a<span class="sc">+</span>arm<span class="sc">*</span>b,data2, <span class="at">family=</span><span class="st">"binomial"</span>)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>      x_log<span class="ot">=</span>mod_log<span class="sc">%&gt;%</span> <span class="fu">concordance</span>()</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>      c_global_log<span class="ot">=</span><span class="fu">c</span>(c_global_log, x_log<span class="sc">$</span>concordance)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>      dm_log<span class="ot">=</span><span class="fu">decompose_model</span>(mod_log,<span class="at">var=</span><span class="st">"arm"</span>)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>      c_benefit_log<span class="ot">=</span><span class="fu">c</span>(c_benefit_log,(<span class="fu">c4b</span>(mod_lm,<span class="at">data=</span>data2, <span class="at">outcome =</span> res, <span class="at">var=</span>arm, <span class="at">matching =</span> <span class="st">"decompose"</span>,<span class="at">method=</span><span class="st">"parametric"</span> ))<span class="sc">$</span>concordance)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>      error2<span class="ot">=</span><span class="fu">c</span>(error2, i)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>      weight2<span class="ot">=</span><span class="fu">c</span>(weight2, j)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>out<span class="ot">=</span><span class="fu">cbind.data.frame</span>(error2,weight2, c_global_lm, c_benefit_lm, c_global_log, c_benefit_log) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="linear-model" class="level2">
-<h2 class="anchored" data-anchor-id="linear-model">Linear Model</h2>
+<h2 class="anchored" data-anchor-id="linear-model"><em>Linear Model</em></h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>out<span class="sc">%&gt;%</span> </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weight2=</span><span class="fu">factor</span>(weight2)) <span class="sc">%&gt;%</span> </span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>c_global_lm, <span class="at">y=</span>c_benefit_lm, <span class="at">col=</span>weight2))<span class="sc">+</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lims</span>(<span class="at">x=</span><span class="fu">c</span>(<span class="fl">0.5</span>,<span class="dv">1</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="fu">c</span>(<span class="fl">0.5</span>,.<span class="dv">8</span>))<span class="sc">+</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"C Global"</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"C-for-benefit"</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">col=</span><span class="st">"Homo weight"</span>)<span class="sc">+</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se=</span>F, <span class="at">linewidth=</span>.<span class="dv">5</span>)<span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_point()+</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lims</span>(<span class="at">x=</span><span class="fu">c</span>(<span class="fl">0.5</span>,<span class="dv">1</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="fu">c</span>(<span class="fl">0.5</span>,.<span class="dv">8</span>))<span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"C Global"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"C-for-benefit"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">col=</span><span class="st">"Homo weight"</span>)<span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -537,18 +542,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 <section id="logistic" class="level2">
-<h2 class="anchored" data-anchor-id="logistic">Logistic</h2>
+<h2 class="anchored" data-anchor-id="logistic"><em>Logistic</em></h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>out<span class="sc">%&gt;%</span> </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weight2=</span><span class="fu">factor</span>(weight2)) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>c_global_log, <span class="at">y=</span>c_benefit_log, <span class="at">col=</span>weight2))<span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lims</span>(<span class="at">x=</span><span class="fu">c</span>(<span class="fl">0.5</span>,.<span class="dv">8</span>),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="fu">c</span>(<span class="fl">0.5</span>,.<span class="dv">65</span>))<span class="sc">+</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"C Global"</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"C-for-benefit"</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">col=</span><span class="st">"Homo weight"</span>)<span class="sc">+</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se=</span>F, <span class="at">linewidth=</span><span class="fl">0.5</span>)<span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_point()+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lims</span>(<span class="at">x=</span><span class="fu">c</span>(<span class="fl">0.5</span>,.<span class="dv">8</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>       <span class="co"># y=c(0.5,.55)</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>       )<span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"C Global"</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"C-for-benefit"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">col=</span><span class="st">"Homo weight"</span>)<span class="sc">+</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -557,6 +564,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>Even with a reasonable Global C, then the C4B stays quite small until you make your way up to very high global C, even then it is much smaller . I would question how useful of a measure C4B is given that it is really compressed and even when there is substantial</p>
 
 
 </section>
@@ -648,7 +656,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/notebook\.sebbate\.uk");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

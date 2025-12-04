@@ -344,27 +344,8 @@ div.csl-indent {
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="./rcode.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">R Code</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./submodels.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Submodels</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./helper_functions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Helper Functions</span></a>
-  </div>
-</li>
-      </ul>
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">R Code</span></span>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
@@ -438,6 +419,7 @@ div.csl-indent {
   <li><a href="#home-made-version" id="toc-home-made-version" class="nav-link active" data-scroll-target="#home-made-version">Home made version</a></li>
   <li><a href="#on-the-fly" id="toc-on-the-fly" class="nav-link" data-scroll-target="#on-the-fly">On the fly</a>
   <ul class="collapse">
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul>
@@ -504,12 +486,12 @@ div.csl-indent {
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">complete</span>(m1))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  arm_ipd eos_bl age_imp  exac_bl sex smoking_bl fev1_bl   trt_dur
-1     ICS    0.2      55 1.000000   M     Former    0.76 0.6324435
-2     ICS    0.4      55 1.000000   M    Current    1.29 1.0130048
-3     ICS    0.4      65 1.427128   M     Former    1.38 0.1095140
-4 Control    0.3      65 1.000000   M     Former    0.74 0.4462697
-5 Control    0.5      65 1.000000   M    Current    1.20 0.6379192
-6     ICS    0.4      75 2.000000   M    Current    0.78 0.5147159</code></pre>
+1     ICS    0.1      65 1.000000   M    Current    1.33 0.2518823
+2     ICS    0.3      65 1.000000   M     Former    1.03 1.0184805
+3     ICS    0.4      65 1.000000   M     Former    1.38 0.1095140
+4     ICS    0.1      55 1.633783   F    Current    0.67 0.4572211
+5 Control    0.3      65 1.000000   M     Former    0.74 0.4462697
+6 Control    0.5      65 1.000000   M    Current    1.20 0.6379192</code></pre>
 </div>
 </div>
 <p>But my concern here is that I can’t work out how to run a data-agnostic on the fly imputation so I made my own version.</p>
@@ -731,6 +713,10 @@ div.csl-indent {
 6     ICS 0.2256478      55       2   M    Current 0.530000</code></pre>
 </div>
 </div>
+<section id="notes" class="level3">
+<h3 class="anchored" data-anchor-id="notes">Notes</h3>
+<p>I think that you need to only build the final RI model using the selected predictors for the model or you will end up slowing the whole thing down</p>
+</section>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
 <div id="refs" class="references csl-bib-body" role="list">
@@ -833,7 +819,7 @@ div.csl-indent {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/notebook\.sebbate\.uk");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

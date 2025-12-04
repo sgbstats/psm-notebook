@@ -5,13 +5,14 @@ csl: csl/jama.csl
 ---
 
 |  |  |  |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | Short Name | NCT number | Relevant Size |
 | Anzueto @anzueto2009 | NCT00115492 | 797 |
 | Calverley @calverley2010 | NCT00476099 | 1465 |
 | Dransfield 1 @dransfield2013 | NCT01009463 | 1622 |
 | Dransfield 2 @dransfield2013 | NCT01017952 | 1633 |
 | EFFECT @papi2017 | EudraCT 2012–004162–17 | 1765 |
+| ETHOS @rabe2020 | NCT02465567 | 8509 |
 | Ferguson @ferguson2008 | NCT00144911 | 782 |
 | FLTA3025 @gsk-a |   | 640 |
 | FORWARD @wedzicha2014 | NCT00929851 | 1186 |
@@ -20,6 +21,7 @@ csl: csl/jama.csl
 | INSTEAD @rossi2014 | NCT01555138 | 581 |
 | Kardos @kardos2007 |   | 994 |
 | Kerwin @kerwin2013 | NCT01053988 | 1030 |
+| KRONOS @ferguson2018 | NCT02497001 | \~600 |
 | Mahler @mahler2002 | [NCT00356642](https://clinicaltrials.gov/ct2/show/?term=NCT00356642&rank=1) | 691 |
 | Martinez @martinez2013 | NCT01054885 | 1224 |
 | Ohar @ohar2014 | NCT01110200 | 639 |

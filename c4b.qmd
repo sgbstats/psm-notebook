@@ -162,7 +162,7 @@ c4b(model, rate, arm_ipd,data=train, method= "parametric", "decompose")
 c4b(model, rate, arm_ipd,data=test, method= "parametric", "decompose")
 ```
 
-### Non-paramteric appraoch
+### Non-parametric approach
 
 ```{r, file="R\\prediction\\decompose_model_non_parametric.R", echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 ```

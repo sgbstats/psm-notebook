@@ -18,11 +18,6 @@ website:
         href: example_studies.qmd
       - section: "R Code"
         href: rcode.qmd
-        contents: 
-          - text: "Submodels"
-            href: submodels.qmd
-          - text: "Helper Functions"
-            href:  helper_functions.qmd
       - text: "Regression Imputation"
         href: ri.qmd
       - text: "Random Forests"

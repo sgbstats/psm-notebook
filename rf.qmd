@@ -7,9 +7,11 @@ Random forest needs to have complete data and ones where there it is missing it 
 
 Takes sqrt(n) of the variables each time and builds a decision tree from those variables and then takes the average from all of the trees (normally 100)
 
-For our big, data driven model. We would end up borrowing across studies, which probably isn't the end of the world. However, the predict function in the RF package doesn't like incomplete data.
+I am using the [regression imputation](ri) to build out the incomplete data.
 
 Major question about interaction. I think that we would have add an interaction variable into the datasets but then theoretically it should only be in models when both of the arm and eos (eg) were both in the tree.
+
+We are using a T-learner
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 load("C:\\Users\\mbbx4sb5\\Dropbox (The University of Manchester)\\00_ICS_RECODE_Shared\\data/study_data.RDa")

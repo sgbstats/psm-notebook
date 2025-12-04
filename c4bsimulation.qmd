@@ -2,7 +2,7 @@
 title: "C4B simulation"
 ---
 
-The question has arisen to what is the association between global C and c4b. In this we simulate data both as a linear model and a logistic model and progressively add more noise until we get the desired properties. The idea is that we build a model which varies the weights of the homogeneous and heterogeneous components as well as increasing the error terms to see how global C affects C4B at different levels.
+*The question has arisen to what is the association between global C and c4b. In this we simulate data both as a linear model and a logistic model and progressively add more noise until we get the desired properties. The idea is that we build a model which varies the weights of the homogeneous and heterogeneous components as well as increasing the error terms to see how global C affects C4B at different levels.*
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 source("R\\prediction\\decompose_model.R")
@@ -10,7 +10,7 @@ source("R\\prediction\\c4b.R")
 
 ```
 
-```{r, message=FALSE, warning=FALSE, eval=FALSE}
+```{r, message=FALSE, warning=FALSE, eval=TRUE}
 library(tidyverse)
 library(survival)
 set.seed(123)
@@ -127,6 +127,37 @@ out%>%
   theme_bw()
 ```
 
-Even with a reasonable Global C, then the C4B stays quite small until you make your way up to very high global C, even then it is much smaller . I would question how useful of a measure C4B is given that it is really compressed and even when there is substantial.
+*Even with a reasonable Global C, then the C4B stays quite small until you make your way up to very high global C, even then it is much smaller . I would question how useful of a measure C4B is given that it is really compressed and even when there is substantial.*
 
-What is noticiable is that the models with more weight on the homogenous part have higher C4B (which is probably what was expected). In some of our models we can look at what the weight of homo and hetro parts are.
+*What is noticeable is that the models with more weight on the homogenous part have higher C4B (which is probably what was expected). In some of our models we can look at what the weight of homo and hetro parts are.*
+
+### *Open question*
+
+*Can we assess the relative weight of the hetro and homo parts?*
+
+```{r, warning=FALSE}
+
+data=data.frame(matrix(rnorm(6000), ncol=3)) %>%
+  mutate(arm=factor(rep(c("trt", "control"), each=1000, times=1), ordered = F),
+         out=0) %>% 
+  rename("a"=X1, b=X2, error=X3)
+
+error=c(seq(from=0, to=2, by=0.25),seq(from=2.5, to=10, by=0.5),seq(from=11, to=20, by=1))/2
+#weight is the proportion that is given to the homo (and 1-weight is given to the Homo)
+weight=c(0.1, .25,.5,.75,.9)
+for(j in weight){
+  for(i in error){
+    
+    coefs=c(0,1.2*j,1*j,1*(1-j),i,1.2*(1-j))
+    data2=linear_predictor(data, formula, coefs) %>% 
+      mutate(p=exp(eta)/(1+exp(eta)),
+             rn=row_number()) %>% 
+      mutate(res=rbinom(1,1,p), .by="rn")
+    mod_lm=lm(eta~a+arm*b,data2 )
+    
+    x=decompose_model(mod_lm, arm)      
+    
+    prcomp(x$decomposed_model %>% dplyr::select(hetro, homo))
+  }
+}
+```

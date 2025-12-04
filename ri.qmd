@@ -101,6 +101,10 @@ head(newdata)
 head(nd2)
 ```
 
+### Notes
+
+I think that you need to only build the final RI model using the selected predictors for the model or you will end up slowing the whole thing down
+
 ### References
 
 ::: {#refs}

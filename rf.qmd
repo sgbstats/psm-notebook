@@ -93,5 +93,106 @@ pred=z1$individual%>% as.data.frame() %>%  mutate(rn=row_number()) %>%
 
     -   Or you use mean/mode imputation for new predictions.
 
+
+## Some code
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+meta_learner = function(data, strata, formula, algorithm, ...) {
+  out = list()
+  levels = unique(data[[strata]])
+  if (class(formula) != "formula") {
+    t = list()
+    vars = list()
+  }
+  for (j in levels) {
+    # cat(paste(j, "\n"))
+    if (class(formula) == "formula") {
+      out[[j]] = algorithm(
+        formula = formula,
+        data = data |>
+          filter(((!!as.name(strata)) == j)) |>
+          select(-(!!as.name(strata))),
+        ...
+      )
+      t = terms(formula, data = data)
+      vars = attr(t, "term.labels")
+    } else {
+      out[[j]] = algorithm(
+        formula = formula[[j]],
+        data = data |>
+          filter(((!!as.name(strata)) == j)) |>
+          select(-(!!as.name(strata))),
+        ...
+      )
+      t[[j]] = terms(formula[[j]], data = data)
+      vars[[j]] = attr(t[[j]], "term.labels")
+    }
+  }
+
+  out = c(
+    out,
+    list(
+      meta = list("strata" = strata, "levels" = levels),
+      terms = formula,
+      vars = vars
+    )
+  )
+  structure(
+    out,
+    class = "meta_learner"
+  )
+}
+
+predict.meta_learner = function(object, newdata, fn = predict) {
+  nd2 <- newdata |> mutate(rn = row_number())
+  fit <- (nd2 |> mutate(fit = NA_real_))[0, ]
+
+  for (j in object[["meta"]][["levels"]]) {
+    nd3 <- nd2 |> filter(.data[[object[["meta"]][["strata"]]]] == j)
+
+    # determine predictors for this stratum (robust to how meta_learner saved terms/vars)
+    vars_needed <- NULL
+    if (!is.null(object$vars) && !is.null(object$vars[[j]])) {
+      vars_needed <- object$vars[[j]]
+    } else if (!is.null(object$terms) && !is.null(object$terms[[j]])) {
+      vars_needed <- attr(terms(object$terms[[j]]), "term.labels")
+    } else if (inherits(object$terms, "formula")) {
+      vars_needed <- attr(terms(object$terms), "term.labels")
+    }
+
+    if (is.null(vars_needed)) vars_needed <- character(0)
+
+    # compute complete-case mask for the subset nd3
+    cc <- if (length(vars_needed) > 0L) complete.cases(nd3[vars_needed]) else rep(TRUE, nrow(nd3))
+    preds <- rep(NA_real_, nrow(nd3))
+
+    if (any(cc)) {
+      res <- fn(object[[j]], nd3[cc, , drop = FALSE])
+
+      # normalize different prediction shapes into a numeric vector
+      if (is.numeric(res) && length(res) == sum(cc)) {
+        preds[cc] <- res
+      } else if (is.matrix(res) || is.data.frame(res)) {
+        if (ncol(res) >= 2) {
+          preds[cc] <- as.numeric(res[, 2])
+        } else {
+          preds[cc] <- as.numeric(res[, 1])
+        }
+      } else if (is.factor(res)) {
+        preds[cc] <- as.numeric(as.character(res))
+      } else {
+        preds[cc] <- as.numeric(res)
+      }
+    }
+
+    fit <- bind_rows(fit, bind_cols(nd3, tibble::tibble(fit = preds)))
+  }
+
+  names(fit)[names(fit) == object[["meta"]][["strata"]]] <- object[["meta"]][["strata"]]
+  fit <- fit |> arrange(rn) |> dplyr::select(-rn)
+  fit$fit
+}
+
+```
 ::: {#refs}
 :::
